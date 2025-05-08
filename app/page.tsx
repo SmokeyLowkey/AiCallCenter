@@ -21,7 +21,7 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col w-full">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between w-full max-w-full px-6">
+        <div className="container flex h-16 items-center justify-between max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 font-bold text-xl text-indigo-600">
             <Phone className="h-6 w-6" />
             <span>AI Call Clarity</span>
@@ -49,7 +49,7 @@ export default function Home() {
       <main className="flex-1">
         {/* Hero Section */}
         <section className="py-16 md:py-24 bg-slate-50 w-full">
-          <div className="container mx-auto px-6 w-full max-w-full">
+          <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
                 <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
@@ -84,13 +84,13 @@ export default function Home() {
                 </div>
               </div>
               <div className="relative">
-                <div className="rounded-lg overflow-hidden shadow-xl">
+                <div className="rounded-2xl overflow-hidden shadow-xl">
                   <Image
                     src="/placeholder.svg?height=600&width=800"
                     alt="Call center agent using AI Call Clarity"
                     width={800}
                     height={600}
-                    className="w-full h-auto"
+                    className="w-full h-auto object-cover"
                   />
                 </div>
               </div>
@@ -100,7 +100,7 @@ export default function Home() {
 
         {/* Features Section */}
         <section id="features" className="py-20 bg-white w-full">
-          <div className="container mx-auto px-6 w-full max-w-full">
+          <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 <span className="text-indigo-600">Powerful Features</span> for Superior Call Experiences
@@ -111,7 +111,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-3 gap-8 mt-12">
               <Card className="border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
                 <CardHeader className="pb-4">
                   <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mb-4">
@@ -205,7 +205,7 @@ export default function Home() {
 
         {/* Use Cases Section */}
         <section className="py-20 bg-slate-50 w-full">
-          <div className="container mx-auto px-6 w-full max-w-full">
+          <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 <span className="text-indigo-600">Transforming</span> Call Experiences Across Industries
@@ -215,7 +215,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-3 gap-8 mt-12">
               <Card className="border-0 shadow-md">
                 <CardHeader className="pb-4">
                   <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mb-4">
@@ -311,7 +311,7 @@ export default function Home() {
 
         {/* Integrations Section */}
         <section id="integrations" className="py-20 bg-white w-full">
-          <div className="container mx-auto px-6 w-full max-w-full">
+          <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 <span className="text-indigo-600">Seamless Integrations</span> With Your Tech Stack
@@ -350,7 +350,7 @@ export default function Home() {
 
         {/* Testimonials Section */}
         <section className="py-20 bg-slate-50 w-full">
-          <div className="container mx-auto px-6 w-full max-w-full">
+          <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 Trusted by <span className="text-indigo-600">Industry Leaders</span>
@@ -417,7 +417,7 @@ export default function Home() {
 
         {/* Pricing Section */}
         <section id="pricing" className="py-20 bg-white w-full">
-          <div className="container mx-auto px-6 w-full max-w-full">
+          <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 <span className="text-indigo-600">Flexible Pricing</span> for Teams of All Sizes
@@ -554,7 +554,7 @@ export default function Home() {
               <Button size="lg" className="bg-white text-indigo-600 hover:bg-slate-100">
                 Request a Demo
               </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-indigo-700">
+              <Button size="lg" variant="outline" className="border-white text-black hover:text-white hover:bg-indigo-500">
                 Contact Sales
               </Button>
             </div>
