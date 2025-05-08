@@ -44,13 +44,13 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Suspense } from "react"
 
-export default function DashboardLayout({ children }) {
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider defaultOpen={true}>
-      <div className="flex min-h-screen bg-slate-50">
+      <div className="flex min-h-screen w-full bg-slate-50">
         <DashboardSidebar />
-        <div className="flex-1 flex flex-col">
-          <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-6">
+        <div className="flex-1 flex flex-col w-full">
+          <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-6 w-full">
             <SidebarTrigger />
             <div className="w-full flex items-center justify-between">
               <div className="relative w-full max-w-md">
@@ -89,7 +89,7 @@ export default function DashboardLayout({ children }) {
               </div>
             </div>
           </header>
-          <main className="flex-1">
+          <main className="flex-1 w-full">
             <Suspense>{children}</Suspense>
           </main>
         </div>

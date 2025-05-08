@@ -50,13 +50,13 @@ export default function TranscriptsPage() {
   const [selectedTranscript, setSelectedTranscript] = useState(null)
   const [viewTranscriptDialog, setViewTranscriptDialog] = useState(false)
 
-  const handleViewTranscript = (transcript) => {
+  const handleViewTranscript = (transcript: any) => {
     setSelectedTranscript(transcript)
     setViewTranscriptDialog(true)
   }
 
   return (
-    <div className="flex flex-col space-y-6 p-6">
+    <div className="flex flex-col space-y-6 p-6 w-full">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Transcripts</h1>
@@ -74,7 +74,7 @@ export default function TranscriptsPage() {
         </div>
       </div>
 
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-2 w-full">
         <div className="relative flex-1">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
@@ -425,8 +425,15 @@ export default function TranscriptsPage() {
   )
 }
 
-function TranscriptCard({ transcript, onView, showFlagReason = false, showSharedInfo = false }) {
-  const getSentimentColor = (sentiment) => {
+interface TranscriptCardProps {
+  transcript: any;
+  onView: () => void;
+  showFlagReason?: boolean;
+  showSharedInfo?: boolean;
+}
+
+function TranscriptCard({ transcript, onView, showFlagReason = false, showSharedInfo = false }: TranscriptCardProps) {
+  const getSentimentColor = (sentiment: string) => {
     switch (sentiment) {
       case "positive":
         return "bg-green-100 text-green-800"
@@ -551,7 +558,7 @@ function TranscriptCard({ transcript, onView, showFlagReason = false, showShared
           <div>
             <p className="text-sm font-medium mb-1">Topics:</p>
             <div className="flex flex-wrap gap-1">
-              {transcript.topics.map((topic, i) => (
+              {transcript.topics.map((topic: string, i: number) => (
                 <Badge key={i} variant="outline" className="bg-slate-100">
                   {topic}
                 </Badge>
@@ -583,7 +590,13 @@ function TranscriptCard({ transcript, onView, showFlagReason = false, showShared
   )
 }
 
-function TranscriptViewDialog({ transcript, open, onOpenChange }) {
+interface TranscriptViewDialogProps {
+  transcript: any;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+function TranscriptViewDialog({ transcript, open, onOpenChange }: TranscriptViewDialogProps) {
   const [activeTab, setActiveTab] = useState("transcript")
 
   const transcriptContent = [
@@ -972,7 +985,7 @@ function TranscriptViewDialog({ transcript, open, onOpenChange }) {
   )
 }
 
-function CheckCircle(props) {
+function CheckCircle(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

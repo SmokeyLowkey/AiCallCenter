@@ -43,13 +43,13 @@ export default function InsightsPage() {
   const [selectedInsight, setSelectedInsight] = useState(null)
   const [viewInsightDialog, setViewInsightDialog] = useState(false)
 
-  const handleViewInsight = (insight) => {
+  const handleViewInsight = (insight: any) => {
     setSelectedInsight(insight)
     setViewInsightDialog(true)
   }
 
   return (
-    <div className="flex flex-col space-y-6 p-6">
+    <div className="flex flex-col space-y-6 p-6 w-full">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Insights</h1>
@@ -80,7 +80,7 @@ export default function InsightsPage() {
         </div>
       </div>
 
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-2 w-full">
         <div className="relative flex-1">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input type="search" placeholder="Search insights by keyword or topic..." className="pl-8" />
@@ -104,7 +104,7 @@ export default function InsightsPage() {
         </div>
 
         <TabsContent value="overview" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 w-full">
             <Card className="bg-gradient-to-br from-indigo-50 to-white">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -799,7 +799,13 @@ function TopicsChart() {
   )
 }
 
-function InsightDetailDialog({ insight, open, onOpenChange }) {
+interface InsightDetailDialogProps {
+  insight: any;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+function InsightDetailDialog({ insight, open, onOpenChange }: InsightDetailDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[80vh] overflow-hidden flex flex-col">
@@ -843,7 +849,7 @@ function InsightDetailDialog({ insight, open, onOpenChange }) {
               <div className="rounded-lg border p-4">
                 <h3 className="font-medium mb-2">Recommendations</h3>
                 <ul className="space-y-2">
-                  {insight.recommendations.map((recommendation, i) => (
+                  {insight.recommendations.map((recommendation: string, i: number) => (
                     <li key={i} className="flex items-start gap-2 text-sm text-slate-600">
                       <div className="rounded-full bg-indigo-100 text-indigo-600 w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5">
                         {i + 1}
@@ -859,7 +865,7 @@ function InsightDetailDialog({ insight, open, onOpenChange }) {
               <div className="rounded-lg border p-4">
                 <h3 className="font-medium mb-4">Subtopic Breakdown</h3>
                 <div className="space-y-3">
-                  {insight.subtopics.map((subtopic, i) => (
+                  {insight.subtopics.map((subtopic: any, i: number) => (
                     <div key={i}>
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-sm">{subtopic.name}</span>
@@ -909,7 +915,7 @@ function InsightDetailDialog({ insight, open, onOpenChange }) {
   )
 }
 
-function CheckCircle(props) {
+function CheckCircle(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -929,7 +935,7 @@ function CheckCircle(props) {
   )
 }
 
-function Heart(props) {
+function Heart(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -948,7 +954,7 @@ function Heart(props) {
   )
 }
 
-function BookOpen(props) {
+function BookOpen(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -968,7 +974,7 @@ function BookOpen(props) {
   )
 }
 
-function Lock(props) {
+function Lock(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -988,7 +994,7 @@ function Lock(props) {
   )
 }
 
-function CreditCard(props) {
+function CreditCard(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -1008,7 +1014,7 @@ function CreditCard(props) {
   )
 }
 
-function Bug(props) {
+function Bug(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -1037,7 +1043,7 @@ function Bug(props) {
   )
 }
 
-function Zap(props) {
+function Zap(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

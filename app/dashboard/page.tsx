@@ -37,7 +37,7 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState("overview")
 
   return (
-    <div className="flex flex-col space-y-6 p-6">
+    <div className="flex flex-col space-y-6 p-6 w-full">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
@@ -56,7 +56,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Quick Stats */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 w-full">
         <MetricCard
           title="Total Calls"
           value="1,284"
@@ -84,7 +84,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Quick Access */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 w-full">
         <QuickAccessCard
           title="Live Calls"
           description="Monitor and manage active calls"
@@ -96,6 +96,7 @@ export default function DashboardPage() {
           title="Analytics"
           description="View detailed call analytics"
           icon={<BarChart3 className="h-10 w-10 text-indigo-600" />}
+          count=""
           href="/dashboard/analytics"
         />
         <QuickAccessCard
@@ -114,7 +115,7 @@ export default function DashboardPage() {
         />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 w-full">
         {/* Recent Activity */}
         <Card className="lg:col-span-4">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -224,7 +225,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Quick Actions and Integrations */}
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2 w-full">
         <Card>
           <CardHeader>
             <CardTitle>Quick Actions</CardTitle>
@@ -382,7 +383,14 @@ export default function DashboardPage() {
   )
 }
 
-function MetricCard({ title, value, description, icon }) {
+interface MetricCardProps {
+  title: string;
+  value: string;
+  description: string;
+  icon: React.ReactNode;
+}
+
+function MetricCard({ title, value, description, icon }: MetricCardProps) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -397,7 +405,15 @@ function MetricCard({ title, value, description, icon }) {
   )
 }
 
-function QuickAccessCard({ title, description, icon, count, href }) {
+interface QuickAccessCardProps {
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  count: string;
+  href: string;
+}
+
+function QuickAccessCard({ title, description, icon, count, href }: QuickAccessCardProps) {
   return (
     <Card className="overflow-hidden">
       <Link href={href} className="block h-full">
@@ -458,7 +474,7 @@ function RecentCallsTable() {
     },
   ]
 
-  const getSentimentColor = (sentiment) => {
+  const getSentimentColor = (sentiment: string) => {
     switch (sentiment) {
       case "Positive":
         return "bg-green-100 text-green-800"
@@ -511,7 +527,7 @@ function RecentCallsTable() {
   )
 }
 
-function CheckCircle(props) {
+function CheckCircle(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -531,7 +547,7 @@ function CheckCircle(props) {
   )
 }
 
-function Database(props) {
+function Database(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -552,7 +568,7 @@ function Database(props) {
   )
 }
 
-function Zap(props) {
+function Zap(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

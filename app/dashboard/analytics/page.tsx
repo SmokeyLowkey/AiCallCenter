@@ -35,7 +35,7 @@ export default function AnalyticsPage() {
   const [activeTab, setActiveTab] = useState("overview")
 
   return (
-    <div className="flex flex-col space-y-6 p-6">
+    <div className="flex flex-col space-y-6 p-6 w-full">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
@@ -66,7 +66,7 @@ export default function AnalyticsPage() {
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 w-full">
         <MetricCard
           title="Total Calls"
           value="1,284"
@@ -122,7 +122,7 @@ export default function AnalyticsPage() {
         </div>
 
         <TabsContent value="overview" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 w-full">
             <Card className="lg:col-span-4">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <div className="space-y-1">
@@ -179,7 +179,7 @@ export default function AnalyticsPage() {
             </Card>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 w-full">
             <Card className="lg:col-span-3">
               <CardHeader>
                 <CardTitle>Top Performing Agents</CardTitle>
@@ -274,7 +274,7 @@ export default function AnalyticsPage() {
               <CardDescription>AI-generated insights from your call data</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 w-full">
                 <InsightCard
                   title="Peak Call Times"
                   description="Call volume is highest between 10am-12pm and 2pm-4pm. Consider adjusting staffing to match these peak times."
@@ -425,7 +425,7 @@ export default function AnalyticsPage() {
             </CardContent>
           </Card>
 
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-2 w-full">
             <Card>
               <CardHeader>
                 <CardTitle>Performance by Team</CardTitle>
@@ -458,7 +458,7 @@ export default function AnalyticsPage() {
               <CardDescription>Detailed quality metrics for all calls</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 w-full">
                 <div className="rounded-lg border p-4">
                   <div className="flex items-center justify-between">
                     <div>
@@ -673,7 +673,16 @@ export default function AnalyticsPage() {
   )
 }
 
-function MetricCard({ title, value, change, trend, description, icon }) {
+interface MetricCardProps {
+  title: string;
+  value: string;
+  change: string;
+  trend: string;
+  description: string;
+  icon: React.ReactNode;
+}
+
+function MetricCard({ title, value, change, trend, description, icon }: MetricCardProps) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -839,7 +848,14 @@ function CallMetricsChart() {
   )
 }
 
-function InsightCard({ title, description, category, icon }) {
+interface InsightCardProps {
+  title: string;
+  description: string;
+  category: string;
+  icon: React.ReactNode;
+}
+
+function InsightCard({ title, description, category, icon }: InsightCardProps) {
   return (
     <div className="rounded-lg border bg-card p-4">
       <div className="flex items-center gap-3 mb-3">
@@ -1214,7 +1230,7 @@ function QuarterlyPatternsChart() {
   )
 }
 
-function Phone(props) {
+function Phone(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -1233,7 +1249,7 @@ function Phone(props) {
   )
 }
 
-function CheckCircle(props) {
+function CheckCircle(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -1253,7 +1269,7 @@ function CheckCircle(props) {
   )
 }
 
-function Star(props) {
+function Star(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -1272,7 +1288,7 @@ function Star(props) {
   )
 }
 
-function TrendingDown(props) {
+function TrendingDown(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -1291,7 +1307,7 @@ function TrendingDown(props) {
   )
 }
 
-function TrendingUp(props) {
+function TrendingUp(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -1311,7 +1327,7 @@ function TrendingUp(props) {
   )
 }
 
-function Zap(props) {
+function Zap(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

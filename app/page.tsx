@@ -19,9 +19,9 @@ import { Badge } from "@/components/ui/badge"
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col w-full">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between">
+        <div className="container flex h-16 items-center justify-between w-full max-w-full px-6">
           <div className="flex items-center gap-2 font-bold text-xl text-indigo-600">
             <Phone className="h-6 w-6" />
             <span>AI Call Clarity</span>
@@ -48,8 +48,8 @@ export default function Home() {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="py-16 md:py-24 bg-slate-50">
-          <div className="container mx-auto px-4">
+        <section className="py-16 md:py-24 bg-slate-50 w-full">
+          <div className="container mx-auto px-6 w-full max-w-full">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
                 <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
@@ -99,8 +99,8 @@ export default function Home() {
         </section>
 
         {/* Features Section */}
-        <section id="features" className="py-20 bg-white">
-          <div className="container mx-auto px-4">
+        <section id="features" className="py-20 bg-white w-full">
+          <div className="container mx-auto px-6 w-full max-w-full">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 <span className="text-indigo-600">Powerful Features</span> for Superior Call Experiences
@@ -204,8 +204,8 @@ export default function Home() {
         </section>
 
         {/* Use Cases Section */}
-        <section className="py-20 bg-slate-50">
-          <div className="container mx-auto px-4">
+        <section className="py-20 bg-slate-50 w-full">
+          <div className="container mx-auto px-6 w-full max-w-full">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 <span className="text-indigo-600">Transforming</span> Call Experiences Across Industries
@@ -310,8 +310,8 @@ export default function Home() {
         </section>
 
         {/* Integrations Section */}
-        <section id="integrations" className="py-20 bg-white">
-          <div className="container mx-auto px-4">
+        <section id="integrations" className="py-20 bg-white w-full">
+          <div className="container mx-auto px-6 w-full max-w-full">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 <span className="text-indigo-600">Seamless Integrations</span> With Your Tech Stack
@@ -349,8 +349,8 @@ export default function Home() {
         </section>
 
         {/* Testimonials Section */}
-        <section className="py-20 bg-slate-50">
-          <div className="container mx-auto px-4">
+        <section className="py-20 bg-slate-50 w-full">
+          <div className="container mx-auto px-6 w-full max-w-full">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 Trusted by <span className="text-indigo-600">Industry Leaders</span>
@@ -416,8 +416,8 @@ export default function Home() {
         </section>
 
         {/* Pricing Section */}
-        <section id="pricing" className="py-20 bg-white">
-          <div className="container mx-auto px-4">
+        <section id="pricing" className="py-20 bg-white w-full">
+          <div className="container mx-auto px-6 w-full max-w-full">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 <span className="text-indigo-600">Flexible Pricing</span> for Teams of All Sizes
