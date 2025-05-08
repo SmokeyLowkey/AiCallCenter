@@ -53,11 +53,11 @@ export default function Home() {
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
                 <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
-                  <span className="text-indigo-600">AI-Powered</span> Intelligence for Every Call
+                  <span className="text-indigo-600">Every Call Becomes</span> Your Best Call
                 </h1>
                 <p className="text-xl text-slate-600 mb-8">
-                  Transform your call quality with real-time AI assistance that brings relevant information to your
-                  fingertips during customer service, sales, and support calls.
+                  Transform average performers into top performers with real-time AI guidance that delivers your entire team's 
+                  expertise in every conversation. Reduce ramp-up time from months to days.
                 </p>
                 <div className="flex flex-wrap gap-4">
                   <Button size="lg" className="bg-indigo-600 hover:bg-indigo-700">
@@ -103,11 +103,11 @@ export default function Home() {
           <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                <span className="text-indigo-600">Powerful Features</span> for Superior Call Experiences
+                <span className="text-indigo-600">Your Entire Team's Expertise</span> in Every Conversation
               </h2>
               <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-                Our comprehensive suite of AI-powered tools helps you deliver exceptional customer experiences while
-                improving operational efficiency.
+                Our AI assistant acts as an expert whisperer, providing guidance without interruption and ensuring
+                you never miss a critical moment again.
               </p>
             </div>
 
@@ -117,12 +117,12 @@ export default function Home() {
                   <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mb-4">
                     <FileText className="h-6 w-6 text-indigo-600" />
                   </div>
-                  <CardTitle className="text-xl">Live Call Transcription</CardTitle>
+                  <CardTitle className="text-xl">Hyper-Personalized Guidance</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-slate-600">
-                    Get accurate transcriptions in real-time on your calls, enabling better focus on conversations and
-                    improved productivity.
+                    Tailored AI responses based on specific industry verticals, customer personas, and conversation contexts.
+                    Custom playbooks for different call scenarios.
                   </p>
                 </CardContent>
               </Card>
@@ -132,12 +132,12 @@ export default function Home() {
                   <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mb-4">
                     <Database className="h-6 w-6 text-indigo-600" />
                   </div>
-                  <CardTitle className="text-xl">RAG-Powered Insights</CardTitle>
+                  <CardTitle className="text-xl">Expert Knowledge at Scale</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-slate-600">
-                    Our AI leverages Retrieval Augmented Generation to connect conversation context with your knowledge
-                    base, delivering accurate information during calls.
+                    Bridge the gap between training and application by giving every agent access to your best practices.
+                    Reduce ramp-up time for new agents from months to days.
                   </p>
                 </CardContent>
               </Card>
@@ -147,12 +147,12 @@ export default function Home() {
                   <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mb-4">
                     <Layers className="h-6 w-6 text-indigo-600" />
                   </div>
-                  <CardTitle className="text-xl">CRM Integration</CardTitle>
+                  <CardTitle className="text-xl">Measurable ROI</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-slate-600">
-                    Seamlessly connect with your existing CRM systems to automatically update customer records and
-                    access key data during calls.
+                    See specific metrics improvements in conversion rates, call resolution times, and customer satisfaction.
+                    Our ROI calculator shows the projected financial impact for your business.
                   </p>
                 </CardContent>
               </Card>
@@ -162,12 +162,12 @@ export default function Home() {
                   <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mb-4">
                     <Headphones className="h-6 w-6 text-indigo-600" />
                   </div>
-                  <CardTitle className="text-xl">Continuous Recording</CardTitle>
+                  <CardTitle className="text-xl">Simple Implementation</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-slate-600">
-                    Keep your calls secure and compliant with automatic recording and storage following industry
-                    standards.
+                    Plug-and-play capabilities with minimal IT involvement. Deploy in days, not months, with
+                    no-code customization options for business users.
                   </p>
                 </CardContent>
               </Card>
@@ -177,11 +177,12 @@ export default function Home() {
                   <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mb-4">
                     <Zap className="h-6 w-6 text-indigo-600" />
                   </div>
-                  <CardTitle className="text-xl">Call Routing Integration</CardTitle>
+                  <CardTitle className="text-xl">Ethical Transparency</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-slate-600">
-                    Works with advanced call routing systems like Luware Nimbus to optimize your entire call flow.
+                    AI with human oversight, not replacement. Our privacy-first design includes clear data handling
+                    protocols and transparency in how the AI makes recommendations.
                   </p>
                 </CardContent>
               </Card>
@@ -191,11 +192,12 @@ export default function Home() {
                   <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mb-4">
                     <MessageSquare className="h-6 w-6 text-indigo-600" />
                   </div>
-                  <CardTitle className="text-xl">Actionable Summaries</CardTitle>
+                  <CardTitle className="text-xl">Industry-Specific Playbooks</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-slate-600">
-                    Get AI-generated call summaries with key points, action items and follow-up recommendations.
+                    Specialized guidance for healthcare, finance, SaaS, and more. Turn average performers into top performers
+                    overnight with industry-specific best practices.
                   </p>
                 </CardContent>
               </Card>
@@ -208,10 +210,10 @@ export default function Home() {
           <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                <span className="text-indigo-600">Transforming</span> Call Experiences Across Industries
+                <span className="text-indigo-600">Measurable Results</span> Across Industries
               </h2>
               <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-                See how different teams leverage AI Call Clarity to enhance their customer communications.
+                See the concrete ROI our customers achieve with AI Call Clarity. Real metrics from real implementations.
               </p>
             </div>
 
@@ -546,9 +548,9 @@ export default function Home() {
         {/* CTA Section */}
         <section className="py-20 bg-indigo-600 text-white">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Transform Your Call Experience?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Turn Every Call Into Your Best Call?</h2>
             <p className="text-xl text-indigo-100 mb-8 max-w-2xl mx-auto">
-              Join leading companies using AI Call Clarity to deliver exceptional customer experiences.
+              Join industry leaders who have reduced ramp-up time by 80% and increased conversion rates by 27% with AI Call Clarity.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="bg-white text-indigo-600 hover:bg-slate-100">
