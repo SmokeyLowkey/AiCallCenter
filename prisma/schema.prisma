@@ -50,6 +50,20 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
+  // Professional profile fields
+  jobTitle      String?
+  department    String?
+  phoneNumber   String?
+  skills        String[]  @default([])
+  profileImage  String?
+  availability  Json?
+
+  // Team relationships
+  teamId        String?
+  team          Team?     @relation("TeamMember", fields: [teamId], references: [id])
+  ownedTeams    Team[]    @relation("TeamOwner")
+  memberTeams   TeamMember[]
+
   accounts      Account[]
   sessions      Session[]
   VerificationToken VerificationToken[]
@@ -64,6 +78,55 @@ model VerificationToken {
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([identifier, token])
+}
+
+// Team-related models
+model Team {
+  id             String      @id @default(cuid())
+  name           String
+  description    String?
+  industry       String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  
+  // Owner relationship
+  ownerId        String
+  owner          User        @relation("TeamOwner", fields: [ownerId], references: [id])
+  
+  // Members relationship
+  members        User[]      @relation("TeamMember")
+  teamMembers    TeamMember[]
+  
+  // Invite codes
+  inviteCodes    InviteCode[]
+}
+
+model TeamMember {
+  id             String      @id @default(cuid())
+  userId         String
+  teamId         String
+  role           UserRole    @default(AGENT)
+  joinedAt       DateTime    @default(now())
+  
+  // Relations
+  user           User        @relation(fields: [userId], references: [id])
+  team           Team        @relation(fields: [teamId], references: [id])
+  
+  // Ensure a user can only have one role per team
+  @@unique([userId, teamId])
+}
+
+model InviteCode {
+  id             String      @id @default(cuid())
+  code           String      @unique
+  teamId         String
+  createdAt      DateTime    @default(now())
+  expiresAt      DateTime
+  usedCount      Int         @default(0)
+  maxUses        Int         @default(10)
+  
+  // Relation
+  team           Team        @relation(fields: [teamId], references: [id])
 }
 
 enum UserRole {

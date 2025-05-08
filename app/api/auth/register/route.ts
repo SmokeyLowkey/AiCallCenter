@@ -210,7 +210,15 @@ const createVerificationEmail = (name: string, verificationLink: string) => {
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, password } = await req.json();
+    const { 
+      name, 
+      email, 
+      password, 
+      jobTitle, 
+      department, 
+      phoneNumber, 
+      inviteCode 
+    } = await req.json();
 
     // Validate input
     if (!name || !email || !password) {
@@ -235,15 +243,48 @@ export async function POST(req: NextRequest) {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create user
+    // Create user with professional profile fields
     const user = await prisma.user.create({
       data: {
         name,
         email,
         password: hashedPassword,
         role: "USER",
+        jobTitle,
+        department,
+        phoneNumber,
       },
     });
+
+    // If invite code is provided, join the team
+    if (inviteCode) {
+      const invite = await prisma.inviteCode.findUnique({
+        where: { code: inviteCode },
+      });
+
+      if (invite && invite.expiresAt > new Date() && invite.usedCount < invite.maxUses) {
+        // Add user to the team
+        await prisma.teamMember.create({
+          data: {
+            userId: user.id,
+            teamId: invite.teamId,
+            role: "AGENT", // Default role for invited members
+          },
+        });
+
+        // Set as user's primary team
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { teamId: invite.teamId },
+        });
+
+        // Increment the used count for the invite code
+        await prisma.inviteCode.update({
+          where: { id: invite.id },
+          data: { usedCount: invite.usedCount + 1 },
+        });
+      }
+    }
 
     // Create verification token
     const token = await prisma.verificationToken.create({

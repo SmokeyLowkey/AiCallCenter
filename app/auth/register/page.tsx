@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,13 +9,22 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { signIn } from "next-auth/react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const inviteCode = searchParams.get("invite");
+  
+  const [activeTab, setActiveTab] = useState("basic");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [jobTitle, setJobTitle] = useState("");
+  const [department, setDepartment] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [inviteCodeInput, setInviteCodeInput] = useState(inviteCode || "");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
@@ -50,6 +59,10 @@ export default function RegisterPage() {
           name,
           email,
           password,
+          jobTitle,
+          department,
+          phoneNumber,
+          inviteCode: inviteCodeInput,
         }),
       });
 
@@ -66,10 +79,47 @@ export default function RegisterPage() {
       setEmail("");
       setPassword("");
       setConfirmPassword("");
+      setJobTitle("");
+      setDepartment("");
+      setPhoneNumber("");
+      setInviteCodeInput("");
     } catch (error: any) {
       setError(error.message || "An error occurred during registration");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const nextStep = () => {
+    if (activeTab === "basic") {
+      // Validate basic info
+      if (!name || !email || !password || !confirmPassword) {
+        setError("Please fill in all required fields");
+        return;
+      }
+      
+      if (password !== confirmPassword) {
+        setError("Passwords do not match");
+        return;
+      }
+      
+      if (password.length < 8) {
+        setError("Password must be at least 8 characters long");
+        return;
+      }
+      
+      setError("");
+      setActiveTab("professional");
+    } else if (activeTab === "professional") {
+      setActiveTab("team");
+    }
+  };
+
+  const prevStep = () => {
+    if (activeTab === "professional") {
+      setActiveTab("basic");
+    } else if (activeTab === "team") {
+      setActiveTab("professional");
     }
   };
 
@@ -96,52 +146,128 @@ export default function RegisterPage() {
               <AlertDescription>{success}</AlertDescription>
             </Alert>
           )}
+          
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
-              <Input
-                id="name"
-                type="text"
-                placeholder="John Doe"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="name@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-              />
-            </div>
-            <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700" disabled={loading}>
-              {loading ? "Creating account..." : "Create account"}
-            </Button>
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="basic">Basic Info</TabsTrigger>
+                <TabsTrigger value="professional">Professional</TabsTrigger>
+                <TabsTrigger value="team">Team</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="basic" className="space-y-4 pt-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Full Name <span className="text-red-500">*</span></Label>
+                  <Input
+                    id="name"
+                    type="text"
+                    placeholder="John Doe"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email <span className="text-red-500">*</span></Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="name@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="password">Password <span className="text-red-500">*</span></Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword">Confirm Password <span className="text-red-500">*</span></Label>
+                  <Input
+                    id="confirmPassword"
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                  />
+                </div>
+                <Button type="button" className="w-full bg-indigo-600 hover:bg-indigo-700" onClick={nextStep}>
+                  Next
+                </Button>
+              </TabsContent>
+              
+              <TabsContent value="professional" className="space-y-4 pt-4">
+                <div className="space-y-2">
+                  <Label htmlFor="jobTitle">Job Title</Label>
+                  <Input
+                    id="jobTitle"
+                    type="text"
+                    placeholder="Call Center Agent"
+                    value={jobTitle}
+                    onChange={(e) => setJobTitle(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="department">Department</Label>
+                  <Input
+                    id="department"
+                    type="text"
+                    placeholder="Customer Support"
+                    value={department}
+                    onChange={(e) => setDepartment(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="phoneNumber">Phone Number</Label>
+                  <Input
+                    id="phoneNumber"
+                    type="tel"
+                    placeholder="+1 (555) 123-4567"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                  />
+                </div>
+                <div className="flex space-x-2">
+                  <Button type="button" variant="outline" className="w-1/2" onClick={prevStep}>
+                    Back
+                  </Button>
+                  <Button type="button" className="w-1/2 bg-indigo-600 hover:bg-indigo-700" onClick={nextStep}>
+                    Next
+                  </Button>
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="team" className="space-y-4 pt-4">
+                <div className="space-y-2">
+                  <Label htmlFor="inviteCode">Team Invite Code (Optional)</Label>
+                  <Input
+                    id="inviteCode"
+                    type="text"
+                    placeholder="Enter invite code"
+                    value={inviteCodeInput}
+                    onChange={(e) => setInviteCodeInput(e.target.value)}
+                  />
+                  <p className="text-xs text-slate-500">
+                    If you have an invite code, enter it here to join your team. Otherwise, you can create or join a team later.
+                  </p>
+                </div>
+                <div className="flex space-x-2">
+                  <Button type="button" variant="outline" className="w-1/2" onClick={prevStep}>
+                    Back
+                  </Button>
+                  <Button type="submit" className="w-1/2 bg-indigo-600 hover:bg-indigo-700" disabled={loading}>
+                    {loading ? "Creating account..." : "Create account"}
+                  </Button>
+                </div>
+              </TabsContent>
+            </Tabs>
           </form>
 
           <div className="relative my-6">

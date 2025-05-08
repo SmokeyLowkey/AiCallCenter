@@ -83,8 +83,20 @@ export const authOptions = {
       }
 
       if (token.role && session.user) {
-        // Cast token.role to string to match the type in Session
         session.user.role = token.role as string;
+      }
+
+      // Add team-related fields to the session
+      if (token.teamId && session.user) {
+        session.user.teamId = token.teamId as string;
+      }
+
+      if (token.jobTitle && session.user) {
+        session.user.jobTitle = token.jobTitle as string;
+      }
+
+      if (token.department && session.user) {
+        session.user.department = token.department as string;
       }
 
       return session;
@@ -92,6 +104,19 @@ export const authOptions = {
     async jwt({ token, user }: { token: JWT; user?: User }) {
       if (user) {
         token.role = user.role;
+        
+        // Add team-related fields to the token
+        if (user.teamId) {
+          token.teamId = user.teamId;
+        }
+        
+        if (user.jobTitle) {
+          token.jobTitle = user.jobTitle;
+        }
+        
+        if (user.department) {
+          token.department = user.department;
+        }
       }
       return token;
     },
