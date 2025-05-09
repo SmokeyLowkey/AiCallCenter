@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { authOptions } from "../auth/[...nextauth]/route";
 import { randomBytes } from "crypto";
 import { getToken } from "next-auth/jwt";
 

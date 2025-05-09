@@ -25,28 +25,36 @@ export default function VerifyPage() {
 
     const verifyEmail = async () => {
       try {
-        const response = await fetch(`/api/auth/verify?token=${token}`);
-        
-        if (response.redirected) {
-          // If the API redirects, follow the redirect
-          router.push(response.url);
-          return;
+        // Call the verification API directly
+        const response = await fetch(`/api/auth/verify?token=${token}`, {
+          // Add cache: 'no-store' to prevent caching issues
+          cache: 'no-store'
+        });
+
+        // Parse the response data
+        let data;
+        try {
+          data = await response.json();
+        } catch (e) {
+          console.error("Failed to parse JSON response:", e);
+          data = {};
         }
-
-        const data = await response.json();
-
-        if (!response.ok) {
+        
+        // Check the response status
+        if (response.ok) {
+          setStatus("success");
+          setMessage(data.message || "Your email has been verified successfully!");
+          
+          // Redirect to login page after 3 seconds
+          setTimeout(() => {
+            router.push("/auth/login");
+          }, 3000);
+        } else {
+          // Handle error response
           throw new Error(data.error || "Verification failed");
         }
-
-        setStatus("success");
-        setMessage("Your email has been verified successfully!");
-        
-        // Redirect to login page after 3 seconds
-        setTimeout(() => {
-          router.push("/auth/login");
-        }, 3000);
       } catch (error: any) {
+        console.error("Verification error:", error);
         setStatus("error");
         setMessage(error.message || "An error occurred during verification");
       }

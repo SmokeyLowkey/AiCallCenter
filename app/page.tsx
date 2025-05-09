@@ -16,8 +16,13 @@ import {
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { auth } from "../auth"
 
-export default function Home() {
+export default async function Home() {
+  // Get the user's session
+  const session = await auth();
+  const isLoggedIn = !!session?.user;
+
   return (
     <div className="flex min-h-screen flex-col w-full">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -38,10 +43,20 @@ export default function Home() {
             </Link>
           </nav>
           <div className="flex items-center gap-4">
-            <Button variant="ghost" className="hidden md:flex">
-              Login
-            </Button>
-            <Button className="bg-indigo-600 hover:bg-indigo-700">Request Demo</Button>
+            {isLoggedIn ? (
+              <Link href="/dashboard">
+                <Button className="bg-indigo-600 hover:bg-indigo-700">Go to Dashboard</Button>
+              </Link>
+            ) : (
+              <>
+                <Link href="/auth/login">
+                  <Button variant="ghost" className="hidden md:flex">Login</Button>
+                </Link>
+                <Link href="/auth/register">
+                  <Button className="bg-indigo-600 hover:bg-indigo-700">Request Demo</Button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </header>
@@ -60,12 +75,24 @@ export default function Home() {
                   expertise in every conversation. Reduce ramp-up time from months to days.
                 </p>
                 <div className="flex flex-wrap gap-4">
-                  <Button size="lg" className="bg-indigo-600 hover:bg-indigo-700">
-                    Schedule Demo
-                  </Button>
-                  <Button size="lg" variant="outline" className="border-indigo-600 text-indigo-600 hover:bg-indigo-50">
-                    Learn More
-                  </Button>
+                  {isLoggedIn ? (
+                    <Link href="/dashboard">
+                      <Button size="lg" className="bg-indigo-600 hover:bg-indigo-700">
+                        Go to Dashboard
+                      </Button>
+                    </Link>
+                  ) : (
+                    <>
+                      <Link href="/auth/register">
+                        <Button size="lg" className="bg-indigo-600 hover:bg-indigo-700">
+                          Schedule Demo
+                        </Button>
+                      </Link>
+                      <Button size="lg" variant="outline" className="border-indigo-600 text-indigo-600 hover:bg-indigo-50">
+                        Learn More
+                      </Button>
+                    </>
+                  )}
                 </div>
 
                 <div className="flex flex-wrap gap-8 mt-12">
@@ -553,12 +580,24 @@ export default function Home() {
               Join industry leaders who have reduced ramp-up time by 80% and increased conversion rates by 27% with AI Call Clarity.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-white text-indigo-600 hover:bg-slate-100">
-                Request a Demo
-              </Button>
-              <Button size="lg" variant="outline" className="border-white text-black hover:text-white hover:bg-indigo-500">
-                Contact Sales
-              </Button>
+              {isLoggedIn ? (
+                <Link href="/dashboard">
+                  <Button size="lg" className="bg-white text-indigo-600 hover:bg-slate-100">
+                    Go to Dashboard
+                  </Button>
+                </Link>
+              ) : (
+                <>
+                  <Link href="/auth/register">
+                    <Button size="lg" className="bg-white text-indigo-600 hover:bg-slate-100">
+                      Request a Demo
+                    </Button>
+                  </Link>
+                  <Button size="lg" variant="outline" className="border-white text-black hover:text-white hover:bg-indigo-500">
+                    Contact Sales
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </section>

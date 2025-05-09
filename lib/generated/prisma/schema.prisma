@@ -50,19 +50,39 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
+  // Verification fields
+  verificationToken        String?
+  verificationTokenExpires DateTime?
+
   // Professional profile fields
   jobTitle     String?
-  department   String?
   phoneNumber  String?
   skills       String[] @default([])
   profileImage String?
   availability Json?
+
+  // Performance metrics
+  callsHandled      Int    @default(0)
+  avgCallDuration   Int? // in seconds
+  resolutionRate    Float? // percentage
+  satisfactionScore Float? // average customer satisfaction
+  aiUsageRate       Float? // percentage of AI suggestions used
+
+  // Department relationship
+  departmentId String?
+  department   Department? @relation(fields: [departmentId], references: [id])
 
   // Team relationships
   teamId      String?
   team        Team?        @relation("TeamMember", fields: [teamId], references: [id])
   ownedTeams  Team[]       @relation("TeamOwner")
   memberTeams TeamMember[]
+
+  // Call relationships
+  handledCalls      Call[]
+  queuedCalls       QueuedCall[]
+  uploadedDocuments Document[]
+  analyticsData     AnalyticsData[]
 
   accounts          Account[]
   sessions          Session[]
@@ -99,6 +119,13 @@ model Team {
 
   // Invite codes
   inviteCodes InviteCode[]
+
+  // Call center relationships
+  calls           Call[]
+  queuedCalls     QueuedCall[]
+  forwardingRules ForwardingRule[]
+  integrations    Integration[]
+  analyticsData   AnalyticsData[]
 }
 
 model TeamMember {
@@ -127,6 +154,271 @@ model InviteCode {
 
   // Relation
   team Team @relation(fields: [teamId], references: [id])
+}
+
+// Department model
+model Department {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  description String?
+
+  // Relationships
+  users User[]
+
+  // Metadata
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Call-related models
+model Call {
+  id        String     @id @default(cuid())
+  callId    String     @unique // External ID from call provider
+  status    CallStatus
+  startTime DateTime
+  endTime   DateTime?
+  duration  Int? // in seconds
+
+  // Caller information
+  callerId     String?
+  callerName   String?
+  callerPhone  String
+  callerAvatar String?
+
+  // Agent information
+  agentId String?
+  agent   User?   @relation(fields: [agentId], references: [id])
+
+  // Call details
+  type           String? // support, sales, technical, etc.
+  sentiment      String? // positive, neutral, negative
+  resolution     Boolean? // whether the issue was resolved
+  resolutionTime Int? // time to resolution in seconds
+
+  // AI assistance
+  aiAssisted        Boolean @default(false)
+  aiSuggestions     Int? // number of AI suggestions provided
+  aiSuggestionsUsed Int? // number of AI suggestions used
+
+  // Relationships
+  transcript Transcript?
+  topics     CallTopic[]
+  insights   CallInsight[]
+
+  // Metadata
+  teamId    String?
+  team      Team?    @relation(fields: [teamId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum CallStatus {
+  ACTIVE
+  COMPLETED
+  MISSED
+  QUEUED
+  TRANSFERRED
+}
+
+model Transcript {
+  id      String  @id @default(cuid())
+  callId  String  @unique
+  call    Call    @relation(fields: [callId], references: [id], onDelete: Cascade)
+  content Json // Array of transcript segments with speaker, text, timestamp
+  summary String? @db.Text
+
+  // Flags and status
+  isStarred  Boolean @default(false)
+  isFlagged  Boolean @default(false)
+  flagReason String?
+
+  // Sharing
+  isShared   Boolean   @default(false)
+  sharedBy   String?
+  sharedWith String[] // Array of user or team IDs
+  sharedAt   DateTime?
+
+  // Metadata
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CallTopic {
+  id         String @id @default(cuid())
+  name       String
+  callId     String
+  call       Call   @relation(fields: [callId], references: [id], onDelete: Cascade)
+  confidence Float // AI confidence in topic detection (0-1)
+
+  // Metadata
+  createdAt DateTime @default(now())
+}
+
+// For predefined topics
+model Topic {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  description String?
+  category    String?
+
+  // Metadata
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Insight models
+model Insight {
+  id          String  @id @default(cuid())
+  title       String
+  description String  @db.Text
+  details     String? @db.Text
+  category    String // Customer Experience, Performance, Topic Analysis, etc.
+  confidence  String // High, Medium, Low
+
+  // Trend information
+  trend  String? // up, down, neutral
+  change String? // percentage or value change
+
+  // Recommendations
+  recommendations String[] // Array of recommendation texts
+
+  // Related calls
+  calls CallInsight[]
+
+  // Metadata
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CallInsight {
+  id        String  @id @default(cuid())
+  callId    String
+  call      Call    @relation(fields: [callId], references: [id], onDelete: Cascade)
+  insightId String
+  insight   Insight @relation(fields: [insightId], references: [id], onDelete: Cascade)
+
+  // Metadata
+  createdAt DateTime @default(now())
+}
+
+// Knowledge Base models
+model Document {
+  id    String @id @default(cuid())
+  title String
+  type  String // PDF, DOCX, TXT, etc.
+  size  Int // in bytes
+  path  String // storage path
+
+  // Processing status
+  status          DocumentStatus
+  processingError String?
+
+  // Categorization
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  // Metadata
+  uploadedById String
+  uploadedBy   User     @relation(fields: [uploadedById], references: [id])
+  uploadDate   DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Category {
+  id          String     @id @default(cuid())
+  name        String     @unique
+  description String?
+  documents   Document[]
+
+  // Metadata
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum DocumentStatus {
+  PROCESSING
+  PROCESSED
+  FAILED
+}
+
+// Call Queue model
+model QueuedCall {
+  id          String  @id @default(cuid())
+  callerId    String?
+  callerName  String?
+  callerPhone String
+  reason      String?
+  priority    String // High, Medium, Low
+
+  // Queue status
+  waitStartTime DateTime @default(now())
+  estimatedWait Int? // estimated wait time in seconds
+
+  // Assignment
+  assignedToId String?
+  assignedTo   User?   @relation(fields: [assignedToId], references: [id])
+
+  // Metadata
+  teamId    String?
+  team      Team?    @relation(fields: [teamId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Call Forwarding model
+model ForwardingRule {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+
+  // Conditions
+  timeCondition   Json? // days and hours when rule applies
+  callerCondition Json? // caller conditions (VIP, etc.)
+
+  // Destination
+  destination   String // Team, Voicemail, External Number, etc.
+  destinationId String? // ID of the destination if applicable
+
+  // Status
+  isActive Boolean @default(true)
+
+  // Metadata
+  teamId    String?
+  team      Team?    @relation(fields: [teamId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Integration model
+model Integration {
+  id     String @id @default(cuid())
+  name   String // Twilio, Salesforce, etc.
+  type   String // CRM, Calling, etc.
+  config Json // Configuration details (encrypted)
+  status String // Connected, Not Connected
+
+  // Metadata
+  teamId    String?
+  team      Team?    @relation(fields: [teamId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Analytics model
+model AnalyticsData {
+  id         String   @id @default(cuid())
+  date       DateTime
+  metricType String // CallVolume, AverageCallDuration, ResolutionRate, etc.
+  value      Float
+
+  // Dimensions
+  agentId String?
+  agent   User?   @relation(fields: [agentId], references: [id])
+  teamId  String?
+  team    Team?   @relation(fields: [teamId], references: [id])
+
+  // Metadata
+  createdAt DateTime @default(now())
 }
 
 enum UserRole {

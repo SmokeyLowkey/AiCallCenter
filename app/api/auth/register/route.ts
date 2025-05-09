@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const DEV_DOMAIN = process.env.DEV_DOMAIN || "resend.dev";
+const DEV_DOMAIN = process.env.RESEND_DOMAIN || "resend.dev";
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
 // Email template for verification
@@ -210,6 +210,8 @@ const createVerificationEmail = (name: string, verificationLink: string) => {
 
 export async function POST(req: NextRequest) {
   try {
+    console.log("📧 Registration API called");
+    
     const { 
       name, 
       email, 
@@ -219,9 +221,12 @@ export async function POST(req: NextRequest) {
       phoneNumber, 
       inviteCode 
     } = await req.json();
+    
+    console.log(`📧 Registration data received: ${email}`);
 
     // Validate input
     if (!name || !email || !password) {
+      console.log("📧 Missing required fields");
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
@@ -234,6 +239,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (existingUser) {
+      console.log(`📧 User already exists: ${email}`);
       return NextResponse.json(
         { error: "User with this email already exists" },
         { status: 400 }
@@ -242,8 +248,10 @@ export async function POST(req: NextRequest) {
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
+    console.log("📧 Password hashed successfully");
 
     // Create user with professional profile fields
+    console.log("📧 Creating user in database");
     const user = await prisma.user.create({
       data: {
         name,
@@ -255,14 +263,17 @@ export async function POST(req: NextRequest) {
         phoneNumber,
       },
     });
+    console.log(`📧 User created with ID: ${user.id}`);
 
     // If invite code is provided, join the team
     if (inviteCode) {
+      console.log(`📧 Processing invite code: ${inviteCode}`);
       const invite = await prisma.inviteCode.findUnique({
         where: { code: inviteCode },
       });
 
       if (invite && invite.expiresAt > new Date() && invite.usedCount < invite.maxUses) {
+        console.log(`📧 Valid invite code found for team: ${invite.teamId}`);
         // Add user to the team
         await prisma.teamMember.create({
           data: {
@@ -283,42 +294,70 @@ export async function POST(req: NextRequest) {
           where: { id: invite.id },
           data: { usedCount: invite.usedCount + 1 },
         });
+        console.log("📧 User added to team successfully");
+      } else {
+        console.log("📧 Invalid or expired invite code");
       }
     }
 
     // Create verification token
-    const token = await prisma.verificationToken.create({
-      data: {
-        identifier: email,
-        token: `${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`,
-        expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
-        userId: user.id,
-      },
-    });
+    console.log("📧 Creating verification token");
+    try {
+      // Generate a random token
+      const tokenString = `${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`;
+      console.log(`📧 Generated token string: ${tokenString}`);
+      
+      // Store the token directly in the user model
+      const updatedUser = await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          // Store the token and expiration directly in the user model
+          verificationToken: tokenString,
+          verificationTokenExpires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
+        },
+      });
+      console.log(`📧 Verification token stored in user model: ${updatedUser.verificationToken}`);
 
-    const verificationLink = `${APP_URL}/auth/verify?token=${token.token}`;
-    const emailHtml = createVerificationEmail(name, verificationLink);
+      const verificationLink = `${APP_URL}/auth/verify?token=${tokenString}`;
+      console.log(`📧 Verification link: ${verificationLink}`);
+      console.log(`📧 APP_URL: ${APP_URL}`);
+      console.log(`📧 DEV_DOMAIN: ${DEV_DOMAIN}`);
+      console.log(`📧 RESEND_API_KEY exists: ${!!process.env.RESEND_API_KEY}`);
+      
+      const emailHtml = createVerificationEmail(name, verificationLink);
+      console.log("📧 Email HTML created");
 
-    // Send verification email
-    await resend.emails.send({
-      from: `AI Call Clarity <onboarding@${DEV_DOMAIN}>`,
-      to: [email],
-      subject: "Verify your email address",
-      html: emailHtml,
-    });
+      // Send verification email
+      console.log(`📧 Sending verification email to: ${email}`);
+      try {
+        const emailResult = await resend.emails.send({
+          from: `AI Call Clarity <onboarding@${DEV_DOMAIN}>`,
+          to: [email],
+          subject: "Verify your email address",
+          html: emailHtml,
+        });
+        console.log(`📧 Email sent successfully: ${JSON.stringify(emailResult)}`);
+      } catch (emailError) {
+        console.error("📧 Email sending error:", emailError);
+        // Continue with registration even if email fails
+      }
 
-    return NextResponse.json(
-      {
-        message: "User registered successfully. Please check your email to verify your account.",
-        userId: user.id,
-      },
-      { status: 201 }
-    );
+      return NextResponse.json(
+        {
+          message: "User registered successfully. Please check your email to verify your account.",
+          userId: user.id,
+        },
+        { status: 201 }
+      );
+    } catch (tokenError) {
+      console.error("📧 Token creation error:", tokenError);
+      throw tokenError; // Re-throw to be caught by the outer catch block
+    }
   } catch (error) {
-    console.error("Registration error:", error);
+    console.error("📧 Registration error:", error);
     return NextResponse.json(
       { error: "An error occurred during registration" },
       { status: 500 }
     );
   }
-}
+    }
