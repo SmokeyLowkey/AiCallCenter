@@ -24,6 +24,7 @@ export default function RegisterPage() {
   const [jobTitle, setJobTitle] = useState("");
   const [department, setDepartment] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [companyName, setCompanyName] = useState("");
   const [inviteCodeInput, setInviteCodeInput] = useState(inviteCode || "");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -62,6 +63,7 @@ export default function RegisterPage() {
           jobTitle,
           department,
           phoneNumber,
+          companyName,
           inviteCode: inviteCodeInput,
         }),
       });
@@ -82,6 +84,7 @@ export default function RegisterPage() {
       setJobTitle("");
       setDepartment("");
       setPhoneNumber("");
+      setCompanyName("");
       setInviteCodeInput("");
     } catch (error: any) {
       setError(error.message || "An error occurred during registration");
@@ -111,6 +114,13 @@ export default function RegisterPage() {
       setError("");
       setActiveTab("professional");
     } else if (activeTab === "professional") {
+      // Validate professional info
+      if (!companyName) {
+        setError("Company name is required");
+        return;
+      }
+      
+      setError("");
       setActiveTab("team");
     }
   };
@@ -204,6 +214,17 @@ export default function RegisterPage() {
               </TabsContent>
               
               <TabsContent value="professional" className="space-y-4 pt-4">
+                <div className="space-y-2">
+                  <Label htmlFor="companyName">Company Name <span className="text-red-500">*</span></Label>
+                  <Input
+                    id="companyName"
+                    type="text"
+                    placeholder="Acme Corporation"
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
+                    required
+                  />
+                </div>
                 <div className="space-y-2">
                   <Label htmlFor="jobTitle">Job Title</Label>
                   <Input

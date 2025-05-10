@@ -2756,6 +2756,7 @@ export namespace Prisma {
     forwardingRules: number
     integrations: number
     analyticsData: number
+    documents: number
   }
 
   export type TeamCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2767,6 +2768,7 @@ export namespace Prisma {
     forwardingRules?: boolean | TeamCountOutputTypeCountForwardingRulesArgs
     integrations?: boolean | TeamCountOutputTypeCountIntegrationsArgs
     analyticsData?: boolean | TeamCountOutputTypeCountAnalyticsDataArgs
+    documents?: boolean | TeamCountOutputTypeCountDocumentsArgs
   }
 
   // Custom InputTypes
@@ -2834,6 +2836,13 @@ export namespace Prisma {
    */
   export type TeamCountOutputTypeCountAnalyticsDataArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AnalyticsDataWhereInput
+  }
+
+  /**
+   * TeamCountOutputType without action
+   */
+  export type TeamCountOutputTypeCountDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DocumentWhereInput
   }
 
 
@@ -5242,6 +5251,8 @@ export namespace Prisma {
     updatedAt: Date | null
     verificationToken: string | null
     verificationTokenExpires: Date | null
+    companyName: string | null
+    companyId: string | null
     jobTitle: string | null
     phoneNumber: string | null
     profileImage: string | null
@@ -5266,6 +5277,8 @@ export namespace Prisma {
     updatedAt: Date | null
     verificationToken: string | null
     verificationTokenExpires: Date | null
+    companyName: string | null
+    companyId: string | null
     jobTitle: string | null
     phoneNumber: string | null
     profileImage: string | null
@@ -5290,6 +5303,8 @@ export namespace Prisma {
     updatedAt: number
     verificationToken: number
     verificationTokenExpires: number
+    companyName: number
+    companyId: number
     jobTitle: number
     phoneNumber: number
     skills: number
@@ -5334,6 +5349,8 @@ export namespace Prisma {
     updatedAt?: true
     verificationToken?: true
     verificationTokenExpires?: true
+    companyName?: true
+    companyId?: true
     jobTitle?: true
     phoneNumber?: true
     profileImage?: true
@@ -5358,6 +5375,8 @@ export namespace Prisma {
     updatedAt?: true
     verificationToken?: true
     verificationTokenExpires?: true
+    companyName?: true
+    companyId?: true
     jobTitle?: true
     phoneNumber?: true
     profileImage?: true
@@ -5382,6 +5401,8 @@ export namespace Prisma {
     updatedAt?: true
     verificationToken?: true
     verificationTokenExpires?: true
+    companyName?: true
+    companyId?: true
     jobTitle?: true
     phoneNumber?: true
     skills?: true
@@ -5495,6 +5516,8 @@ export namespace Prisma {
     updatedAt: Date
     verificationToken: string | null
     verificationTokenExpires: Date | null
+    companyName: string | null
+    companyId: string | null
     jobTitle: string | null
     phoneNumber: string | null
     skills: string[]
@@ -5540,6 +5563,8 @@ export namespace Prisma {
     updatedAt?: boolean
     verificationToken?: boolean
     verificationTokenExpires?: boolean
+    companyName?: boolean
+    companyId?: boolean
     jobTitle?: boolean
     phoneNumber?: boolean
     skills?: boolean
@@ -5578,6 +5603,8 @@ export namespace Prisma {
     updatedAt?: boolean
     verificationToken?: boolean
     verificationTokenExpires?: boolean
+    companyName?: boolean
+    companyId?: boolean
     jobTitle?: boolean
     phoneNumber?: boolean
     skills?: boolean
@@ -5606,6 +5633,8 @@ export namespace Prisma {
     updatedAt?: boolean
     verificationToken?: boolean
     verificationTokenExpires?: boolean
+    companyName?: boolean
+    companyId?: boolean
     jobTitle?: boolean
     phoneNumber?: boolean
     skills?: boolean
@@ -5634,6 +5663,8 @@ export namespace Prisma {
     updatedAt?: boolean
     verificationToken?: boolean
     verificationTokenExpires?: boolean
+    companyName?: boolean
+    companyId?: boolean
     jobTitle?: boolean
     phoneNumber?: boolean
     skills?: boolean
@@ -5648,7 +5679,7 @@ export namespace Prisma {
     teamId?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "password" | "role" | "createdAt" | "updatedAt" | "verificationToken" | "verificationTokenExpires" | "jobTitle" | "phoneNumber" | "skills" | "profileImage" | "availability" | "callsHandled" | "avgCallDuration" | "resolutionRate" | "satisfactionScore" | "aiUsageRate" | "departmentId" | "teamId", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "password" | "role" | "createdAt" | "updatedAt" | "verificationToken" | "verificationTokenExpires" | "companyName" | "companyId" | "jobTitle" | "phoneNumber" | "skills" | "profileImage" | "availability" | "callsHandled" | "avgCallDuration" | "resolutionRate" | "satisfactionScore" | "aiUsageRate" | "departmentId" | "teamId", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     department?: boolean | User$departmentArgs<ExtArgs>
     team?: boolean | User$teamArgs<ExtArgs>
@@ -5699,6 +5730,8 @@ export namespace Prisma {
       updatedAt: Date
       verificationToken: string | null
       verificationTokenExpires: Date | null
+      companyName: string | null
+      companyId: string | null
       jobTitle: string | null
       phoneNumber: string | null
       skills: string[]
@@ -6156,6 +6189,8 @@ export namespace Prisma {
     readonly updatedAt: FieldRef<"User", 'DateTime'>
     readonly verificationToken: FieldRef<"User", 'String'>
     readonly verificationTokenExpires: FieldRef<"User", 'DateTime'>
+    readonly companyName: FieldRef<"User", 'String'>
+    readonly companyId: FieldRef<"User", 'String'>
     readonly jobTitle: FieldRef<"User", 'String'>
     readonly phoneNumber: FieldRef<"User", 'String'>
     readonly skills: FieldRef<"User", 'String[]'>
@@ -7909,6 +7944,8 @@ export namespace Prisma {
     name: string | null
     description: string | null
     industry: string | null
+    companyId: string | null
+    companyName: string | null
     createdAt: Date | null
     updatedAt: Date | null
     ownerId: string | null
@@ -7919,6 +7956,8 @@ export namespace Prisma {
     name: string | null
     description: string | null
     industry: string | null
+    companyId: string | null
+    companyName: string | null
     createdAt: Date | null
     updatedAt: Date | null
     ownerId: string | null
@@ -7929,6 +7968,8 @@ export namespace Prisma {
     name: number
     description: number
     industry: number
+    companyId: number
+    companyName: number
     createdAt: number
     updatedAt: number
     ownerId: number
@@ -7941,6 +7982,8 @@ export namespace Prisma {
     name?: true
     description?: true
     industry?: true
+    companyId?: true
+    companyName?: true
     createdAt?: true
     updatedAt?: true
     ownerId?: true
@@ -7951,6 +7994,8 @@ export namespace Prisma {
     name?: true
     description?: true
     industry?: true
+    companyId?: true
+    companyName?: true
     createdAt?: true
     updatedAt?: true
     ownerId?: true
@@ -7961,6 +8006,8 @@ export namespace Prisma {
     name?: true
     description?: true
     industry?: true
+    companyId?: true
+    companyName?: true
     createdAt?: true
     updatedAt?: true
     ownerId?: true
@@ -8044,6 +8091,8 @@ export namespace Prisma {
     name: string
     description: string | null
     industry: string | null
+    companyId: string | null
+    companyName: string | null
     createdAt: Date
     updatedAt: Date
     ownerId: string
@@ -8071,6 +8120,8 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     industry?: boolean
+    companyId?: boolean
+    companyName?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     ownerId?: boolean
@@ -8083,6 +8134,7 @@ export namespace Prisma {
     forwardingRules?: boolean | Team$forwardingRulesArgs<ExtArgs>
     integrations?: boolean | Team$integrationsArgs<ExtArgs>
     analyticsData?: boolean | Team$analyticsDataArgs<ExtArgs>
+    documents?: boolean | Team$documentsArgs<ExtArgs>
     _count?: boolean | TeamCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["team"]>
 
@@ -8091,6 +8143,8 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     industry?: boolean
+    companyId?: boolean
+    companyName?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     ownerId?: boolean
@@ -8102,6 +8156,8 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     industry?: boolean
+    companyId?: boolean
+    companyName?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     ownerId?: boolean
@@ -8113,12 +8169,14 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     industry?: boolean
+    companyId?: boolean
+    companyName?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     ownerId?: boolean
   }
 
-  export type TeamOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "industry" | "createdAt" | "updatedAt" | "ownerId", ExtArgs["result"]["team"]>
+  export type TeamOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "industry" | "companyId" | "companyName" | "createdAt" | "updatedAt" | "ownerId", ExtArgs["result"]["team"]>
   export type TeamInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     owner?: boolean | UserDefaultArgs<ExtArgs>
     members?: boolean | Team$membersArgs<ExtArgs>
@@ -8129,6 +8187,7 @@ export namespace Prisma {
     forwardingRules?: boolean | Team$forwardingRulesArgs<ExtArgs>
     integrations?: boolean | Team$integrationsArgs<ExtArgs>
     analyticsData?: boolean | Team$analyticsDataArgs<ExtArgs>
+    documents?: boolean | Team$documentsArgs<ExtArgs>
     _count?: boolean | TeamCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TeamIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8150,12 +8209,15 @@ export namespace Prisma {
       forwardingRules: Prisma.$ForwardingRulePayload<ExtArgs>[]
       integrations: Prisma.$IntegrationPayload<ExtArgs>[]
       analyticsData: Prisma.$AnalyticsDataPayload<ExtArgs>[]
+      documents: Prisma.$DocumentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
       description: string | null
       industry: string | null
+      companyId: string | null
+      companyName: string | null
       createdAt: Date
       updatedAt: Date
       ownerId: string
@@ -8562,6 +8624,7 @@ export namespace Prisma {
     forwardingRules<T extends Team$forwardingRulesArgs<ExtArgs> = {}>(args?: Subset<T, Team$forwardingRulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ForwardingRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     integrations<T extends Team$integrationsArgs<ExtArgs> = {}>(args?: Subset<T, Team$integrationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     analyticsData<T extends Team$analyticsDataArgs<ExtArgs> = {}>(args?: Subset<T, Team$analyticsDataArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AnalyticsDataPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    documents<T extends Team$documentsArgs<ExtArgs> = {}>(args?: Subset<T, Team$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8595,6 +8658,8 @@ export namespace Prisma {
     readonly name: FieldRef<"Team", 'String'>
     readonly description: FieldRef<"Team", 'String'>
     readonly industry: FieldRef<"Team", 'String'>
+    readonly companyId: FieldRef<"Team", 'String'>
+    readonly companyName: FieldRef<"Team", 'String'>
     readonly createdAt: FieldRef<"Team", 'DateTime'>
     readonly updatedAt: FieldRef<"Team", 'DateTime'>
     readonly ownerId: FieldRef<"Team", 'String'>
@@ -9183,6 +9248,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AnalyticsDataScalarFieldEnum | AnalyticsDataScalarFieldEnum[]
+  }
+
+  /**
+   * Team.documents
+   */
+  export type Team$documentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: DocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentInclude<ExtArgs> | null
+    where?: DocumentWhereInput
+    orderBy?: DocumentOrderByWithRelationInput | DocumentOrderByWithRelationInput[]
+    cursor?: DocumentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DocumentScalarFieldEnum | DocumentScalarFieldEnum[]
   }
 
   /**
@@ -19378,12 +19467,18 @@ export namespace Prisma {
     type: string | null
     size: number | null
     path: string | null
+    s3Key: string | null
     status: $Enums.DocumentStatus | null
     processingError: string | null
     categoryId: string | null
+    teamId: string | null
+    companyId: string | null
+    processImmediately: boolean | null
     uploadedById: string | null
     uploadDate: Date | null
     updatedAt: Date | null
+    vectorized: boolean | null
+    vectorizedAt: Date | null
   }
 
   export type DocumentMaxAggregateOutputType = {
@@ -19392,12 +19487,18 @@ export namespace Prisma {
     type: string | null
     size: number | null
     path: string | null
+    s3Key: string | null
     status: $Enums.DocumentStatus | null
     processingError: string | null
     categoryId: string | null
+    teamId: string | null
+    companyId: string | null
+    processImmediately: boolean | null
     uploadedById: string | null
     uploadDate: Date | null
     updatedAt: Date | null
+    vectorized: boolean | null
+    vectorizedAt: Date | null
   }
 
   export type DocumentCountAggregateOutputType = {
@@ -19406,12 +19507,18 @@ export namespace Prisma {
     type: number
     size: number
     path: number
+    s3Key: number
     status: number
     processingError: number
     categoryId: number
+    teamId: number
+    companyId: number
+    processImmediately: number
     uploadedById: number
     uploadDate: number
     updatedAt: number
+    vectorized: number
+    vectorizedAt: number
     _all: number
   }
 
@@ -19430,12 +19537,18 @@ export namespace Prisma {
     type?: true
     size?: true
     path?: true
+    s3Key?: true
     status?: true
     processingError?: true
     categoryId?: true
+    teamId?: true
+    companyId?: true
+    processImmediately?: true
     uploadedById?: true
     uploadDate?: true
     updatedAt?: true
+    vectorized?: true
+    vectorizedAt?: true
   }
 
   export type DocumentMaxAggregateInputType = {
@@ -19444,12 +19557,18 @@ export namespace Prisma {
     type?: true
     size?: true
     path?: true
+    s3Key?: true
     status?: true
     processingError?: true
     categoryId?: true
+    teamId?: true
+    companyId?: true
+    processImmediately?: true
     uploadedById?: true
     uploadDate?: true
     updatedAt?: true
+    vectorized?: true
+    vectorizedAt?: true
   }
 
   export type DocumentCountAggregateInputType = {
@@ -19458,12 +19577,18 @@ export namespace Prisma {
     type?: true
     size?: true
     path?: true
+    s3Key?: true
     status?: true
     processingError?: true
     categoryId?: true
+    teamId?: true
+    companyId?: true
+    processImmediately?: true
     uploadedById?: true
     uploadDate?: true
     updatedAt?: true
+    vectorized?: true
+    vectorizedAt?: true
     _all?: true
   }
 
@@ -19559,12 +19684,18 @@ export namespace Prisma {
     type: string
     size: number
     path: string
+    s3Key: string
     status: $Enums.DocumentStatus
     processingError: string | null
     categoryId: string | null
+    teamId: string
+    companyId: string | null
+    processImmediately: boolean
     uploadedById: string
     uploadDate: Date
     updatedAt: Date
+    vectorized: boolean
+    vectorizedAt: Date | null
     _count: DocumentCountAggregateOutputType | null
     _avg: DocumentAvgAggregateOutputType | null
     _sum: DocumentSumAggregateOutputType | null
@@ -19592,13 +19723,20 @@ export namespace Prisma {
     type?: boolean
     size?: boolean
     path?: boolean
+    s3Key?: boolean
     status?: boolean
     processingError?: boolean
     categoryId?: boolean
+    teamId?: boolean
+    companyId?: boolean
+    processImmediately?: boolean
     uploadedById?: boolean
     uploadDate?: boolean
     updatedAt?: boolean
+    vectorized?: boolean
+    vectorizedAt?: boolean
     category?: boolean | Document$categoryArgs<ExtArgs>
+    team?: boolean | TeamDefaultArgs<ExtArgs>
     uploadedBy?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["document"]>
 
@@ -19608,13 +19746,20 @@ export namespace Prisma {
     type?: boolean
     size?: boolean
     path?: boolean
+    s3Key?: boolean
     status?: boolean
     processingError?: boolean
     categoryId?: boolean
+    teamId?: boolean
+    companyId?: boolean
+    processImmediately?: boolean
     uploadedById?: boolean
     uploadDate?: boolean
     updatedAt?: boolean
+    vectorized?: boolean
+    vectorizedAt?: boolean
     category?: boolean | Document$categoryArgs<ExtArgs>
+    team?: boolean | TeamDefaultArgs<ExtArgs>
     uploadedBy?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["document"]>
 
@@ -19624,13 +19769,20 @@ export namespace Prisma {
     type?: boolean
     size?: boolean
     path?: boolean
+    s3Key?: boolean
     status?: boolean
     processingError?: boolean
     categoryId?: boolean
+    teamId?: boolean
+    companyId?: boolean
+    processImmediately?: boolean
     uploadedById?: boolean
     uploadDate?: boolean
     updatedAt?: boolean
+    vectorized?: boolean
+    vectorizedAt?: boolean
     category?: boolean | Document$categoryArgs<ExtArgs>
+    team?: boolean | TeamDefaultArgs<ExtArgs>
     uploadedBy?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["document"]>
 
@@ -19640,25 +19792,34 @@ export namespace Prisma {
     type?: boolean
     size?: boolean
     path?: boolean
+    s3Key?: boolean
     status?: boolean
     processingError?: boolean
     categoryId?: boolean
+    teamId?: boolean
+    companyId?: boolean
+    processImmediately?: boolean
     uploadedById?: boolean
     uploadDate?: boolean
     updatedAt?: boolean
+    vectorized?: boolean
+    vectorizedAt?: boolean
   }
 
-  export type DocumentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "type" | "size" | "path" | "status" | "processingError" | "categoryId" | "uploadedById" | "uploadDate" | "updatedAt", ExtArgs["result"]["document"]>
+  export type DocumentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "type" | "size" | "path" | "s3Key" | "status" | "processingError" | "categoryId" | "teamId" | "companyId" | "processImmediately" | "uploadedById" | "uploadDate" | "updatedAt" | "vectorized" | "vectorizedAt", ExtArgs["result"]["document"]>
   export type DocumentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     category?: boolean | Document$categoryArgs<ExtArgs>
+    team?: boolean | TeamDefaultArgs<ExtArgs>
     uploadedBy?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type DocumentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     category?: boolean | Document$categoryArgs<ExtArgs>
+    team?: boolean | TeamDefaultArgs<ExtArgs>
     uploadedBy?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type DocumentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     category?: boolean | Document$categoryArgs<ExtArgs>
+    team?: boolean | TeamDefaultArgs<ExtArgs>
     uploadedBy?: boolean | UserDefaultArgs<ExtArgs>
   }
 
@@ -19666,6 +19827,7 @@ export namespace Prisma {
     name: "Document"
     objects: {
       category: Prisma.$CategoryPayload<ExtArgs> | null
+      team: Prisma.$TeamPayload<ExtArgs>
       uploadedBy: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -19674,12 +19836,18 @@ export namespace Prisma {
       type: string
       size: number
       path: string
+      s3Key: string
       status: $Enums.DocumentStatus
       processingError: string | null
       categoryId: string | null
+      teamId: string
+      companyId: string | null
+      processImmediately: boolean
       uploadedById: string
       uploadDate: Date
       updatedAt: Date
+      vectorized: boolean
+      vectorizedAt: Date | null
     }, ExtArgs["result"]["document"]>
     composites: {}
   }
@@ -20075,6 +20243,7 @@ export namespace Prisma {
   export interface Prisma__DocumentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     category<T extends Document$categoryArgs<ExtArgs> = {}>(args?: Subset<T, Document$categoryArgs<ExtArgs>>): Prisma__CategoryClient<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    team<T extends TeamDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TeamDefaultArgs<ExtArgs>>): Prisma__TeamClient<$Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     uploadedBy<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -20110,12 +20279,18 @@ export namespace Prisma {
     readonly type: FieldRef<"Document", 'String'>
     readonly size: FieldRef<"Document", 'Int'>
     readonly path: FieldRef<"Document", 'String'>
+    readonly s3Key: FieldRef<"Document", 'String'>
     readonly status: FieldRef<"Document", 'DocumentStatus'>
     readonly processingError: FieldRef<"Document", 'String'>
     readonly categoryId: FieldRef<"Document", 'String'>
+    readonly teamId: FieldRef<"Document", 'String'>
+    readonly companyId: FieldRef<"Document", 'String'>
+    readonly processImmediately: FieldRef<"Document", 'Boolean'>
     readonly uploadedById: FieldRef<"Document", 'String'>
     readonly uploadDate: FieldRef<"Document", 'DateTime'>
     readonly updatedAt: FieldRef<"Document", 'DateTime'>
+    readonly vectorized: FieldRef<"Document", 'Boolean'>
+    readonly vectorizedAt: FieldRef<"Document", 'DateTime'>
   }
     
 
@@ -26325,6 +26500,8 @@ export namespace Prisma {
     updatedAt: 'updatedAt',
     verificationToken: 'verificationToken',
     verificationTokenExpires: 'verificationTokenExpires',
+    companyName: 'companyName',
+    companyId: 'companyId',
     jobTitle: 'jobTitle',
     phoneNumber: 'phoneNumber',
     skills: 'skills',
@@ -26358,6 +26535,8 @@ export namespace Prisma {
     name: 'name',
     description: 'description',
     industry: 'industry',
+    companyId: 'companyId',
+    companyName: 'companyName',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     ownerId: 'ownerId'
@@ -26503,12 +26682,18 @@ export namespace Prisma {
     type: 'type',
     size: 'size',
     path: 'path',
+    s3Key: 's3Key',
     status: 'status',
     processingError: 'processingError',
     categoryId: 'categoryId',
+    teamId: 'teamId',
+    companyId: 'companyId',
+    processImmediately: 'processImmediately',
     uploadedById: 'uploadedById',
     uploadDate: 'uploadDate',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    vectorized: 'vectorized',
+    vectorizedAt: 'vectorizedAt'
   };
 
   export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typeof DocumentScalarFieldEnum]
@@ -26920,6 +27105,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     verificationToken?: StringNullableFilter<"User"> | string | null
     verificationTokenExpires?: DateTimeNullableFilter<"User"> | Date | string | null
+    companyName?: StringNullableFilter<"User"> | string | null
+    companyId?: StringNullableFilter<"User"> | string | null
     jobTitle?: StringNullableFilter<"User"> | string | null
     phoneNumber?: StringNullableFilter<"User"> | string | null
     skills?: StringNullableListFilter<"User">
@@ -26957,6 +27144,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     verificationToken?: SortOrderInput | SortOrder
     verificationTokenExpires?: SortOrderInput | SortOrder
+    companyName?: SortOrderInput | SortOrder
+    companyId?: SortOrderInput | SortOrder
     jobTitle?: SortOrderInput | SortOrder
     phoneNumber?: SortOrderInput | SortOrder
     skills?: SortOrder
@@ -26997,6 +27186,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     verificationToken?: StringNullableFilter<"User"> | string | null
     verificationTokenExpires?: DateTimeNullableFilter<"User"> | Date | string | null
+    companyName?: StringNullableFilter<"User"> | string | null
+    companyId?: StringNullableFilter<"User"> | string | null
     jobTitle?: StringNullableFilter<"User"> | string | null
     phoneNumber?: StringNullableFilter<"User"> | string | null
     skills?: StringNullableListFilter<"User">
@@ -27034,6 +27225,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     verificationToken?: SortOrderInput | SortOrder
     verificationTokenExpires?: SortOrderInput | SortOrder
+    companyName?: SortOrderInput | SortOrder
+    companyId?: SortOrderInput | SortOrder
     jobTitle?: SortOrderInput | SortOrder
     phoneNumber?: SortOrderInput | SortOrder
     skills?: SortOrder
@@ -27068,6 +27261,8 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     verificationToken?: StringNullableWithAggregatesFilter<"User"> | string | null
     verificationTokenExpires?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    companyName?: StringNullableWithAggregatesFilter<"User"> | string | null
+    companyId?: StringNullableWithAggregatesFilter<"User"> | string | null
     jobTitle?: StringNullableWithAggregatesFilter<"User"> | string | null
     phoneNumber?: StringNullableWithAggregatesFilter<"User"> | string | null
     skills?: StringNullableListFilter<"User">
@@ -27146,6 +27341,8 @@ export namespace Prisma {
     name?: StringFilter<"Team"> | string
     description?: StringNullableFilter<"Team"> | string | null
     industry?: StringNullableFilter<"Team"> | string | null
+    companyId?: StringNullableFilter<"Team"> | string | null
+    companyName?: StringNullableFilter<"Team"> | string | null
     createdAt?: DateTimeFilter<"Team"> | Date | string
     updatedAt?: DateTimeFilter<"Team"> | Date | string
     ownerId?: StringFilter<"Team"> | string
@@ -27158,6 +27355,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleListRelationFilter
     integrations?: IntegrationListRelationFilter
     analyticsData?: AnalyticsDataListRelationFilter
+    documents?: DocumentListRelationFilter
   }
 
   export type TeamOrderByWithRelationInput = {
@@ -27165,6 +27363,8 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     industry?: SortOrderInput | SortOrder
+    companyId?: SortOrderInput | SortOrder
+    companyName?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     ownerId?: SortOrder
@@ -27177,6 +27377,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleOrderByRelationAggregateInput
     integrations?: IntegrationOrderByRelationAggregateInput
     analyticsData?: AnalyticsDataOrderByRelationAggregateInput
+    documents?: DocumentOrderByRelationAggregateInput
   }
 
   export type TeamWhereUniqueInput = Prisma.AtLeast<{
@@ -27187,6 +27388,8 @@ export namespace Prisma {
     name?: StringFilter<"Team"> | string
     description?: StringNullableFilter<"Team"> | string | null
     industry?: StringNullableFilter<"Team"> | string | null
+    companyId?: StringNullableFilter<"Team"> | string | null
+    companyName?: StringNullableFilter<"Team"> | string | null
     createdAt?: DateTimeFilter<"Team"> | Date | string
     updatedAt?: DateTimeFilter<"Team"> | Date | string
     ownerId?: StringFilter<"Team"> | string
@@ -27199,6 +27402,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleListRelationFilter
     integrations?: IntegrationListRelationFilter
     analyticsData?: AnalyticsDataListRelationFilter
+    documents?: DocumentListRelationFilter
   }, "id">
 
   export type TeamOrderByWithAggregationInput = {
@@ -27206,6 +27410,8 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     industry?: SortOrderInput | SortOrder
+    companyId?: SortOrderInput | SortOrder
+    companyName?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     ownerId?: SortOrder
@@ -27222,6 +27428,8 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Team"> | string
     description?: StringNullableWithAggregatesFilter<"Team"> | string | null
     industry?: StringNullableWithAggregatesFilter<"Team"> | string | null
+    companyId?: StringNullableWithAggregatesFilter<"Team"> | string | null
+    companyName?: StringNullableWithAggregatesFilter<"Team"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Team"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Team"> | Date | string
     ownerId?: StringWithAggregatesFilter<"Team"> | string
@@ -27913,13 +28121,20 @@ export namespace Prisma {
     type?: StringFilter<"Document"> | string
     size?: IntFilter<"Document"> | number
     path?: StringFilter<"Document"> | string
+    s3Key?: StringFilter<"Document"> | string
     status?: EnumDocumentStatusFilter<"Document"> | $Enums.DocumentStatus
     processingError?: StringNullableFilter<"Document"> | string | null
     categoryId?: StringNullableFilter<"Document"> | string | null
+    teamId?: StringFilter<"Document"> | string
+    companyId?: StringNullableFilter<"Document"> | string | null
+    processImmediately?: BoolFilter<"Document"> | boolean
     uploadedById?: StringFilter<"Document"> | string
     uploadDate?: DateTimeFilter<"Document"> | Date | string
     updatedAt?: DateTimeFilter<"Document"> | Date | string
+    vectorized?: BoolFilter<"Document"> | boolean
+    vectorizedAt?: DateTimeNullableFilter<"Document"> | Date | string | null
     category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
+    team?: XOR<TeamScalarRelationFilter, TeamWhereInput>
     uploadedBy?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
@@ -27929,13 +28144,20 @@ export namespace Prisma {
     type?: SortOrder
     size?: SortOrder
     path?: SortOrder
+    s3Key?: SortOrder
     status?: SortOrder
     processingError?: SortOrderInput | SortOrder
     categoryId?: SortOrderInput | SortOrder
+    teamId?: SortOrder
+    companyId?: SortOrderInput | SortOrder
+    processImmediately?: SortOrder
     uploadedById?: SortOrder
     uploadDate?: SortOrder
     updatedAt?: SortOrder
+    vectorized?: SortOrder
+    vectorizedAt?: SortOrderInput | SortOrder
     category?: CategoryOrderByWithRelationInput
+    team?: TeamOrderByWithRelationInput
     uploadedBy?: UserOrderByWithRelationInput
   }
 
@@ -27948,13 +28170,20 @@ export namespace Prisma {
     type?: StringFilter<"Document"> | string
     size?: IntFilter<"Document"> | number
     path?: StringFilter<"Document"> | string
+    s3Key?: StringFilter<"Document"> | string
     status?: EnumDocumentStatusFilter<"Document"> | $Enums.DocumentStatus
     processingError?: StringNullableFilter<"Document"> | string | null
     categoryId?: StringNullableFilter<"Document"> | string | null
+    teamId?: StringFilter<"Document"> | string
+    companyId?: StringNullableFilter<"Document"> | string | null
+    processImmediately?: BoolFilter<"Document"> | boolean
     uploadedById?: StringFilter<"Document"> | string
     uploadDate?: DateTimeFilter<"Document"> | Date | string
     updatedAt?: DateTimeFilter<"Document"> | Date | string
+    vectorized?: BoolFilter<"Document"> | boolean
+    vectorizedAt?: DateTimeNullableFilter<"Document"> | Date | string | null
     category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
+    team?: XOR<TeamScalarRelationFilter, TeamWhereInput>
     uploadedBy?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
 
@@ -27964,12 +28193,18 @@ export namespace Prisma {
     type?: SortOrder
     size?: SortOrder
     path?: SortOrder
+    s3Key?: SortOrder
     status?: SortOrder
     processingError?: SortOrderInput | SortOrder
     categoryId?: SortOrderInput | SortOrder
+    teamId?: SortOrder
+    companyId?: SortOrderInput | SortOrder
+    processImmediately?: SortOrder
     uploadedById?: SortOrder
     uploadDate?: SortOrder
     updatedAt?: SortOrder
+    vectorized?: SortOrder
+    vectorizedAt?: SortOrderInput | SortOrder
     _count?: DocumentCountOrderByAggregateInput
     _avg?: DocumentAvgOrderByAggregateInput
     _max?: DocumentMaxOrderByAggregateInput
@@ -27986,12 +28221,18 @@ export namespace Prisma {
     type?: StringWithAggregatesFilter<"Document"> | string
     size?: IntWithAggregatesFilter<"Document"> | number
     path?: StringWithAggregatesFilter<"Document"> | string
+    s3Key?: StringWithAggregatesFilter<"Document"> | string
     status?: EnumDocumentStatusWithAggregatesFilter<"Document"> | $Enums.DocumentStatus
     processingError?: StringNullableWithAggregatesFilter<"Document"> | string | null
     categoryId?: StringNullableWithAggregatesFilter<"Document"> | string | null
+    teamId?: StringWithAggregatesFilter<"Document"> | string
+    companyId?: StringNullableWithAggregatesFilter<"Document"> | string | null
+    processImmediately?: BoolWithAggregatesFilter<"Document"> | boolean
     uploadedById?: StringWithAggregatesFilter<"Document"> | string
     uploadDate?: DateTimeWithAggregatesFilter<"Document"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Document"> | Date | string
+    vectorized?: BoolWithAggregatesFilter<"Document"> | boolean
+    vectorizedAt?: DateTimeNullableWithAggregatesFilter<"Document"> | Date | string | null
   }
 
   export type CategoryWhereInput = {
@@ -28533,6 +28774,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     verificationToken?: string | null
     verificationTokenExpires?: Date | string | null
+    companyName?: string | null
+    companyId?: string | null
     jobTitle?: string | null
     phoneNumber?: string | null
     skills?: UserCreateskillsInput | string[]
@@ -28568,6 +28811,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     verificationToken?: string | null
     verificationTokenExpires?: Date | string | null
+    companyName?: string | null
+    companyId?: string | null
     jobTitle?: string | null
     phoneNumber?: string | null
     skills?: UserCreateskillsInput | string[]
@@ -28603,6 +28848,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     verificationTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: UserUpdateskillsInput | string[]
@@ -28638,6 +28885,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     verificationTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: UserUpdateskillsInput | string[]
@@ -28673,6 +28922,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     verificationToken?: string | null
     verificationTokenExpires?: Date | string | null
+    companyName?: string | null
+    companyId?: string | null
     jobTitle?: string | null
     phoneNumber?: string | null
     skills?: UserCreateskillsInput | string[]
@@ -28699,6 +28950,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     verificationTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: UserUpdateskillsInput | string[]
@@ -28723,6 +28976,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     verificationTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: UserUpdateskillsInput | string[]
@@ -28797,6 +29052,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     industry?: string | null
+    companyId?: string | null
+    companyName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     owner: UserCreateNestedOneWithoutOwnedTeamsInput
@@ -28808,6 +29065,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleCreateNestedManyWithoutTeamInput
     integrations?: IntegrationCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataCreateNestedManyWithoutTeamInput
+    documents?: DocumentCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUncheckedCreateInput = {
@@ -28815,6 +29073,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     industry?: string | null
+    companyId?: string | null
+    companyName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     ownerId: string
@@ -28826,6 +29086,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUncheckedCreateNestedManyWithoutTeamInput
     integrations?: IntegrationUncheckedCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataUncheckedCreateNestedManyWithoutTeamInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUpdateInput = {
@@ -28833,6 +29094,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     owner?: UserUpdateOneRequiredWithoutOwnedTeamsNestedInput
@@ -28844,6 +29107,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUpdateManyWithoutTeamNestedInput
     integrations?: IntegrationUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUpdateManyWithoutTeamNestedInput
+    documents?: DocumentUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateInput = {
@@ -28851,6 +29115,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     ownerId?: StringFieldUpdateOperationsInput | string
@@ -28862,6 +29128,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUncheckedUpdateManyWithoutTeamNestedInput
     integrations?: IntegrationUncheckedUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUncheckedUpdateManyWithoutTeamNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamCreateManyInput = {
@@ -28869,6 +29136,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     industry?: string | null
+    companyId?: string | null
+    companyName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     ownerId: string
@@ -28879,6 +29148,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28888,6 +29159,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     ownerId?: StringFieldUpdateOperationsInput | string
@@ -29638,11 +29911,17 @@ export namespace Prisma {
     type: string
     size: number
     path: string
+    s3Key: string
     status: $Enums.DocumentStatus
     processingError?: string | null
+    companyId?: string | null
+    processImmediately?: boolean
     uploadDate?: Date | string
     updatedAt?: Date | string
+    vectorized?: boolean
+    vectorizedAt?: Date | string | null
     category?: CategoryCreateNestedOneWithoutDocumentsInput
+    team: TeamCreateNestedOneWithoutDocumentsInput
     uploadedBy: UserCreateNestedOneWithoutUploadedDocumentsInput
   }
 
@@ -29652,12 +29931,18 @@ export namespace Prisma {
     type: string
     size: number
     path: string
+    s3Key: string
     status: $Enums.DocumentStatus
     processingError?: string | null
     categoryId?: string | null
+    teamId: string
+    companyId?: string | null
+    processImmediately?: boolean
     uploadedById: string
     uploadDate?: Date | string
     updatedAt?: Date | string
+    vectorized?: boolean
+    vectorizedAt?: Date | string | null
   }
 
   export type DocumentUpdateInput = {
@@ -29666,11 +29951,17 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
     path?: StringFieldUpdateOperationsInput | string
+    s3Key?: StringFieldUpdateOperationsInput | string
     status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
     processingError?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    processImmediately?: BoolFieldUpdateOperationsInput | boolean
     uploadDate?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    vectorized?: BoolFieldUpdateOperationsInput | boolean
+    vectorizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     category?: CategoryUpdateOneWithoutDocumentsNestedInput
+    team?: TeamUpdateOneRequiredWithoutDocumentsNestedInput
     uploadedBy?: UserUpdateOneRequiredWithoutUploadedDocumentsNestedInput
   }
 
@@ -29680,12 +29971,18 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
     path?: StringFieldUpdateOperationsInput | string
+    s3Key?: StringFieldUpdateOperationsInput | string
     status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
     processingError?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    teamId?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    processImmediately?: BoolFieldUpdateOperationsInput | boolean
     uploadedById?: StringFieldUpdateOperationsInput | string
     uploadDate?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    vectorized?: BoolFieldUpdateOperationsInput | boolean
+    vectorizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type DocumentCreateManyInput = {
@@ -29694,12 +29991,18 @@ export namespace Prisma {
     type: string
     size: number
     path: string
+    s3Key: string
     status: $Enums.DocumentStatus
     processingError?: string | null
     categoryId?: string | null
+    teamId: string
+    companyId?: string | null
+    processImmediately?: boolean
     uploadedById: string
     uploadDate?: Date | string
     updatedAt?: Date | string
+    vectorized?: boolean
+    vectorizedAt?: Date | string | null
   }
 
   export type DocumentUpdateManyMutationInput = {
@@ -29708,10 +30011,15 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
     path?: StringFieldUpdateOperationsInput | string
+    s3Key?: StringFieldUpdateOperationsInput | string
     status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
     processingError?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    processImmediately?: BoolFieldUpdateOperationsInput | boolean
     uploadDate?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    vectorized?: BoolFieldUpdateOperationsInput | boolean
+    vectorizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type DocumentUncheckedUpdateManyInput = {
@@ -29720,12 +30028,18 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
     path?: StringFieldUpdateOperationsInput | string
+    s3Key?: StringFieldUpdateOperationsInput | string
     status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
     processingError?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    teamId?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    processImmediately?: BoolFieldUpdateOperationsInput | boolean
     uploadedById?: StringFieldUpdateOperationsInput | string
     uploadDate?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    vectorized?: BoolFieldUpdateOperationsInput | boolean
+    vectorizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type CategoryCreateInput = {
@@ -30522,6 +30836,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     verificationToken?: SortOrder
     verificationTokenExpires?: SortOrder
+    companyName?: SortOrder
+    companyId?: SortOrder
     jobTitle?: SortOrder
     phoneNumber?: SortOrder
     skills?: SortOrder
@@ -30556,6 +30872,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     verificationToken?: SortOrder
     verificationTokenExpires?: SortOrder
+    companyName?: SortOrder
+    companyId?: SortOrder
     jobTitle?: SortOrder
     phoneNumber?: SortOrder
     profileImage?: SortOrder
@@ -30580,6 +30898,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     verificationToken?: SortOrder
     verificationTokenExpires?: SortOrder
+    companyName?: SortOrder
+    companyId?: SortOrder
     jobTitle?: SortOrder
     phoneNumber?: SortOrder
     profileImage?: SortOrder
@@ -30756,6 +31076,8 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     industry?: SortOrder
+    companyId?: SortOrder
+    companyName?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     ownerId?: SortOrder
@@ -30766,6 +31088,8 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     industry?: SortOrder
+    companyId?: SortOrder
+    companyName?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     ownerId?: SortOrder
@@ -30776,6 +31100,8 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     industry?: SortOrder
+    companyId?: SortOrder
+    companyName?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     ownerId?: SortOrder
@@ -31306,12 +31632,18 @@ export namespace Prisma {
     type?: SortOrder
     size?: SortOrder
     path?: SortOrder
+    s3Key?: SortOrder
     status?: SortOrder
     processingError?: SortOrder
     categoryId?: SortOrder
+    teamId?: SortOrder
+    companyId?: SortOrder
+    processImmediately?: SortOrder
     uploadedById?: SortOrder
     uploadDate?: SortOrder
     updatedAt?: SortOrder
+    vectorized?: SortOrder
+    vectorizedAt?: SortOrder
   }
 
   export type DocumentAvgOrderByAggregateInput = {
@@ -31324,12 +31656,18 @@ export namespace Prisma {
     type?: SortOrder
     size?: SortOrder
     path?: SortOrder
+    s3Key?: SortOrder
     status?: SortOrder
     processingError?: SortOrder
     categoryId?: SortOrder
+    teamId?: SortOrder
+    companyId?: SortOrder
+    processImmediately?: SortOrder
     uploadedById?: SortOrder
     uploadDate?: SortOrder
     updatedAt?: SortOrder
+    vectorized?: SortOrder
+    vectorizedAt?: SortOrder
   }
 
   export type DocumentMinOrderByAggregateInput = {
@@ -31338,12 +31676,18 @@ export namespace Prisma {
     type?: SortOrder
     size?: SortOrder
     path?: SortOrder
+    s3Key?: SortOrder
     status?: SortOrder
     processingError?: SortOrder
     categoryId?: SortOrder
+    teamId?: SortOrder
+    companyId?: SortOrder
+    processImmediately?: SortOrder
     uploadedById?: SortOrder
     uploadDate?: SortOrder
     updatedAt?: SortOrder
+    vectorized?: SortOrder
+    vectorizedAt?: SortOrder
   }
 
   export type DocumentSumOrderByAggregateInput = {
@@ -32111,6 +32455,13 @@ export namespace Prisma {
     connect?: AnalyticsDataWhereUniqueInput | AnalyticsDataWhereUniqueInput[]
   }
 
+  export type DocumentCreateNestedManyWithoutTeamInput = {
+    create?: XOR<DocumentCreateWithoutTeamInput, DocumentUncheckedCreateWithoutTeamInput> | DocumentCreateWithoutTeamInput[] | DocumentUncheckedCreateWithoutTeamInput[]
+    connectOrCreate?: DocumentCreateOrConnectWithoutTeamInput | DocumentCreateOrConnectWithoutTeamInput[]
+    createMany?: DocumentCreateManyTeamInputEnvelope
+    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutTeamInput = {
     create?: XOR<UserCreateWithoutTeamInput, UserUncheckedCreateWithoutTeamInput> | UserCreateWithoutTeamInput[] | UserUncheckedCreateWithoutTeamInput[]
     connectOrCreate?: UserCreateOrConnectWithoutTeamInput | UserCreateOrConnectWithoutTeamInput[]
@@ -32165,6 +32516,13 @@ export namespace Prisma {
     connectOrCreate?: AnalyticsDataCreateOrConnectWithoutTeamInput | AnalyticsDataCreateOrConnectWithoutTeamInput[]
     createMany?: AnalyticsDataCreateManyTeamInputEnvelope
     connect?: AnalyticsDataWhereUniqueInput | AnalyticsDataWhereUniqueInput[]
+  }
+
+  export type DocumentUncheckedCreateNestedManyWithoutTeamInput = {
+    create?: XOR<DocumentCreateWithoutTeamInput, DocumentUncheckedCreateWithoutTeamInput> | DocumentCreateWithoutTeamInput[] | DocumentUncheckedCreateWithoutTeamInput[]
+    connectOrCreate?: DocumentCreateOrConnectWithoutTeamInput | DocumentCreateOrConnectWithoutTeamInput[]
+    createMany?: DocumentCreateManyTeamInputEnvelope
+    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
   }
 
   export type UserUpdateOneRequiredWithoutOwnedTeamsNestedInput = {
@@ -32287,6 +32645,20 @@ export namespace Prisma {
     deleteMany?: AnalyticsDataScalarWhereInput | AnalyticsDataScalarWhereInput[]
   }
 
+  export type DocumentUpdateManyWithoutTeamNestedInput = {
+    create?: XOR<DocumentCreateWithoutTeamInput, DocumentUncheckedCreateWithoutTeamInput> | DocumentCreateWithoutTeamInput[] | DocumentUncheckedCreateWithoutTeamInput[]
+    connectOrCreate?: DocumentCreateOrConnectWithoutTeamInput | DocumentCreateOrConnectWithoutTeamInput[]
+    upsert?: DocumentUpsertWithWhereUniqueWithoutTeamInput | DocumentUpsertWithWhereUniqueWithoutTeamInput[]
+    createMany?: DocumentCreateManyTeamInputEnvelope
+    set?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    disconnect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    delete?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    update?: DocumentUpdateWithWhereUniqueWithoutTeamInput | DocumentUpdateWithWhereUniqueWithoutTeamInput[]
+    updateMany?: DocumentUpdateManyWithWhereWithoutTeamInput | DocumentUpdateManyWithWhereWithoutTeamInput[]
+    deleteMany?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
+  }
+
   export type UserUncheckedUpdateManyWithoutTeamNestedInput = {
     create?: XOR<UserCreateWithoutTeamInput, UserUncheckedCreateWithoutTeamInput> | UserCreateWithoutTeamInput[] | UserUncheckedCreateWithoutTeamInput[]
     connectOrCreate?: UserCreateOrConnectWithoutTeamInput | UserCreateOrConnectWithoutTeamInput[]
@@ -32397,6 +32769,20 @@ export namespace Prisma {
     update?: AnalyticsDataUpdateWithWhereUniqueWithoutTeamInput | AnalyticsDataUpdateWithWhereUniqueWithoutTeamInput[]
     updateMany?: AnalyticsDataUpdateManyWithWhereWithoutTeamInput | AnalyticsDataUpdateManyWithWhereWithoutTeamInput[]
     deleteMany?: AnalyticsDataScalarWhereInput | AnalyticsDataScalarWhereInput[]
+  }
+
+  export type DocumentUncheckedUpdateManyWithoutTeamNestedInput = {
+    create?: XOR<DocumentCreateWithoutTeamInput, DocumentUncheckedCreateWithoutTeamInput> | DocumentCreateWithoutTeamInput[] | DocumentUncheckedCreateWithoutTeamInput[]
+    connectOrCreate?: DocumentCreateOrConnectWithoutTeamInput | DocumentCreateOrConnectWithoutTeamInput[]
+    upsert?: DocumentUpsertWithWhereUniqueWithoutTeamInput | DocumentUpsertWithWhereUniqueWithoutTeamInput[]
+    createMany?: DocumentCreateManyTeamInputEnvelope
+    set?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    disconnect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    delete?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    update?: DocumentUpdateWithWhereUniqueWithoutTeamInput | DocumentUpdateWithWhereUniqueWithoutTeamInput[]
+    updateMany?: DocumentUpdateManyWithWhereWithoutTeamInput | DocumentUpdateManyWithWhereWithoutTeamInput[]
+    deleteMany?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutMemberTeamsInput = {
@@ -32773,6 +33159,12 @@ export namespace Prisma {
     connect?: CategoryWhereUniqueInput
   }
 
+  export type TeamCreateNestedOneWithoutDocumentsInput = {
+    create?: XOR<TeamCreateWithoutDocumentsInput, TeamUncheckedCreateWithoutDocumentsInput>
+    connectOrCreate?: TeamCreateOrConnectWithoutDocumentsInput
+    connect?: TeamWhereUniqueInput
+  }
+
   export type UserCreateNestedOneWithoutUploadedDocumentsInput = {
     create?: XOR<UserCreateWithoutUploadedDocumentsInput, UserUncheckedCreateWithoutUploadedDocumentsInput>
     connectOrCreate?: UserCreateOrConnectWithoutUploadedDocumentsInput
@@ -32791,6 +33183,14 @@ export namespace Prisma {
     delete?: CategoryWhereInput | boolean
     connect?: CategoryWhereUniqueInput
     update?: XOR<XOR<CategoryUpdateToOneWithWhereWithoutDocumentsInput, CategoryUpdateWithoutDocumentsInput>, CategoryUncheckedUpdateWithoutDocumentsInput>
+  }
+
+  export type TeamUpdateOneRequiredWithoutDocumentsNestedInput = {
+    create?: XOR<TeamCreateWithoutDocumentsInput, TeamUncheckedCreateWithoutDocumentsInput>
+    connectOrCreate?: TeamCreateOrConnectWithoutDocumentsInput
+    upsert?: TeamUpsertWithoutDocumentsInput
+    connect?: TeamWhereUniqueInput
+    update?: XOR<XOR<TeamUpdateToOneWithWhereWithoutDocumentsInput, TeamUpdateWithoutDocumentsInput>, TeamUncheckedUpdateWithoutDocumentsInput>
   }
 
   export type UserUpdateOneRequiredWithoutUploadedDocumentsNestedInput = {
@@ -33294,6 +33694,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     verificationToken?: string | null
     verificationTokenExpires?: Date | string | null
+    companyName?: string | null
+    companyId?: string | null
     jobTitle?: string | null
     phoneNumber?: string | null
     skills?: UserCreateskillsInput | string[]
@@ -33328,6 +33730,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     verificationToken?: string | null
     verificationTokenExpires?: Date | string | null
+    companyName?: string | null
+    companyId?: string | null
     jobTitle?: string | null
     phoneNumber?: string | null
     skills?: UserCreateskillsInput | string[]
@@ -33378,6 +33782,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     verificationTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: UserUpdateskillsInput | string[]
@@ -33412,6 +33818,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     verificationTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: UserUpdateskillsInput | string[]
@@ -33446,6 +33854,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     verificationToken?: string | null
     verificationTokenExpires?: Date | string | null
+    companyName?: string | null
+    companyId?: string | null
     jobTitle?: string | null
     phoneNumber?: string | null
     skills?: UserCreateskillsInput | string[]
@@ -33480,6 +33890,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     verificationToken?: string | null
     verificationTokenExpires?: Date | string | null
+    companyName?: string | null
+    companyId?: string | null
     jobTitle?: string | null
     phoneNumber?: string | null
     skills?: UserCreateskillsInput | string[]
@@ -33530,6 +33942,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     verificationTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: UserUpdateskillsInput | string[]
@@ -33564,6 +33978,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     verificationTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: UserUpdateskillsInput | string[]
@@ -33612,6 +34028,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     industry?: string | null
+    companyId?: string | null
+    companyName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     owner: UserCreateNestedOneWithoutOwnedTeamsInput
@@ -33622,6 +34040,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleCreateNestedManyWithoutTeamInput
     integrations?: IntegrationCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataCreateNestedManyWithoutTeamInput
+    documents?: DocumentCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUncheckedCreateWithoutMembersInput = {
@@ -33629,6 +34048,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     industry?: string | null
+    companyId?: string | null
+    companyName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     ownerId: string
@@ -33639,6 +34060,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUncheckedCreateNestedManyWithoutTeamInput
     integrations?: IntegrationUncheckedCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataUncheckedCreateNestedManyWithoutTeamInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutTeamInput
   }
 
   export type TeamCreateOrConnectWithoutMembersInput = {
@@ -33651,6 +34073,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     industry?: string | null
+    companyId?: string | null
+    companyName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: UserCreateNestedManyWithoutTeamInput
@@ -33661,6 +34085,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleCreateNestedManyWithoutTeamInput
     integrations?: IntegrationCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataCreateNestedManyWithoutTeamInput
+    documents?: DocumentCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUncheckedCreateWithoutOwnerInput = {
@@ -33668,6 +34093,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     industry?: string | null
+    companyId?: string | null
+    companyName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: UserUncheckedCreateNestedManyWithoutTeamInput
@@ -33678,6 +34105,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUncheckedCreateNestedManyWithoutTeamInput
     integrations?: IntegrationUncheckedCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataUncheckedCreateNestedManyWithoutTeamInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutTeamInput
   }
 
   export type TeamCreateOrConnectWithoutOwnerInput = {
@@ -33820,11 +34248,17 @@ export namespace Prisma {
     type: string
     size: number
     path: string
+    s3Key: string
     status: $Enums.DocumentStatus
     processingError?: string | null
+    companyId?: string | null
+    processImmediately?: boolean
     uploadDate?: Date | string
     updatedAt?: Date | string
+    vectorized?: boolean
+    vectorizedAt?: Date | string | null
     category?: CategoryCreateNestedOneWithoutDocumentsInput
+    team: TeamCreateNestedOneWithoutDocumentsInput
   }
 
   export type DocumentUncheckedCreateWithoutUploadedByInput = {
@@ -33833,11 +34267,17 @@ export namespace Prisma {
     type: string
     size: number
     path: string
+    s3Key: string
     status: $Enums.DocumentStatus
     processingError?: string | null
     categoryId?: string | null
+    teamId: string
+    companyId?: string | null
+    processImmediately?: boolean
     uploadDate?: Date | string
     updatedAt?: Date | string
+    vectorized?: boolean
+    vectorizedAt?: Date | string | null
   }
 
   export type DocumentCreateOrConnectWithoutUploadedByInput = {
@@ -34005,6 +34445,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     owner?: UserUpdateOneRequiredWithoutOwnedTeamsNestedInput
@@ -34015,6 +34457,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUpdateManyWithoutTeamNestedInput
     integrations?: IntegrationUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUpdateManyWithoutTeamNestedInput
+    documents?: DocumentUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateWithoutMembersInput = {
@@ -34022,6 +34465,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     ownerId?: StringFieldUpdateOperationsInput | string
@@ -34032,6 +34477,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUncheckedUpdateManyWithoutTeamNestedInput
     integrations?: IntegrationUncheckedUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUncheckedUpdateManyWithoutTeamNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUpsertWithWhereUniqueWithoutOwnerInput = {
@@ -34058,6 +34504,8 @@ export namespace Prisma {
     name?: StringFilter<"Team"> | string
     description?: StringNullableFilter<"Team"> | string | null
     industry?: StringNullableFilter<"Team"> | string | null
+    companyId?: StringNullableFilter<"Team"> | string | null
+    companyName?: StringNullableFilter<"Team"> | string | null
     createdAt?: DateTimeFilter<"Team"> | Date | string
     updatedAt?: DateTimeFilter<"Team"> | Date | string
     ownerId?: StringFilter<"Team"> | string
@@ -34192,12 +34640,18 @@ export namespace Prisma {
     type?: StringFilter<"Document"> | string
     size?: IntFilter<"Document"> | number
     path?: StringFilter<"Document"> | string
+    s3Key?: StringFilter<"Document"> | string
     status?: EnumDocumentStatusFilter<"Document"> | $Enums.DocumentStatus
     processingError?: StringNullableFilter<"Document"> | string | null
     categoryId?: StringNullableFilter<"Document"> | string | null
+    teamId?: StringFilter<"Document"> | string
+    companyId?: StringNullableFilter<"Document"> | string | null
+    processImmediately?: BoolFilter<"Document"> | boolean
     uploadedById?: StringFilter<"Document"> | string
     uploadDate?: DateTimeFilter<"Document"> | Date | string
     updatedAt?: DateTimeFilter<"Document"> | Date | string
+    vectorized?: BoolFilter<"Document"> | boolean
+    vectorizedAt?: DateTimeNullableFilter<"Document"> | Date | string | null
   }
 
   export type AnalyticsDataUpsertWithWhereUniqueWithoutAgentInput = {
@@ -34328,6 +34782,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     verificationToken?: string | null
     verificationTokenExpires?: Date | string | null
+    companyName?: string | null
+    companyId?: string | null
     jobTitle?: string | null
     phoneNumber?: string | null
     skills?: UserCreateskillsInput | string[]
@@ -34362,6 +34818,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     verificationToken?: string | null
     verificationTokenExpires?: Date | string | null
+    companyName?: string | null
+    companyId?: string | null
     jobTitle?: string | null
     phoneNumber?: string | null
     skills?: UserCreateskillsInput | string[]
@@ -34412,6 +34870,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     verificationTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: UserUpdateskillsInput | string[]
@@ -34446,6 +34906,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     verificationTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: UserUpdateskillsInput | string[]
@@ -34480,6 +34942,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     verificationToken?: string | null
     verificationTokenExpires?: Date | string | null
+    companyName?: string | null
+    companyId?: string | null
     jobTitle?: string | null
     phoneNumber?: string | null
     skills?: UserCreateskillsInput | string[]
@@ -34514,6 +34978,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     verificationToken?: string | null
     verificationTokenExpires?: Date | string | null
+    companyName?: string | null
+    companyId?: string | null
     jobTitle?: string | null
     phoneNumber?: string | null
     skills?: UserCreateskillsInput | string[]
@@ -34553,6 +35019,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     verificationToken?: string | null
     verificationTokenExpires?: Date | string | null
+    companyName?: string | null
+    companyId?: string | null
     jobTitle?: string | null
     phoneNumber?: string | null
     skills?: UserCreateskillsInput | string[]
@@ -34587,6 +35055,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     verificationToken?: string | null
     verificationTokenExpires?: Date | string | null
+    companyName?: string | null
+    companyId?: string | null
     jobTitle?: string | null
     phoneNumber?: string | null
     skills?: UserCreateskillsInput | string[]
@@ -34865,6 +35335,54 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type DocumentCreateWithoutTeamInput = {
+    id?: string
+    title: string
+    type: string
+    size: number
+    path: string
+    s3Key: string
+    status: $Enums.DocumentStatus
+    processingError?: string | null
+    companyId?: string | null
+    processImmediately?: boolean
+    uploadDate?: Date | string
+    updatedAt?: Date | string
+    vectorized?: boolean
+    vectorizedAt?: Date | string | null
+    category?: CategoryCreateNestedOneWithoutDocumentsInput
+    uploadedBy: UserCreateNestedOneWithoutUploadedDocumentsInput
+  }
+
+  export type DocumentUncheckedCreateWithoutTeamInput = {
+    id?: string
+    title: string
+    type: string
+    size: number
+    path: string
+    s3Key: string
+    status: $Enums.DocumentStatus
+    processingError?: string | null
+    categoryId?: string | null
+    companyId?: string | null
+    processImmediately?: boolean
+    uploadedById: string
+    uploadDate?: Date | string
+    updatedAt?: Date | string
+    vectorized?: boolean
+    vectorizedAt?: Date | string | null
+  }
+
+  export type DocumentCreateOrConnectWithoutTeamInput = {
+    where: DocumentWhereUniqueInput
+    create: XOR<DocumentCreateWithoutTeamInput, DocumentUncheckedCreateWithoutTeamInput>
+  }
+
+  export type DocumentCreateManyTeamInputEnvelope = {
+    data: DocumentCreateManyTeamInput | DocumentCreateManyTeamInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutOwnedTeamsInput = {
     update: XOR<UserUpdateWithoutOwnedTeamsInput, UserUncheckedUpdateWithoutOwnedTeamsInput>
     create: XOR<UserCreateWithoutOwnedTeamsInput, UserUncheckedCreateWithoutOwnedTeamsInput>
@@ -34888,6 +35406,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     verificationTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: UserUpdateskillsInput | string[]
@@ -34922,6 +35442,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     verificationTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: UserUpdateskillsInput | string[]
@@ -34975,6 +35497,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     verificationToken?: StringNullableFilter<"User"> | string | null
     verificationTokenExpires?: DateTimeNullableFilter<"User"> | Date | string | null
+    companyName?: StringNullableFilter<"User"> | string | null
+    companyId?: StringNullableFilter<"User"> | string | null
     jobTitle?: StringNullableFilter<"User"> | string | null
     phoneNumber?: StringNullableFilter<"User"> | string | null
     skills?: StringNullableListFilter<"User">
@@ -35145,6 +35669,22 @@ export namespace Prisma {
     data: XOR<AnalyticsDataUpdateManyMutationInput, AnalyticsDataUncheckedUpdateManyWithoutTeamInput>
   }
 
+  export type DocumentUpsertWithWhereUniqueWithoutTeamInput = {
+    where: DocumentWhereUniqueInput
+    update: XOR<DocumentUpdateWithoutTeamInput, DocumentUncheckedUpdateWithoutTeamInput>
+    create: XOR<DocumentCreateWithoutTeamInput, DocumentUncheckedCreateWithoutTeamInput>
+  }
+
+  export type DocumentUpdateWithWhereUniqueWithoutTeamInput = {
+    where: DocumentWhereUniqueInput
+    data: XOR<DocumentUpdateWithoutTeamInput, DocumentUncheckedUpdateWithoutTeamInput>
+  }
+
+  export type DocumentUpdateManyWithWhereWithoutTeamInput = {
+    where: DocumentScalarWhereInput
+    data: XOR<DocumentUpdateManyMutationInput, DocumentUncheckedUpdateManyWithoutTeamInput>
+  }
+
   export type UserCreateWithoutMemberTeamsInput = {
     id?: string
     name?: string | null
@@ -35157,6 +35697,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     verificationToken?: string | null
     verificationTokenExpires?: Date | string | null
+    companyName?: string | null
+    companyId?: string | null
     jobTitle?: string | null
     phoneNumber?: string | null
     skills?: UserCreateskillsInput | string[]
@@ -35191,6 +35733,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     verificationToken?: string | null
     verificationTokenExpires?: Date | string | null
+    companyName?: string | null
+    companyId?: string | null
     jobTitle?: string | null
     phoneNumber?: string | null
     skills?: UserCreateskillsInput | string[]
@@ -35223,6 +35767,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     industry?: string | null
+    companyId?: string | null
+    companyName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     owner: UserCreateNestedOneWithoutOwnedTeamsInput
@@ -35233,6 +35779,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleCreateNestedManyWithoutTeamInput
     integrations?: IntegrationCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataCreateNestedManyWithoutTeamInput
+    documents?: DocumentCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUncheckedCreateWithoutTeamMembersInput = {
@@ -35240,6 +35787,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     industry?: string | null
+    companyId?: string | null
+    companyName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     ownerId: string
@@ -35250,6 +35799,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUncheckedCreateNestedManyWithoutTeamInput
     integrations?: IntegrationUncheckedCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataUncheckedCreateNestedManyWithoutTeamInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutTeamInput
   }
 
   export type TeamCreateOrConnectWithoutTeamMembersInput = {
@@ -35280,6 +35830,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     verificationTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: UserUpdateskillsInput | string[]
@@ -35314,6 +35866,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     verificationTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: UserUpdateskillsInput | string[]
@@ -35352,6 +35906,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     owner?: UserUpdateOneRequiredWithoutOwnedTeamsNestedInput
@@ -35362,6 +35918,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUpdateManyWithoutTeamNestedInput
     integrations?: IntegrationUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUpdateManyWithoutTeamNestedInput
+    documents?: DocumentUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateWithoutTeamMembersInput = {
@@ -35369,6 +35926,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     ownerId?: StringFieldUpdateOperationsInput | string
@@ -35379,6 +35938,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUncheckedUpdateManyWithoutTeamNestedInput
     integrations?: IntegrationUncheckedUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUncheckedUpdateManyWithoutTeamNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamCreateWithoutInviteCodesInput = {
@@ -35386,6 +35946,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     industry?: string | null
+    companyId?: string | null
+    companyName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     owner: UserCreateNestedOneWithoutOwnedTeamsInput
@@ -35396,6 +35958,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleCreateNestedManyWithoutTeamInput
     integrations?: IntegrationCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataCreateNestedManyWithoutTeamInput
+    documents?: DocumentCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUncheckedCreateWithoutInviteCodesInput = {
@@ -35403,6 +35966,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     industry?: string | null
+    companyId?: string | null
+    companyName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     ownerId: string
@@ -35413,6 +35978,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUncheckedCreateNestedManyWithoutTeamInput
     integrations?: IntegrationUncheckedCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataUncheckedCreateNestedManyWithoutTeamInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutTeamInput
   }
 
   export type TeamCreateOrConnectWithoutInviteCodesInput = {
@@ -35436,6 +36002,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     owner?: UserUpdateOneRequiredWithoutOwnedTeamsNestedInput
@@ -35446,6 +36014,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUpdateManyWithoutTeamNestedInput
     integrations?: IntegrationUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUpdateManyWithoutTeamNestedInput
+    documents?: DocumentUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateWithoutInviteCodesInput = {
@@ -35453,6 +36022,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     ownerId?: StringFieldUpdateOperationsInput | string
@@ -35463,6 +36034,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUncheckedUpdateManyWithoutTeamNestedInput
     integrations?: IntegrationUncheckedUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUncheckedUpdateManyWithoutTeamNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutTeamNestedInput
   }
 
   export type UserCreateWithoutDepartmentInput = {
@@ -35477,6 +36049,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     verificationToken?: string | null
     verificationTokenExpires?: Date | string | null
+    companyName?: string | null
+    companyId?: string | null
     jobTitle?: string | null
     phoneNumber?: string | null
     skills?: UserCreateskillsInput | string[]
@@ -35511,6 +36085,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     verificationToken?: string | null
     verificationTokenExpires?: Date | string | null
+    companyName?: string | null
+    companyId?: string | null
     jobTitle?: string | null
     phoneNumber?: string | null
     skills?: UserCreateskillsInput | string[]
@@ -35571,6 +36147,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     verificationToken?: string | null
     verificationTokenExpires?: Date | string | null
+    companyName?: string | null
+    companyId?: string | null
     jobTitle?: string | null
     phoneNumber?: string | null
     skills?: UserCreateskillsInput | string[]
@@ -35605,6 +36183,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     verificationToken?: string | null
     verificationTokenExpires?: Date | string | null
+    companyName?: string | null
+    companyId?: string | null
     jobTitle?: string | null
     phoneNumber?: string | null
     skills?: UserCreateskillsInput | string[]
@@ -35718,6 +36298,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     industry?: string | null
+    companyId?: string | null
+    companyName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     owner: UserCreateNestedOneWithoutOwnedTeamsInput
@@ -35728,6 +36310,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleCreateNestedManyWithoutTeamInput
     integrations?: IntegrationCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataCreateNestedManyWithoutTeamInput
+    documents?: DocumentCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUncheckedCreateWithoutCallsInput = {
@@ -35735,6 +36318,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     industry?: string | null
+    companyId?: string | null
+    companyName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     ownerId: string
@@ -35745,6 +36330,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUncheckedCreateNestedManyWithoutTeamInput
     integrations?: IntegrationUncheckedCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataUncheckedCreateNestedManyWithoutTeamInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutTeamInput
   }
 
   export type TeamCreateOrConnectWithoutCallsInput = {
@@ -35775,6 +36361,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     verificationTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: UserUpdateskillsInput | string[]
@@ -35809,6 +36397,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     verificationTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: UserUpdateskillsInput | string[]
@@ -35941,6 +36531,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     owner?: UserUpdateOneRequiredWithoutOwnedTeamsNestedInput
@@ -35951,6 +36543,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUpdateManyWithoutTeamNestedInput
     integrations?: IntegrationUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUpdateManyWithoutTeamNestedInput
+    documents?: DocumentUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateWithoutCallsInput = {
@@ -35958,6 +36551,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     ownerId?: StringFieldUpdateOperationsInput | string
@@ -35968,6 +36563,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUncheckedUpdateManyWithoutTeamNestedInput
     integrations?: IntegrationUncheckedUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUncheckedUpdateManyWithoutTeamNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutTeamNestedInput
   }
 
   export type CallCreateWithoutTranscriptInput = {
@@ -36461,6 +37057,51 @@ export namespace Prisma {
     create: XOR<CategoryCreateWithoutDocumentsInput, CategoryUncheckedCreateWithoutDocumentsInput>
   }
 
+  export type TeamCreateWithoutDocumentsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    industry?: string | null
+    companyId?: string | null
+    companyName?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    owner: UserCreateNestedOneWithoutOwnedTeamsInput
+    members?: UserCreateNestedManyWithoutTeamInput
+    teamMembers?: TeamMemberCreateNestedManyWithoutTeamInput
+    inviteCodes?: InviteCodeCreateNestedManyWithoutTeamInput
+    calls?: CallCreateNestedManyWithoutTeamInput
+    queuedCalls?: QueuedCallCreateNestedManyWithoutTeamInput
+    forwardingRules?: ForwardingRuleCreateNestedManyWithoutTeamInput
+    integrations?: IntegrationCreateNestedManyWithoutTeamInput
+    analyticsData?: AnalyticsDataCreateNestedManyWithoutTeamInput
+  }
+
+  export type TeamUncheckedCreateWithoutDocumentsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    industry?: string | null
+    companyId?: string | null
+    companyName?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ownerId: string
+    members?: UserUncheckedCreateNestedManyWithoutTeamInput
+    teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutTeamInput
+    inviteCodes?: InviteCodeUncheckedCreateNestedManyWithoutTeamInput
+    calls?: CallUncheckedCreateNestedManyWithoutTeamInput
+    queuedCalls?: QueuedCallUncheckedCreateNestedManyWithoutTeamInput
+    forwardingRules?: ForwardingRuleUncheckedCreateNestedManyWithoutTeamInput
+    integrations?: IntegrationUncheckedCreateNestedManyWithoutTeamInput
+    analyticsData?: AnalyticsDataUncheckedCreateNestedManyWithoutTeamInput
+  }
+
+  export type TeamCreateOrConnectWithoutDocumentsInput = {
+    where: TeamWhereUniqueInput
+    create: XOR<TeamCreateWithoutDocumentsInput, TeamUncheckedCreateWithoutDocumentsInput>
+  }
+
   export type UserCreateWithoutUploadedDocumentsInput = {
     id?: string
     name?: string | null
@@ -36473,6 +37114,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     verificationToken?: string | null
     verificationTokenExpires?: Date | string | null
+    companyName?: string | null
+    companyId?: string | null
     jobTitle?: string | null
     phoneNumber?: string | null
     skills?: UserCreateskillsInput | string[]
@@ -36507,6 +37150,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     verificationToken?: string | null
     verificationTokenExpires?: Date | string | null
+    companyName?: string | null
+    companyId?: string | null
     jobTitle?: string | null
     phoneNumber?: string | null
     skills?: UserCreateskillsInput | string[]
@@ -36561,6 +37206,57 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type TeamUpsertWithoutDocumentsInput = {
+    update: XOR<TeamUpdateWithoutDocumentsInput, TeamUncheckedUpdateWithoutDocumentsInput>
+    create: XOR<TeamCreateWithoutDocumentsInput, TeamUncheckedCreateWithoutDocumentsInput>
+    where?: TeamWhereInput
+  }
+
+  export type TeamUpdateToOneWithWhereWithoutDocumentsInput = {
+    where?: TeamWhereInput
+    data: XOR<TeamUpdateWithoutDocumentsInput, TeamUncheckedUpdateWithoutDocumentsInput>
+  }
+
+  export type TeamUpdateWithoutDocumentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneRequiredWithoutOwnedTeamsNestedInput
+    members?: UserUpdateManyWithoutTeamNestedInput
+    teamMembers?: TeamMemberUpdateManyWithoutTeamNestedInput
+    inviteCodes?: InviteCodeUpdateManyWithoutTeamNestedInput
+    calls?: CallUpdateManyWithoutTeamNestedInput
+    queuedCalls?: QueuedCallUpdateManyWithoutTeamNestedInput
+    forwardingRules?: ForwardingRuleUpdateManyWithoutTeamNestedInput
+    integrations?: IntegrationUpdateManyWithoutTeamNestedInput
+    analyticsData?: AnalyticsDataUpdateManyWithoutTeamNestedInput
+  }
+
+  export type TeamUncheckedUpdateWithoutDocumentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    members?: UserUncheckedUpdateManyWithoutTeamNestedInput
+    teamMembers?: TeamMemberUncheckedUpdateManyWithoutTeamNestedInput
+    inviteCodes?: InviteCodeUncheckedUpdateManyWithoutTeamNestedInput
+    calls?: CallUncheckedUpdateManyWithoutTeamNestedInput
+    queuedCalls?: QueuedCallUncheckedUpdateManyWithoutTeamNestedInput
+    forwardingRules?: ForwardingRuleUncheckedUpdateManyWithoutTeamNestedInput
+    integrations?: IntegrationUncheckedUpdateManyWithoutTeamNestedInput
+    analyticsData?: AnalyticsDataUncheckedUpdateManyWithoutTeamNestedInput
+  }
+
   export type UserUpsertWithoutUploadedDocumentsInput = {
     update: XOR<UserUpdateWithoutUploadedDocumentsInput, UserUncheckedUpdateWithoutUploadedDocumentsInput>
     create: XOR<UserCreateWithoutUploadedDocumentsInput, UserUncheckedCreateWithoutUploadedDocumentsInput>
@@ -36584,6 +37280,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     verificationTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: UserUpdateskillsInput | string[]
@@ -36618,6 +37316,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     verificationTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: UserUpdateskillsInput | string[]
@@ -36646,10 +37346,16 @@ export namespace Prisma {
     type: string
     size: number
     path: string
+    s3Key: string
     status: $Enums.DocumentStatus
     processingError?: string | null
+    companyId?: string | null
+    processImmediately?: boolean
     uploadDate?: Date | string
     updatedAt?: Date | string
+    vectorized?: boolean
+    vectorizedAt?: Date | string | null
+    team: TeamCreateNestedOneWithoutDocumentsInput
     uploadedBy: UserCreateNestedOneWithoutUploadedDocumentsInput
   }
 
@@ -36659,11 +37365,17 @@ export namespace Prisma {
     type: string
     size: number
     path: string
+    s3Key: string
     status: $Enums.DocumentStatus
     processingError?: string | null
+    teamId: string
+    companyId?: string | null
+    processImmediately?: boolean
     uploadedById: string
     uploadDate?: Date | string
     updatedAt?: Date | string
+    vectorized?: boolean
+    vectorizedAt?: Date | string | null
   }
 
   export type DocumentCreateOrConnectWithoutCategoryInput = {
@@ -36704,6 +37416,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     verificationToken?: string | null
     verificationTokenExpires?: Date | string | null
+    companyName?: string | null
+    companyId?: string | null
     jobTitle?: string | null
     phoneNumber?: string | null
     skills?: UserCreateskillsInput | string[]
@@ -36738,6 +37452,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     verificationToken?: string | null
     verificationTokenExpires?: Date | string | null
+    companyName?: string | null
+    companyId?: string | null
     jobTitle?: string | null
     phoneNumber?: string | null
     skills?: UserCreateskillsInput | string[]
@@ -36770,6 +37486,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     industry?: string | null
+    companyId?: string | null
+    companyName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     owner: UserCreateNestedOneWithoutOwnedTeamsInput
@@ -36780,6 +37498,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleCreateNestedManyWithoutTeamInput
     integrations?: IntegrationCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataCreateNestedManyWithoutTeamInput
+    documents?: DocumentCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUncheckedCreateWithoutQueuedCallsInput = {
@@ -36787,6 +37506,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     industry?: string | null
+    companyId?: string | null
+    companyName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     ownerId: string
@@ -36797,6 +37518,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUncheckedCreateNestedManyWithoutTeamInput
     integrations?: IntegrationUncheckedCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataUncheckedCreateNestedManyWithoutTeamInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutTeamInput
   }
 
   export type TeamCreateOrConnectWithoutQueuedCallsInput = {
@@ -36827,6 +37549,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     verificationTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: UserUpdateskillsInput | string[]
@@ -36861,6 +37585,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     verificationTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: UserUpdateskillsInput | string[]
@@ -36899,6 +37625,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     owner?: UserUpdateOneRequiredWithoutOwnedTeamsNestedInput
@@ -36909,6 +37637,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUpdateManyWithoutTeamNestedInput
     integrations?: IntegrationUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUpdateManyWithoutTeamNestedInput
+    documents?: DocumentUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateWithoutQueuedCallsInput = {
@@ -36916,6 +37645,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     ownerId?: StringFieldUpdateOperationsInput | string
@@ -36926,6 +37657,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUncheckedUpdateManyWithoutTeamNestedInput
     integrations?: IntegrationUncheckedUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUncheckedUpdateManyWithoutTeamNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamCreateWithoutForwardingRulesInput = {
@@ -36933,6 +37665,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     industry?: string | null
+    companyId?: string | null
+    companyName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     owner: UserCreateNestedOneWithoutOwnedTeamsInput
@@ -36943,6 +37677,7 @@ export namespace Prisma {
     queuedCalls?: QueuedCallCreateNestedManyWithoutTeamInput
     integrations?: IntegrationCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataCreateNestedManyWithoutTeamInput
+    documents?: DocumentCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUncheckedCreateWithoutForwardingRulesInput = {
@@ -36950,6 +37685,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     industry?: string | null
+    companyId?: string | null
+    companyName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     ownerId: string
@@ -36960,6 +37697,7 @@ export namespace Prisma {
     queuedCalls?: QueuedCallUncheckedCreateNestedManyWithoutTeamInput
     integrations?: IntegrationUncheckedCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataUncheckedCreateNestedManyWithoutTeamInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutTeamInput
   }
 
   export type TeamCreateOrConnectWithoutForwardingRulesInput = {
@@ -36983,6 +37721,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     owner?: UserUpdateOneRequiredWithoutOwnedTeamsNestedInput
@@ -36993,6 +37733,7 @@ export namespace Prisma {
     queuedCalls?: QueuedCallUpdateManyWithoutTeamNestedInput
     integrations?: IntegrationUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUpdateManyWithoutTeamNestedInput
+    documents?: DocumentUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateWithoutForwardingRulesInput = {
@@ -37000,6 +37741,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     ownerId?: StringFieldUpdateOperationsInput | string
@@ -37010,6 +37753,7 @@ export namespace Prisma {
     queuedCalls?: QueuedCallUncheckedUpdateManyWithoutTeamNestedInput
     integrations?: IntegrationUncheckedUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUncheckedUpdateManyWithoutTeamNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamCreateWithoutIntegrationsInput = {
@@ -37017,6 +37761,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     industry?: string | null
+    companyId?: string | null
+    companyName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     owner: UserCreateNestedOneWithoutOwnedTeamsInput
@@ -37027,6 +37773,7 @@ export namespace Prisma {
     queuedCalls?: QueuedCallCreateNestedManyWithoutTeamInput
     forwardingRules?: ForwardingRuleCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataCreateNestedManyWithoutTeamInput
+    documents?: DocumentCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUncheckedCreateWithoutIntegrationsInput = {
@@ -37034,6 +37781,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     industry?: string | null
+    companyId?: string | null
+    companyName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     ownerId: string
@@ -37044,6 +37793,7 @@ export namespace Prisma {
     queuedCalls?: QueuedCallUncheckedCreateNestedManyWithoutTeamInput
     forwardingRules?: ForwardingRuleUncheckedCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataUncheckedCreateNestedManyWithoutTeamInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutTeamInput
   }
 
   export type TeamCreateOrConnectWithoutIntegrationsInput = {
@@ -37067,6 +37817,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     owner?: UserUpdateOneRequiredWithoutOwnedTeamsNestedInput
@@ -37077,6 +37829,7 @@ export namespace Prisma {
     queuedCalls?: QueuedCallUpdateManyWithoutTeamNestedInput
     forwardingRules?: ForwardingRuleUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUpdateManyWithoutTeamNestedInput
+    documents?: DocumentUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateWithoutIntegrationsInput = {
@@ -37084,6 +37837,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     ownerId?: StringFieldUpdateOperationsInput | string
@@ -37094,6 +37849,7 @@ export namespace Prisma {
     queuedCalls?: QueuedCallUncheckedUpdateManyWithoutTeamNestedInput
     forwardingRules?: ForwardingRuleUncheckedUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUncheckedUpdateManyWithoutTeamNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutTeamNestedInput
   }
 
   export type UserCreateWithoutAnalyticsDataInput = {
@@ -37108,6 +37864,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     verificationToken?: string | null
     verificationTokenExpires?: Date | string | null
+    companyName?: string | null
+    companyId?: string | null
     jobTitle?: string | null
     phoneNumber?: string | null
     skills?: UserCreateskillsInput | string[]
@@ -37142,6 +37900,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     verificationToken?: string | null
     verificationTokenExpires?: Date | string | null
+    companyName?: string | null
+    companyId?: string | null
     jobTitle?: string | null
     phoneNumber?: string | null
     skills?: UserCreateskillsInput | string[]
@@ -37174,6 +37934,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     industry?: string | null
+    companyId?: string | null
+    companyName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     owner: UserCreateNestedOneWithoutOwnedTeamsInput
@@ -37184,6 +37946,7 @@ export namespace Prisma {
     queuedCalls?: QueuedCallCreateNestedManyWithoutTeamInput
     forwardingRules?: ForwardingRuleCreateNestedManyWithoutTeamInput
     integrations?: IntegrationCreateNestedManyWithoutTeamInput
+    documents?: DocumentCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUncheckedCreateWithoutAnalyticsDataInput = {
@@ -37191,6 +37954,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     industry?: string | null
+    companyId?: string | null
+    companyName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     ownerId: string
@@ -37201,6 +37966,7 @@ export namespace Prisma {
     queuedCalls?: QueuedCallUncheckedCreateNestedManyWithoutTeamInput
     forwardingRules?: ForwardingRuleUncheckedCreateNestedManyWithoutTeamInput
     integrations?: IntegrationUncheckedCreateNestedManyWithoutTeamInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutTeamInput
   }
 
   export type TeamCreateOrConnectWithoutAnalyticsDataInput = {
@@ -37231,6 +37997,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     verificationTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: UserUpdateskillsInput | string[]
@@ -37265,6 +38033,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     verificationTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: UserUpdateskillsInput | string[]
@@ -37303,6 +38073,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     owner?: UserUpdateOneRequiredWithoutOwnedTeamsNestedInput
@@ -37313,6 +38085,7 @@ export namespace Prisma {
     queuedCalls?: QueuedCallUpdateManyWithoutTeamNestedInput
     forwardingRules?: ForwardingRuleUpdateManyWithoutTeamNestedInput
     integrations?: IntegrationUpdateManyWithoutTeamNestedInput
+    documents?: DocumentUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateWithoutAnalyticsDataInput = {
@@ -37320,6 +38093,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     ownerId?: StringFieldUpdateOperationsInput | string
@@ -37330,6 +38105,7 @@ export namespace Prisma {
     queuedCalls?: QueuedCallUncheckedUpdateManyWithoutTeamNestedInput
     forwardingRules?: ForwardingRuleUncheckedUpdateManyWithoutTeamNestedInput
     integrations?: IntegrationUncheckedUpdateManyWithoutTeamNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamCreateManyOwnerInput = {
@@ -37337,6 +38113,8 @@ export namespace Prisma {
     name: string
     description?: string | null
     industry?: string | null
+    companyId?: string | null
+    companyName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -37391,11 +38169,17 @@ export namespace Prisma {
     type: string
     size: number
     path: string
+    s3Key: string
     status: $Enums.DocumentStatus
     processingError?: string | null
     categoryId?: string | null
+    teamId: string
+    companyId?: string | null
+    processImmediately?: boolean
     uploadDate?: Date | string
     updatedAt?: Date | string
+    vectorized?: boolean
+    vectorizedAt?: Date | string | null
   }
 
   export type AnalyticsDataCreateManyAgentInput = {
@@ -37439,6 +38223,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: UserUpdateManyWithoutTeamNestedInput
@@ -37449,6 +38235,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUpdateManyWithoutTeamNestedInput
     integrations?: IntegrationUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUpdateManyWithoutTeamNestedInput
+    documents?: DocumentUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateWithoutOwnerInput = {
@@ -37456,6 +38243,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: UserUncheckedUpdateManyWithoutTeamNestedInput
@@ -37466,6 +38255,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUncheckedUpdateManyWithoutTeamNestedInput
     integrations?: IntegrationUncheckedUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUncheckedUpdateManyWithoutTeamNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateManyWithoutOwnerInput = {
@@ -37473,6 +38263,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -37621,11 +38413,17 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
     path?: StringFieldUpdateOperationsInput | string
+    s3Key?: StringFieldUpdateOperationsInput | string
     status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
     processingError?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    processImmediately?: BoolFieldUpdateOperationsInput | boolean
     uploadDate?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    vectorized?: BoolFieldUpdateOperationsInput | boolean
+    vectorizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     category?: CategoryUpdateOneWithoutDocumentsNestedInput
+    team?: TeamUpdateOneRequiredWithoutDocumentsNestedInput
   }
 
   export type DocumentUncheckedUpdateWithoutUploadedByInput = {
@@ -37634,11 +38432,17 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
     path?: StringFieldUpdateOperationsInput | string
+    s3Key?: StringFieldUpdateOperationsInput | string
     status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
     processingError?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    teamId?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    processImmediately?: BoolFieldUpdateOperationsInput | boolean
     uploadDate?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    vectorized?: BoolFieldUpdateOperationsInput | boolean
+    vectorizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type DocumentUncheckedUpdateManyWithoutUploadedByInput = {
@@ -37647,11 +38451,17 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
     path?: StringFieldUpdateOperationsInput | string
+    s3Key?: StringFieldUpdateOperationsInput | string
     status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
     processingError?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    teamId?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    processImmediately?: BoolFieldUpdateOperationsInput | boolean
     uploadDate?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    vectorized?: BoolFieldUpdateOperationsInput | boolean
+    vectorizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type AnalyticsDataUpdateWithoutAgentInput = {
@@ -37774,6 +38584,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     verificationToken?: string | null
     verificationTokenExpires?: Date | string | null
+    companyName?: string | null
+    companyId?: string | null
     jobTitle?: string | null
     phoneNumber?: string | null
     skills?: UserCreateskillsInput | string[]
@@ -37872,6 +38684,25 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type DocumentCreateManyTeamInput = {
+    id?: string
+    title: string
+    type: string
+    size: number
+    path: string
+    s3Key: string
+    status: $Enums.DocumentStatus
+    processingError?: string | null
+    categoryId?: string | null
+    companyId?: string | null
+    processImmediately?: boolean
+    uploadedById: string
+    uploadDate?: Date | string
+    updatedAt?: Date | string
+    vectorized?: boolean
+    vectorizedAt?: Date | string | null
+  }
+
   export type UserUpdateWithoutTeamInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
@@ -37884,6 +38715,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     verificationTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: UserUpdateskillsInput | string[]
@@ -37918,6 +38751,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     verificationTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: UserUpdateskillsInput | string[]
@@ -37952,6 +38787,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     verificationTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: UserUpdateskillsInput | string[]
@@ -38226,6 +39063,63 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DocumentUpdateWithoutTeamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    path?: StringFieldUpdateOperationsInput | string
+    s3Key?: StringFieldUpdateOperationsInput | string
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    processingError?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    processImmediately?: BoolFieldUpdateOperationsInput | boolean
+    uploadDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    vectorized?: BoolFieldUpdateOperationsInput | boolean
+    vectorizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    category?: CategoryUpdateOneWithoutDocumentsNestedInput
+    uploadedBy?: UserUpdateOneRequiredWithoutUploadedDocumentsNestedInput
+  }
+
+  export type DocumentUncheckedUpdateWithoutTeamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    path?: StringFieldUpdateOperationsInput | string
+    s3Key?: StringFieldUpdateOperationsInput | string
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    processingError?: NullableStringFieldUpdateOperationsInput | string | null
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    processImmediately?: BoolFieldUpdateOperationsInput | boolean
+    uploadedById?: StringFieldUpdateOperationsInput | string
+    uploadDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    vectorized?: BoolFieldUpdateOperationsInput | boolean
+    vectorizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type DocumentUncheckedUpdateManyWithoutTeamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    path?: StringFieldUpdateOperationsInput | string
+    s3Key?: StringFieldUpdateOperationsInput | string
+    status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+    processingError?: NullableStringFieldUpdateOperationsInput | string | null
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    processImmediately?: BoolFieldUpdateOperationsInput | boolean
+    uploadedById?: StringFieldUpdateOperationsInput | string
+    uploadDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    vectorized?: BoolFieldUpdateOperationsInput | boolean
+    vectorizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type UserCreateManyDepartmentInput = {
     id?: string
     name?: string | null
@@ -38238,6 +39132,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     verificationToken?: string | null
     verificationTokenExpires?: Date | string | null
+    companyName?: string | null
+    companyId?: string | null
     jobTitle?: string | null
     phoneNumber?: string | null
     skills?: UserCreateskillsInput | string[]
@@ -38263,6 +39159,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     verificationTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: UserUpdateskillsInput | string[]
@@ -38297,6 +39195,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     verificationTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: UserUpdateskillsInput | string[]
@@ -38331,6 +39231,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
     verificationTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: UserUpdateskillsInput | string[]
@@ -38426,11 +39328,17 @@ export namespace Prisma {
     type: string
     size: number
     path: string
+    s3Key: string
     status: $Enums.DocumentStatus
     processingError?: string | null
+    teamId: string
+    companyId?: string | null
+    processImmediately?: boolean
     uploadedById: string
     uploadDate?: Date | string
     updatedAt?: Date | string
+    vectorized?: boolean
+    vectorizedAt?: Date | string | null
   }
 
   export type DocumentUpdateWithoutCategoryInput = {
@@ -38439,10 +39347,16 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
     path?: StringFieldUpdateOperationsInput | string
+    s3Key?: StringFieldUpdateOperationsInput | string
     status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
     processingError?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    processImmediately?: BoolFieldUpdateOperationsInput | boolean
     uploadDate?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    vectorized?: BoolFieldUpdateOperationsInput | boolean
+    vectorizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    team?: TeamUpdateOneRequiredWithoutDocumentsNestedInput
     uploadedBy?: UserUpdateOneRequiredWithoutUploadedDocumentsNestedInput
   }
 
@@ -38452,11 +39366,17 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
     path?: StringFieldUpdateOperationsInput | string
+    s3Key?: StringFieldUpdateOperationsInput | string
     status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
     processingError?: NullableStringFieldUpdateOperationsInput | string | null
+    teamId?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    processImmediately?: BoolFieldUpdateOperationsInput | boolean
     uploadedById?: StringFieldUpdateOperationsInput | string
     uploadDate?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    vectorized?: BoolFieldUpdateOperationsInput | boolean
+    vectorizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type DocumentUncheckedUpdateManyWithoutCategoryInput = {
@@ -38465,11 +39385,17 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
     path?: StringFieldUpdateOperationsInput | string
+    s3Key?: StringFieldUpdateOperationsInput | string
     status?: EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
     processingError?: NullableStringFieldUpdateOperationsInput | string | null
+    teamId?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    processImmediately?: BoolFieldUpdateOperationsInput | boolean
     uploadedById?: StringFieldUpdateOperationsInput | string
     uploadDate?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    vectorized?: BoolFieldUpdateOperationsInput | boolean
+    vectorizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
 

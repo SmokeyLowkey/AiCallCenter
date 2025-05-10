@@ -4,8 +4,27 @@ import { prisma } from "@/lib/prisma"
 import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
 import bcrypt from "bcryptjs"
+import type { NextAuthConfig } from "next-auth"
+import { JWT } from "next-auth/jwt"
+import { Session } from "next-auth"
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+// Define credentials type
+interface Credentials {
+  email: string;
+  password: string;
+}
+
+// Define custom user type with role
+interface CustomUser {
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+  role?: string;
+}
+
+// Define the auth configuration
+const authConfig: NextAuthConfig = {
   adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt" },
   pages: {
@@ -28,8 +47,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return null;
         }
 
-        const email = credentials.email as string;
-        const password = credentials.password as string;
+        const { email, password } = credentials as Credentials;
 
         try {
           const user = await prisma.user.findUnique({
@@ -64,18 +82,35 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    async session({ session, token }) {
+    async session({ session, token }: { session: Session; token: JWT }) {
       if (token && session.user) {
         session.user.id = token.sub as string;
         session.user.role = token.role as string;
       }
       return session;
     },
-    async jwt({ token, user }) {
-      if (user) {
+    async jwt({ token, user }: { token: JWT; user?: any }) {
+      if (user && 'role' in user) {
         token.role = user.role;
       }
       return token;
     }
+  },
+  debug: process.env.NODE_ENV === "development",
+  secret: process.env.NEXTAUTH_SECRET,
+  trustHost: true,
+  cookies: {
+    sessionToken: {
+      name: `next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+      },
+    }
   }
-})
+}
+
+// Export the NextAuth handlers and helpers
+export const { handlers, auth, signIn, signOut } = NextAuth(authConfig)

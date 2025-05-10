@@ -1,6 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useToast } from "@/components/ui/use-toast"
 import {
   BarChart3,
   Download,
@@ -44,9 +46,224 @@ import {
 import { Progress } from "@/components/ui/progress"
 import { Switch } from "@/components/ui/switch"
 
+// Define types for our data
+interface TeamMember {
+  id: string
+  name: string
+  email: string
+  role: string
+  jobTitle?: string
+  department: string
+  departmentId?: string
+  team: string
+  teamId: string
+  status: string
+  performance: number
+  callsHandled: number
+  avgCallDuration?: number
+  resolutionRate?: number
+  satisfactionScore?: number
+  profileImage?: string
+}
+
+interface Team {
+  id: string
+  name: string
+  description?: string
+  industry?: string
+  owner: {
+    id: string
+    name: string
+  }
+  memberCount: number
+}
+
+interface Department {
+  id: string
+  name: string
+  description?: string
+  users: any[]
+}
+
 export default function TeamPage() {
-  const [activeTab, setActiveTab] = useState("agents")
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const tabParam = searchParams.get('tab')
+  const { toast } = useToast()
+  const [activeTab, setActiveTab] = useState(tabParam || "agents")
+  const [createTeamDialogOpen, setCreateTeamDialogOpen] = useState(false)
+  const [newTeamName, setNewTeamName] = useState("")
+  const [isCreatingTeam, setIsCreatingTeam] = useState(false)
+  
+  const handleCreateTeam = async () => {
+    if (!newTeamName.trim()) {
+      toast({
+        title: "Error",
+        description: "Team name is required",
+        variant: "destructive",
+      })
+      return
+    }
+    
+    try {
+      setIsCreatingTeam(true)
+      
+      const response = await fetch("/api/teams", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: newTeamName }),
+      })
+      
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || "Failed to create team")
+      }
+      
+      const data = await response.json()
+      
+      toast({
+        title: "Success",
+        description: "Team created successfully",
+      })
+      
+      // Close the dialog and reset the form
+      setCreateTeamDialogOpen(false)
+      setNewTeamName("")
+      
+      // Refresh the page to show the new team
+      router.refresh()
+    } catch (error) {
+      console.error("Error creating team:", error)
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to create team",
+        variant: "destructive",
+      })
+    } finally {
+      setIsCreatingTeam(false)
+    }
+  }
   const [searchQuery, setSearchQuery] = useState("")
+  const [loading, setLoading] = useState(true)
+  const [agents, setAgents] = useState<TeamMember[]>([])
+  const [managers, setManagers] = useState<TeamMember[]>([])
+  const [teams, setTeams] = useState<Team[]>([])
+  const [departments, setDepartments] = useState<Department[]>([])
+  const [selectedDepartment, setSelectedDepartment] = useState("all")
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalItems, setTotalItems] = useState(0)
+  const itemsPerPage = 10
+
+  // Fetch team members (agents and managers)
+  useEffect(() => {
+    async function fetchTeamMembers() {
+      try {
+        setLoading(true)
+        
+        // Fetch agents
+        const agentsResponse = await fetch('/api/team-members?role=AGENT')
+        if (!agentsResponse.ok) {
+          throw new Error('Failed to fetch agents')
+        }
+        const agentsData = await agentsResponse.json()
+        setAgents(agentsData)
+        
+        // Fetch managers
+        const managersResponse = await fetch('/api/team-members?role=MANAGER')
+        if (!managersResponse.ok) {
+          throw new Error('Failed to fetch managers')
+        }
+        const managersData = await managersResponse.json()
+        setManagers(managersData)
+        
+        setTotalItems(agentsData.length + managersData.length)
+      } catch (error) {
+        console.error('Error fetching team members:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    fetchTeamMembers()
+  }, [])
+  
+  // Fetch teams
+  useEffect(() => {
+    async function fetchTeams() {
+      try {
+        const response = await fetch('/api/teams/details')
+        if (!response.ok) {
+          throw new Error('Failed to fetch teams')
+        }
+        const data = await response.json()
+        setTeams(data)
+      } catch (error) {
+        console.error('Error fetching teams:', error)
+      }
+    }
+    
+    fetchTeams()
+  }, [])
+  
+  // Fetch departments
+  useEffect(() => {
+    async function fetchDepartments() {
+      try {
+        const response = await fetch('/api/departments')
+        if (!response.ok) {
+          throw new Error('Failed to fetch departments')
+        }
+        const data = await response.json()
+        setDepartments(data)
+      } catch (error) {
+        console.error('Error fetching departments:', error)
+      }
+    }
+    
+    fetchDepartments()
+  }, [])
+  
+  // Filter agents based on search query and selected department
+  const filteredAgents = agents.filter(agent => {
+    const matchesSearch =
+      searchQuery === '' ||
+      agent.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      agent.role?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      agent.department?.toLowerCase().includes(searchQuery.toLowerCase())
+    
+    const matchesDepartment =
+      selectedDepartment === 'all' ||
+      agent.department?.toLowerCase() === selectedDepartment.toLowerCase()
+    
+    return matchesSearch && matchesDepartment
+  })
+  
+  // Filter managers based on search query
+  const filteredManagers = managers.filter(manager => {
+    return searchQuery === '' ||
+      manager.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      manager.role?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      manager.department?.toLowerCase().includes(searchQuery.toLowerCase())
+  })
+  
+  // Handle department filter change
+  const handleDepartmentChange = (value: string) => {
+    setSelectedDepartment(value)
+    setCurrentPage(1) // Reset to first page when filter changes
+  }
+  
+  // Handle pagination
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+  }
+  
+  // Calculate pagination
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const paginatedAgents = filteredAgents.slice(startIndex, endIndex)
+  const totalPages = Math.ceil(filteredAgents.length / itemsPerPage)
 
   return (
     <div className="flex flex-col space-y-6 p-6">
@@ -111,11 +328,9 @@ export default function TeamPage() {
                       <SelectValue placeholder="Select department" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="support">Customer Support</SelectItem>
-                      <SelectItem value="sales">Sales</SelectItem>
-                      <SelectItem value="technical">Technical Support</SelectItem>
-                      <SelectItem value="billing">Billing</SelectItem>
-                      <SelectItem value="operations">Operations</SelectItem>
+                      {departments.map((dept) => (
+                        <SelectItem key={dept.id} value={dept.id}>{dept.name}</SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
@@ -128,10 +343,9 @@ export default function TeamPage() {
                       <SelectValue placeholder="Select team" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="alpha">Alpha Team</SelectItem>
-                      <SelectItem value="beta">Beta Team</SelectItem>
-                      <SelectItem value="gamma">Gamma Team</SelectItem>
-                      <SelectItem value="delta">Delta Team</SelectItem>
+                      {teams.map((team) => (
+                        <SelectItem key={team.id} value={team.id}>{team.name}</SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
@@ -177,17 +391,18 @@ export default function TeamPage() {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <Select defaultValue="all">
+        <Select
+          defaultValue="all"
+          onValueChange={handleDepartmentChange}
+        >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Filter by department" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Departments</SelectItem>
-            <SelectItem value="support">Customer Support</SelectItem>
-            <SelectItem value="sales">Sales</SelectItem>
-            <SelectItem value="technical">Technical Support</SelectItem>
-            <SelectItem value="billing">Billing</SelectItem>
-            <SelectItem value="operations">Operations</SelectItem>
+            {departments.map((dept) => (
+              <SelectItem key={dept.id} value={dept.name.toLowerCase()}>{dept.name}</SelectItem>
+            ))}
           </SelectContent>
         </Select>
         <Button variant="outline" size="icon">
@@ -195,7 +410,10 @@ export default function TeamPage() {
         </Button>
       </div>
 
-      <Tabs defaultValue="agents" className="space-y-4" onValueChange={setActiveTab}>
+      <Tabs value={activeTab} className="space-y-4" onValueChange={(value) => {
+        setActiveTab(value)
+        router.push(`/dashboard/team?tab=${value}`)
+      }}>
         <div className="flex items-center justify-between">
           <TabsList>
             <TabsTrigger value="agents">Agents</TabsTrigger>
@@ -204,147 +422,114 @@ export default function TeamPage() {
             <TabsTrigger value="performance">Performance</TabsTrigger>
           </TabsList>
           <div className="text-sm text-muted-foreground">
-            Showing <strong>15</strong> of <strong>24</strong> team members
+            Showing <strong>{paginatedAgents.length}</strong> of <strong>{filteredAgents.length}</strong> team members
           </div>
         </div>
 
         <TabsContent value="agents" className="space-y-4">
-          <div className="rounded-md border">
-            <div className="relative w-full overflow-auto">
-              <table className="w-full caption-bottom text-sm">
-                <thead>
-                  <tr className="border-b bg-slate-50">
-                    <th className="h-10 px-4 text-left font-medium text-muted-foreground">Name</th>
-                    <th className="h-10 px-4 text-left font-medium text-muted-foreground">Role</th>
-                    <th className="h-10 px-4 text-left font-medium text-muted-foreground">Department</th>
-                    <th className="h-10 px-4 text-left font-medium text-muted-foreground">Team</th>
-                    <th className="h-10 px-4 text-left font-medium text-muted-foreground">Status</th>
-                    <th className="h-10 px-4 text-left font-medium text-muted-foreground">Performance</th>
-                    <th className="h-10 px-4 text-left font-medium text-muted-foreground">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    {
-                      name: "Emma Rodriguez",
-                      avatar: "/placeholder.svg?height=32&width=32",
-                      role: "Senior Agent",
-                      department: "Customer Support",
-                      team: "Alpha Team",
-                      status: "active",
-                      performance: 92,
-                    },
-                    {
-                      name: "Michael Chen",
-                      avatar: "/placeholder.svg?height=32&width=32",
-                      role: "Agent",
-                      department: "Technical Support",
-                      team: "Beta Team",
-                      status: "active",
-                      performance: 89,
-                    },
-                    {
-                      name: "Sarah Johnson",
-                      avatar: "/placeholder.svg?height=32&width=32",
-                      role: "Agent",
-                      department: "Customer Support",
-                      team: "Alpha Team",
-                      status: "active",
-                      performance: 85,
-                    },
-                    {
-                      name: "David Williams",
-                      avatar: "/placeholder.svg?height=32&width=32",
-                      role: "Senior Agent",
-                      department: "Sales",
-                      team: "Gamma Team",
-                      status: "active",
-                      performance: 82,
-                    },
-                    {
-                      name: "Lisa Taylor",
-                      avatar: "/placeholder.svg?height=32&width=32",
-                      role: "Agent",
-                      department: "Billing",
-                      team: "Delta Team",
-                      status: "inactive",
-                      performance: 79,
-                    },
-                  ].map((agent, i) => (
-                    <tr key={i} className="border-b">
-                      <td className="p-4 align-middle">
-                        <div className="flex items-center gap-3">
-                          <Avatar className="h-8 w-8">
-                            <AvatarImage src={agent.avatar || "/placeholder.svg"} alt={agent.name} />
-                            <AvatarFallback>{agent.name.charAt(0)}</AvatarFallback>
-                          </Avatar>
-                          <span className="font-medium">{agent.name}</span>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">{agent.role}</td>
-                      <td className="p-4 align-middle">{agent.department}</td>
-                      <td className="p-4 align-middle">{agent.team}</td>
-                      <td className="p-4 align-middle">
-                        <Badge
-                          className={
-                            agent.status === "active" ? "bg-green-100 text-green-800" : "bg-slate-100 text-slate-800"
-                          }
-                        >
-                          {agent.status.charAt(0).toUpperCase() + agent.status.slice(1)}
-                        </Badge>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="flex items-center gap-2">
-                          <Progress
-                            value={agent.performance}
-                            className="h-2 w-[100px]"
-                            indicatorClassName={
-                              agent.performance >= 90
-                                ? "bg-green-600"
-                                : agent.performance >= 80
-                                  ? "bg-blue-600"
-                                  : agent.performance >= 70
-                                    ? "bg-amber-600"
-                                    : "bg-red-600"
-                            }
-                          />
-                          <span className="text-sm font-medium">{agent.performance}%</span>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                              <MoreHorizontal className="h-4 w-4" />
-                              <span className="sr-only">Actions</span>
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem>
-                              <User className="mr-2 h-4 w-4" />
-                              View Profile
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <Settings className="mr-2 h-4 w-4" />
-                              Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <BarChart3 className="mr-2 h-4 w-4" />
-                              View Performance
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>
-                              <Mail className="mr-2 h-4 w-4" />
-                              Send Message
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem className="text-red-600">
-                              <Trash2 className="mr-2 h-4 w-4" />
-                              Deactivate
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </td>
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            </div>
+          ) : filteredAgents.length === 0 ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="text-center">
+                <h3 className="text-lg font-medium">No agents found</h3>
+                <p className="text-muted-foreground">Try adjusting your search or filters</p>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="rounded-md border">
+                <div className="relative w-full overflow-auto">
+                  <table className="w-full caption-bottom text-sm">
+                    <thead>
+                      <tr className="border-b bg-slate-50">
+                        <th className="h-10 px-4 text-left font-medium text-muted-foreground">Name</th>
+                        <th className="h-10 px-4 text-left font-medium text-muted-foreground">Role</th>
+                        <th className="h-10 px-4 text-left font-medium text-muted-foreground">Department</th>
+                        <th className="h-10 px-4 text-left font-medium text-muted-foreground">Team</th>
+                        <th className="h-10 px-4 text-left font-medium text-muted-foreground">Status</th>
+                        <th className="h-10 px-4 text-left font-medium text-muted-foreground">Performance</th>
+                        <th className="h-10 px-4 text-left font-medium text-muted-foreground">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {paginatedAgents.map((agent, i) => (
+                        <tr key={agent.id || i} className="border-b">
+                          <td className="p-4 align-middle">
+                            <div className="flex items-center gap-3">
+                              <Avatar className="h-8 w-8">
+                                <AvatarImage src={agent.profileImage || "/placeholder.svg"} alt={agent.name} />
+                                <AvatarFallback>{agent.name.charAt(0)}</AvatarFallback>
+                              </Avatar>
+                              <span className="font-medium">{agent.name}</span>
+                            </div>
+                          </td>
+                          <td className="p-4 align-middle">{agent.role}</td>
+                          <td className="p-4 align-middle">{agent.department}</td>
+                          <td className="p-4 align-middle">{agent.team}</td>
+                          <td className="p-4 align-middle">
+                            <Badge
+                              className={
+                                agent.status === "active" ? "bg-green-100 text-green-800" : "bg-slate-100 text-slate-800"
+                              }
+                            >
+                              {agent.status ? agent.status.charAt(0).toUpperCase() + agent.status.slice(1) : "Active"}
+                            </Badge>
+                          </td>
+                          <td className="p-4 align-middle">
+                            <div className="flex items-center gap-2">
+                              <Progress
+                                value={agent.performance}
+                                className="h-2 w-[100px]"
+                                indicatorClassName={
+                                  agent.performance >= 90
+                                    ? "bg-green-600"
+                                    : agent.performance >= 80
+                                      ? "bg-blue-600"
+                                      : agent.performance >= 70
+                                        ? "bg-amber-600"
+                                        : "bg-red-600"
+                                }
+                              />
+                              <span className="text-sm font-medium">{agent.performance}%</span>
+                            </div>
+                          </td>
+                          <td className="p-4 align-middle">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon">
+                                  <MoreHorizontal className="h-4 w-4" />
+                                  <span className="sr-only">Actions</span>
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem>
+                                  <User className="mr-2 h-4 w-4" />
+                                  View Profile
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                  <Settings className="mr-2 h-4 w-4" />
+                                  Edit
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                  <BarChart3 className="mr-2 h-4 w-4" />
+                                  View Performance
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem>
+                                  <Mail className="mr-2 h-4 w-4" />
+                                  Send Message
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem className="text-red-600">
+                                  <Trash2 className="mr-2 h-4 w-4" />
+                                  Deactivate
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </td>
                     </tr>
                   ))}
                 </tbody>
@@ -375,160 +560,134 @@ export default function TeamPage() {
               Next
             </Button>
           </div>
+          </>
+          )}
         </TabsContent>
 
         <TabsContent value="managers" className="space-y-4">
-          <div className="rounded-md border">
-            <div className="relative w-full overflow-auto">
-              <table className="w-full caption-bottom text-sm">
-                <thead>
-                  <tr className="border-b bg-slate-50">
-                    <th className="h-10 px-4 text-left font-medium text-muted-foreground">Name</th>
-                    <th className="h-10 px-4 text-left font-medium text-muted-foreground">Role</th>
-                    <th className="h-10 px-4 text-left font-medium text-muted-foreground">Department</th>
-                    <th className="h-10 px-4 text-left font-medium text-muted-foreground">Teams Managed</th>
-                    <th className="h-10 px-4 text-left font-medium text-muted-foreground">Status</th>
-                    <th className="h-10 px-4 text-left font-medium text-muted-foreground">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    {
-                      name: "Jennifer Adams",
-                      avatar: "/placeholder.svg?height=32&width=32",
-                      role: "Department Manager",
-                      department: "Customer Support",
-                      teamsManaged: ["Alpha Team", "Beta Team"],
-                      status: "active",
-                    },
-                    {
-                      name: "Robert Johnson",
-                      avatar: "/placeholder.svg?height=32&width=32",
-                      role: "Team Lead",
-                      department: "Technical Support",
-                      teamsManaged: ["Beta Team"],
-                      status: "active",
-                    },
-                    {
-                      name: "Maria Garcia",
-                      avatar: "/placeholder.svg?height=32&width=32",
-                      role: "Department Manager",
-                      department: "Sales",
-                      teamsManaged: ["Gamma Team"],
-                      status: "active",
-                    },
-                  ].map((manager, i) => (
-                    <tr key={i} className="border-b">
-                      <td className="p-4 align-middle">
-                        <div className="flex items-center gap-3">
-                          <Avatar className="h-8 w-8">
-                            <AvatarImage src={manager.avatar || "/placeholder.svg"} alt={manager.name} />
-                            <AvatarFallback>{manager.name.charAt(0)}</AvatarFallback>
-                          </Avatar>
-                          <span className="font-medium">{manager.name}</span>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">{manager.role}</td>
-                      <td className="p-4 align-middle">{manager.department}</td>
-                      <td className="p-4 align-middle">
-                        <div className="flex flex-wrap gap-1">
-                          {manager.teamsManaged.map((team, i) => (
-                            <Badge key={i} variant="outline" className="bg-slate-100">
-                              {team}
-                            </Badge>
-                          ))}
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <Badge
-                          className={
-                            manager.status === "active" ? "bg-green-100 text-green-800" : "bg-slate-100 text-slate-800"
-                          }
-                        >
-                          {manager.status.charAt(0).toUpperCase() + manager.status.slice(1)}
-                        </Badge>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                              <MoreHorizontal className="h-4 w-4" />
-                              <span className="sr-only">Actions</span>
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem>
-                              <User className="mr-2 h-4 w-4" />
-                              View Profile
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <Settings className="mr-2 h-4 w-4" />
-                              Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <Users className="mr-2 h-4 w-4" />
-                              Manage Teams
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>
-                              <Mail className="mr-2 h-4 w-4" />
-                              Send Message
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem className="text-red-600">
-                              <Trash2 className="mr-2 h-4 w-4" />
-                              Deactivate
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </td>
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            </div>
+          ) : filteredManagers.length === 0 ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="text-center">
+                <h3 className="text-lg font-medium">No managers found</h3>
+                <p className="text-muted-foreground">Try adjusting your search or filters</p>
+              </div>
+            </div>
+          ) : (
+            <div className="rounded-md border">
+              <div className="relative w-full overflow-auto">
+                <table className="w-full caption-bottom text-sm">
+                  <thead>
+                    <tr className="border-b bg-slate-50">
+                      <th className="h-10 px-4 text-left font-medium text-muted-foreground">Name</th>
+                      <th className="h-10 px-4 text-left font-medium text-muted-foreground">Role</th>
+                      <th className="h-10 px-4 text-left font-medium text-muted-foreground">Department</th>
+                      <th className="h-10 px-4 text-left font-medium text-muted-foreground">Teams Managed</th>
+                      <th className="h-10 px-4 text-left font-medium text-muted-foreground">Status</th>
+                      <th className="h-10 px-4 text-left font-medium text-muted-foreground">Actions</th>
                     </tr>
+                  </thead>
+                  <tbody>
+                    {filteredManagers.map((manager, i) => (
+                      <tr key={manager.id || i} className="border-b">
+                        <td className="p-4 align-middle">
+                          <div className="flex items-center gap-3">
+                            <Avatar className="h-8 w-8">
+                              <AvatarImage src={manager.profileImage || "/placeholder.svg"} alt={manager.name} />
+                              <AvatarFallback>{manager.name.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            <span className="font-medium">{manager.name}</span>
+                          </div>
+                        </td>
+                        <td className="p-4 align-middle">{manager.role}</td>
+                        <td className="p-4 align-middle">{manager.department}</td>
+                        <td className="p-4 align-middle">
+                          <div className="flex flex-wrap gap-1">
+                            <Badge variant="outline" className="bg-slate-100">
+                              {manager.team || "No team"}
+                            </Badge>
+                          </div>
+                        </td>
+                        <td className="p-4 align-middle">
+                          <Badge
+                            className={
+                              manager.status === "active" ? "bg-green-100 text-green-800" : "bg-slate-100 text-slate-800"
+                            }
+                          >
+                            {manager.status ? manager.status.charAt(0).toUpperCase() + manager.status.slice(1) : "Active"}
+                          </Badge>
+                        </td>
+                        <td className="p-4 align-middle">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon">
+                                <MoreHorizontal className="h-4 w-4" />
+                                <span className="sr-only">Actions</span>
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem>
+                                <User className="mr-2 h-4 w-4" />
+                                View Profile
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                <Settings className="mr-2 h-4 w-4" />
+                                Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                <Users className="mr-2 h-4 w-4" />
+                                Manage Teams
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem>
+                                <Mail className="mr-2 h-4 w-4" />
+                                Send Message
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem className="text-red-600">
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Deactivate
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </td>
+                      </tr>
                   ))}
                 </tbody>
               </table>
             </div>
           </div>
+          )}
         </TabsContent>
 
         <TabsContent value="teams" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {[
-              {
-                name: "Alpha Team",
-                department: "Customer Support",
-                memberCount: 8,
-                manager: "Jennifer Adams",
-                performance: 88,
-              },
-              {
-                name: "Beta Team",
-                department: "Technical Support",
-                memberCount: 6,
-                manager: "Robert Johnson",
-                performance: 92,
-              },
-              {
-                name: "Gamma Team",
-                department: "Sales",
-                memberCount: 5,
-                manager: "Maria Garcia",
-                performance: 85,
-              },
-              {
-                name: "Delta Team",
-                department: "Billing",
-                memberCount: 4,
-                manager: "James Wilson",
-                performance: 79,
-              },
-            ].map((team, i) => (
-              <Card key={i}>
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            </div>
+          ) : teams.length === 0 ? (
+            <div className="flex flex-col justify-center items-center h-64">
+              <div className="text-center mb-6">
+                <h3 className="text-lg font-medium">No teams found</h3>
+                <p className="text-muted-foreground">Create a team to get started</p>
+              </div>
+              <Button onClick={() => setCreateTeamDialogOpen(true)}>
+                Create a team
+              </Button>
+            </div>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {teams.map((team, i) => (
+              <Card key={team.id || i}>
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <CardTitle>{team.name}</CardTitle>
-                    <Badge className="bg-indigo-100 text-indigo-800">{team.department}</Badge>
+                    <Badge className="bg-indigo-100 text-indigo-800">{team.industry || "General"}</Badge>
                   </div>
-                  <CardDescription>Managed by {team.manager}</CardDescription>
+                  <CardDescription>Managed by {team.owner?.name || "Unknown"}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
@@ -539,20 +698,12 @@ export default function TeamPage() {
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-muted-foreground">Performance</span>
-                        <span className="font-medium">{team.performance}%</span>
+                        <span className="font-medium">85%</span>
                       </div>
                       <Progress
-                        value={team.performance}
+                        value={85} // Default performance value
                         className="h-2"
-                        indicatorClassName={
-                          team.performance >= 90
-                            ? "bg-green-600"
-                            : team.performance >= 80
-                              ? "bg-blue-600"
-                              : team.performance >= 70
-                                ? "bg-amber-600"
-                                : "bg-red-600"
-                        }
+                        indicatorClassName="bg-blue-600"
                       />
                     </div>
                   </div>
@@ -577,10 +728,16 @@ export default function TeamPage() {
                 </div>
                 <h3 className="text-lg font-medium mb-1">Create New Team</h3>
                 <p className="text-sm text-center text-muted-foreground mb-4">Add a new team to organize your agents</p>
-                <Button variant="outline">Create Team</Button>
+                <Button
+                  variant="outline"
+                  onClick={() => setCreateTeamDialogOpen(true)}
+                >
+                  Create Team
+                </Button>
               </CardContent>
             </Card>
           </div>
+          )}
         </TabsContent>
 
         <TabsContent value="performance" className="space-y-4">
@@ -764,6 +921,44 @@ export default function TeamPage() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Create Team Dialog */}
+      <Dialog open={createTeamDialogOpen} onOpenChange={setCreateTeamDialogOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Add New Team</DialogTitle>
+            <DialogDescription>Add a new team to organize your agents.</DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="teamName" className="text-right">
+                Name
+              </Label>
+              <Input
+                id="teamName"
+                value={newTeamName}
+                onChange={(e) => setNewTeamName(e.target.value)}
+                placeholder="Enter team name"
+                className="col-span-3"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setCreateTeamDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleCreateTeam}
+              disabled={isCreatingTeam}
+            >
+              {isCreatingTeam ? "Creating..." : "Add Team"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

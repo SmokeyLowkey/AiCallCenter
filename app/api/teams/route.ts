@@ -44,6 +44,12 @@ export async function POST(req: NextRequest) {
 
     const userId = token.sub;
     const { name, description, industry } = await req.json();
+    
+    // Get the user's company information
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { companyId: true, companyName: true }
+    });
 
     // Validate input
     if (!name) {
@@ -62,6 +68,9 @@ export async function POST(req: NextRequest) {
         owner: {
           connect: { id: userId },
         },
+        // Add company information if available
+        ...(user?.companyId && { companyId: user.companyId }),
+        ...(user?.companyName && { companyName: user.companyName }),
       },
     });
 

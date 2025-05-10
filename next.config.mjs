@@ -7,7 +7,10 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    unoptimized: true,
+    unoptimized: true, // Disable image optimization to fix the issue
+  },
+  experimental: {
+    serverComponentsExternalPackages: ['pdf-parse'],
   },
 }
 

@@ -212,14 +212,15 @@ export async function POST(req: NextRequest) {
   try {
     console.log("📧 Registration API called");
     
-    const { 
-      name, 
-      email, 
-      password, 
-      jobTitle, 
-      department, 
-      phoneNumber, 
-      inviteCode 
+    const {
+      name,
+      email,
+      password,
+      jobTitle,
+      department,
+      phoneNumber,
+      companyName,
+      inviteCode
     } = await req.json();
     
     console.log(`📧 Registration data received: ${email}`);
@@ -252,14 +253,44 @@ export async function POST(req: NextRequest) {
 
     // Create user with professional profile fields
     console.log("📧 Creating user in database");
+    // Generate a company ID if company name is provided
+    let companyId = null;
+    if (companyName) {
+      companyId = `company_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+    }
+
+    // Handle department - either find existing or create new
+    let departmentId = null;
+    if (department) {
+      // Try to find existing department
+      const existingDepartment = await prisma.department.findUnique({
+        where: { name: department }
+      });
+      
+      if (existingDepartment) {
+        departmentId = existingDepartment.id;
+      } else {
+        // Create new department
+        const newDepartment = await prisma.department.create({
+          data: {
+            name: department,
+            description: `Department for ${companyName || 'company'}`
+          }
+        });
+        departmentId = newDepartment.id;
+      }
+    }
+
     const user = await prisma.user.create({
       data: {
         name,
         email,
         password: hashedPassword,
         role: "USER",
+        companyName,
+        companyId,
         jobTitle,
-        department,
+        departmentId, // Connect to department by ID instead of direct assignment
         phoneNumber,
       },
     });

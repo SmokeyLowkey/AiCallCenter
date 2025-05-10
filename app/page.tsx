@@ -21,6 +21,11 @@ import { auth } from "../auth"
 export default async function Home() {
   // Get the user's session
   const session = await auth();
+  
+  // Debug the session
+  console.log("Session in Home page:", !!session?.user);
+  
+  // Make sure we're correctly checking if the user is logged in
   const isLoggedIn = !!session?.user;
 
   return (
@@ -113,11 +118,12 @@ export default async function Home() {
               <div className="relative">
                 <div className="rounded-2xl overflow-hidden shadow-xl">
                   <Image
-                    src="/placeholder.svg?height=600&width=800"
+                    src="/herosectionpic.jpg"
                     alt="Call center agent using AI Call Clarity"
                     width={800}
                     height={600}
                     className="w-full h-auto object-cover"
+                    priority
                   />
                 </div>
               </div>
@@ -358,12 +364,25 @@ export default async function Home() {
             </div>
 
             <div className="grid grid-cols-3 md:grid-cols-6 gap-8 max-w-4xl mx-auto">
-              {["Salesforce", "Microsoft Dynamics", "HubSpot", "Zendesk", "Freshdesk", "Zoho"].map((integration) => (
-                <div key={integration} className="flex flex-col items-center">
-                  <div className="w-16 h-16 bg-slate-100 rounded-lg flex items-center justify-center mb-3">
-                    <span className="text-xl font-bold text-slate-500">{integration.charAt(0)}</span>
+              {[
+                { name: "Salesforce", logo: "/Salesforce.com_logo.svg" },
+                { name: "Microsoft Dynamics", logo: "/MICROSOFTDYNAMICS365.png" },
+                { name: "HubSpot", logo: "/HUBSPOT.png" },
+                { name: "Zendesk", logo: "/ZENDESK.png" },
+                { name: "Freshdesk", logo: "/FRESHDESK.png" },
+                { name: "Zoho", logo: "/ZOHO.png" }
+              ].map((integration) => (
+                <div key={integration.name} className="flex flex-col items-center">
+                  <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center mb-3 p-2">
+                    <Image
+                      src={integration.logo}
+                      alt={`${integration.name} logo`}
+                      width={64}
+                      height={64}
+                      className="object-contain w-full h-full"
+                    />
                   </div>
-                  <span className="text-sm font-medium text-slate-700">{integration}</span>
+                  <span className="text-sm font-medium text-slate-700">{integration.name}</span>
                 </div>
               ))}
             </div>

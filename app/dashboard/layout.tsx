@@ -1,5 +1,6 @@
 "use client"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import {
   BarChart3,
   Bell,
@@ -16,6 +17,9 @@ import {
   Settings,
   Users,
 } from "lucide-react"
+import { TeamSwitcher } from "@/components/TeamSwitcher"
+import { SidebarHeaderContent } from "@/components/SidebarHeaderContent"
+import { UserProfile } from "./UserProfile"
 
 import {
   Sidebar,
@@ -42,9 +46,49 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Suspense } from "react"
+import { Suspense, useState } from "react"
+import { useToast } from "@/components/ui/use-toast"
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const router = useRouter()
+  const { toast } = useToast()
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
+
+  const handleLogout = async () => {
+    try {
+      setIsLoggingOut(true)
+      
+      // Call the logout API
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error('Logout failed')
+      }
+
+      // Show success toast
+      toast({
+        title: "Logged out",
+        description: "You have been successfully logged out.",
+      })
+
+      // Redirect to home page
+      window.location.href = '/'
+    } catch (error) {
+      console.error('Logout error:', error)
+      toast({
+        title: "Error",
+        description: "Failed to log out. Please try again.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsLoggingOut(false)
+    }
+  }
   return (
     <SidebarProvider defaultOpen={true}>
       <div className="flex min-h-screen w-full bg-slate-50">
@@ -62,17 +106,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 />
               </div>
               <div className="flex items-center gap-4">
+                <TeamSwitcher />
                 <Button variant="outline" size="icon">
                   <Bell className="h-4 w-4" />
                 </Button>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="flex items-center gap-2" size="sm">
-                      <Avatar className="h-6 w-6">
-                        <AvatarImage src="/placeholder.svg?height=32&width=32" alt="Avatar" />
-                        <AvatarFallback>JD</AvatarFallback>
-                      </Avatar>
-                      <span className="hidden md:inline-flex">John Doe</span>
+                      <UserProfile />
                       <ChevronDown className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
@@ -83,7 +124,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     <DropdownMenuItem>Settings</DropdownMenuItem>
                     <DropdownMenuItem>Billing</DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Log out</DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleLogout} disabled={isLoggingOut}>
+                      {isLoggingOut ? "Logging out..." : "Log out"}
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
@@ -102,10 +145,7 @@ function DashboardSidebar() {
   return (
     <Sidebar>
       <SidebarHeader className="border-b">
-        <div className="flex items-center gap-2 px-2 py-3">
-          <Phone className="h-6 w-6 text-indigo-600" />
-          <span className="font-bold text-lg">AI Call Clarity</span>
-        </div>
+        <SidebarHeaderContent />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>

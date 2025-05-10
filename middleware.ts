@@ -1,32 +1,49 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
-import { getToken } from "next-auth/jwt";
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   // Define public paths that don't require authentication
-  const isPublicPath = 
-    path === "/" || 
-    path === "/auth/login" || 
-    path === "/auth/register" || 
+  const isPublicPath =
+    path === "/" ||
+    path === "/auth/login" ||
+    path === "/auth/register" ||
     path.startsWith("/auth/verify") ||
-    path.startsWith("/api/auth");
+    path.startsWith("/api/auth") ||
+    path.startsWith("/_next/") ||  // Next.js internal routes
+    path.includes(".") ||  // Files with extensions (like .jpg, .png, etc.)
+    path.startsWith("/favicon.ico");
+    
+  // Check if it's an API route
+  const isApiRoute = path.startsWith("/api/");
 
-  // Get the token from the request
-  const token = await getToken({ 
-    req: request,
-    secret: process.env.NEXTAUTH_SECRET
-  });
+  // Check for the session token in cookies
+  const authCookie = request.cookies.get("next-auth.session-token")?.value ||
+                     request.cookies.get("__Secure-next-auth.session-token")?.value;
+                     
+  // Log the auth cookie for debugging
+  console.log("Auth cookie in middleware:", !!authCookie);
 
+  // For API routes, return a 401 response instead of redirecting
+  if (isApiRoute && !isPublicPath && !authCookie) {
+    return new NextResponse(
+      JSON.stringify({ error: "Authentication required" }),
+      {
+        status: 401,
+        headers: { "Content-Type": "application/json" }
+      }
+    );
+  }
+  
   // Redirect to login if trying to access a protected route without being authenticated
-  if (!isPublicPath && !token) {
+  if (!isPublicPath && !authCookie && !isApiRoute) {
     return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 
   // Redirect to dashboard if already authenticated and trying to access auth pages
-  if (token && (path === "/auth/login" || path === "/auth/register")) {
+  if (authCookie && (path === "/auth/login" || path === "/auth/register")) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
@@ -36,12 +53,9 @@ export async function middleware(request: NextRequest) {
 // See "Matching Paths" below to learn more
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    "/((?!_next/static|_next/image|favicon.ico).*)",
+    // Only apply middleware to these paths
+    "/dashboard/:path*",
+    "/api/:path*",
+    "/auth/:path*",
   ],
 };

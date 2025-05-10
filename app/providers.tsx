@@ -2,6 +2,7 @@
 
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "@/components/theme-provider";
+import { TeamProvider } from "@/contexts/TeamContext";
 import { useState, useEffect } from "react";
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -20,7 +21,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
         enableSystem={false}
         disableTransitionOnChange
       >
-        {mounted && children}
+        <TeamProvider>
+          {mounted && children}
+        </TeamProvider>
       </ThemeProvider>
     </SessionProvider>
   );

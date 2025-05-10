@@ -55,6 +55,8 @@ model User {
   verificationTokenExpires DateTime?
 
   // Professional profile fields
+  companyName  String? // Company name for document uploads
+  companyId    String? // Company ID for multi-company support
   jobTitle     String?
   phoneNumber  String?
   skills       String[] @default([])
@@ -106,6 +108,8 @@ model Team {
   name        String
   description String?
   industry    String?
+  companyId   String? // Company ID for multi-company support
+  companyName String? // Company name for display
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -126,6 +130,7 @@ model Team {
   forwardingRules ForwardingRule[]
   integrations    Integration[]
   analyticsData   AnalyticsData[]
+  documents       Document[]
 }
 
 model TeamMember {
@@ -308,6 +313,7 @@ model Document {
   type  String // PDF, DOCX, TXT, etc.
   size  Int // in bytes
   path  String // storage path
+  s3Key String // S3 object key
 
   // Processing status
   status          DocumentStatus
@@ -317,11 +323,23 @@ model Document {
   categoryId String?
   category   Category? @relation(fields: [categoryId], references: [id])
 
+  // Team and company ownership
+  teamId    String
+  team      Team    @relation(fields: [teamId], references: [id])
+  companyId String? // Company ID for multi-company support
+
+  // Processing flags
+  processImmediately Boolean @default(true) // Whether to process immediately after upload
+
   // Metadata
   uploadedById String
   uploadedBy   User     @relation(fields: [uploadedById], references: [id])
   uploadDate   DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  // Vector embeddings for RAG
+  vectorized   Boolean   @default(false)
+  vectorizedAt DateTime?
 }
 
 model Category {

@@ -309,20 +309,44 @@ async function main() {
   // Seed analytics data
   console.log('Seeding analytics data...');
   const today = new Date();
-  const analyticsMetrics = [
-    { metricType: "CallVolume", values: [120, 135, 142, 128, 145, 110, 95] },
-    { metricType: "AverageCallDuration", values: [520, 510, 525, 505, 490, 500, 515] }, // in seconds
-    { metricType: "ResolutionRate", values: [75.5, 76.2, 78.0, 77.5, 79.1, 78.5, 78.9] }, // percentage
-    { metricType: "AIAssistanceRate", values: [88.5, 89.2, 90.5, 91.2, 92.0, 92.5, 93.1] }, // percentage
-    { metricType: "CustomerSatisfaction", values: [4.2, 4.3, 4.3, 4.4, 4.5, 4.5, 4.6] }, // out of 5
+  
+  // Define metrics for different time periods
+  const dailyMetrics = [
+    { metricType: "CallVolume", values: [120, 135, 142, 128, 145, 110, 95, 105, 115, 125, 130, 140, 150, 145, 135, 120, 110, 100, 90, 95, 105, 115, 125, 130, 140, 145, 150, 155, 160, 155] },
+    { metricType: "AverageCallDuration", values: [520, 510, 525, 505, 490, 500, 515, 530, 525, 515, 505, 495, 485, 490, 500, 510, 520, 525, 530, 535, 530, 525, 520, 515, 510, 505, 500, 495, 490, 485] }, // in seconds
+    { metricType: "ResolutionRate", values: [75.5, 76.2, 78.0, 77.5, 79.1, 78.5, 78.9, 79.2, 79.5, 79.8, 80.1, 80.5, 80.8, 81.0, 81.2, 81.5, 81.8, 82.0, 82.2, 82.5, 82.8, 83.0, 83.2, 83.5, 83.8, 84.0, 84.2, 84.5, 84.8, 85.0] }, // percentage
+    { metricType: "AIAssistance", values: [88.5, 89.2, 90.5, 91.2, 92.0, 92.5, 93.1, 93.5, 93.8, 94.0, 94.2, 94.5, 94.8, 95.0, 95.2, 95.5, 95.8, 96.0, 96.2, 96.5, 96.8, 97.0, 97.2, 97.5, 97.8, 98.0, 98.2, 98.5, 98.8, 99.0] }, // percentage
+    { metricType: "CustomerSatisfaction", values: [4.2, 4.3, 4.3, 4.4, 4.5, 4.5, 4.6, 4.6, 4.7, 4.7, 4.7, 4.8, 4.8, 4.8, 4.8, 4.9, 4.9, 4.9, 4.9, 4.9, 4.9, 4.9, 4.9, 4.9, 4.9, 4.9, 4.9, 4.9, 4.9, 5.0] }, // out of 5
+  ];
+  
+  // Distribution metrics - create individual metrics for each category
+  const distributionMetrics = [
+    // Call Type Distribution
+    { metricType: "CallTypeDistribution_Support", value: 45 },
+    { metricType: "CallTypeDistribution_Sales", value: 25 },
+    { metricType: "CallTypeDistribution_Technical", value: 20 },
+    { metricType: "CallTypeDistribution_Billing", value: 10 },
+    
+    // Call Outcome Distribution
+    { metricType: "CallOutcomeDistribution_Resolved", value: 65 },
+    { metricType: "CallOutcomeDistribution_Escalated", value: 15 },
+    { metricType: "CallOutcomeDistribution_FollowUp", value: 12 },
+    { metricType: "CallOutcomeDistribution_Unresolved", value: 8 },
+    
+    // Call Duration Distribution
+    { metricType: "CallDurationDistribution_LessThan5Min", value: 30 },
+    { metricType: "CallDurationDistribution_5To10Min", value: 40 },
+    { metricType: "CallDurationDistribution_10To15Min", value: 20 },
+    { metricType: "CallDurationDistribution_MoreThan15Min", value: 10 }
   ];
 
-  // Create analytics data for the past 7 days
-  for (let i = 0; i < 7; i++) {
+  // Create analytics data for the past 30 days
+  for (let i = 0; i < 30; i++) {
     const date = new Date(today);
-    date.setDate(date.getDate() - (6 - i)); // 6 days ago to today
+    date.setDate(date.getDate() - (29 - i)); // 29 days ago to today
     
-    for (const metric of analyticsMetrics) {
+    // Add daily metrics
+    for (const metric of dailyMetrics) {
       await prisma.analyticsData.create({
         data: {
           date: date,
@@ -331,6 +355,37 @@ async function main() {
         },
       });
     }
+    
+    // Add distribution metrics (only for today and a few previous days for trend)
+    if (i >= 25) { // Last 5 days
+      for (const metric of distributionMetrics) {
+        await prisma.analyticsData.create({
+          data: {
+            date: date,
+            metricType: metric.metricType,
+            value: metric.value + (Math.random() * 5 - 2.5), // Add some variation
+          },
+        });
+      }
+    }
+  }
+  
+  // Add summary metrics for quick access
+  const summaryMetrics = [
+    { metricType: "TotalCalls", value: 1284 },
+    { metricType: "AverageDuration", value: 522 }, // in seconds
+    { metricType: "ResolutionRate", value: 78.3 }, // percentage
+    { metricType: "AIAssistance", value: 92.7 }, // percentage
+  ];
+  
+  for (const metric of summaryMetrics) {
+    await prisma.analyticsData.create({
+      data: {
+        date: today,
+        metricType: metric.metricType,
+        value: metric.value,
+      },
+    });
   }
 
   // Seed sample calls and transcripts
