@@ -12,6 +12,10 @@ export async function middleware(request: NextRequest) {
     path === "/auth/register" ||
     path.startsWith("/auth/verify") ||
     path.startsWith("/api/auth") ||
+    path.startsWith("/api/integrations/twilio/") ||  // Twilio webhook endpoints
+    path.startsWith("/api/twilio-") ||  // Twilio debug endpoints
+    path.startsWith("/api/test-twilio") ||  // Twilio test endpoint
+    path.startsWith("/api/twilio-stream") ||  // Twilio stream endpoint
     path.startsWith("/_next/") ||  // Next.js internal routes
     path.includes(".") ||  // Files with extensions (like .jpg, .png, etc.)
     path.startsWith("/favicon.ico");
@@ -23,8 +27,10 @@ export async function middleware(request: NextRequest) {
   const authCookie = request.cookies.get("next-auth.session-token")?.value ||
                      request.cookies.get("__Secure-next-auth.session-token")?.value;
                      
-  // Log the auth cookie for debugging
-  console.log("Auth cookie in middleware:", !!authCookie);
+  // Log the auth cookie for debugging (except for Twilio webhooks to reduce noise)
+  if (!path.includes('/twilio')) {
+    console.log("Auth cookie in middleware:", !!authCookie);
+  }
 
   // For API routes, return a 401 response instead of redirecting
   if (isApiRoute && !isPublicPath && !authCookie) {

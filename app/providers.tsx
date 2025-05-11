@@ -3,6 +3,7 @@
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TeamProvider } from "@/contexts/TeamContext";
+import { SocketProvider } from "@/contexts/SocketContext";
 import { useState, useEffect } from "react";
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -22,7 +23,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
         disableTransitionOnChange
       >
         <TeamProvider>
-          {mounted && children}
+          <SocketProvider>
+            {mounted && children}
+          </SocketProvider>
         </TeamProvider>
       </ThemeProvider>
     </SessionProvider>

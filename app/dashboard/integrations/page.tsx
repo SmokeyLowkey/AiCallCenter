@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, ReactNode } from "react"
 import Link from "next/link"
 import {
   ArrowRight,
@@ -33,9 +33,29 @@ import {
 } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
+import { TwilioConfigDialog } from "./components/TwilioConfigDialog"
+import { TwilioPhoneNumberManager } from "./components/TwilioPhoneNumberManager"
+
+// Define interfaces for component props
+interface CrmIntegrationCardProps {
+  name: string;
+  description: string;
+  icon: ReactNode;
+  status: string;
+  lastSync?: string;
+}
+
+interface CallForwardingCardProps {
+  name: string;
+  description: string;
+  icon: ReactNode;
+  status: string;
+  lastSync?: string;
+}
 
 export default function IntegrationsPage() {
   const [activeTab, setActiveTab] = useState("crm")
+  // We no longer need a hardcoded teamId since our API will handle users without teams
 
   return (
     <div className="flex flex-col space-y-6 p-6">
@@ -80,18 +100,21 @@ export default function IntegrationsPage() {
               description="Integrate with HubSpot CRM for contact management and sales tracking"
               icon={<Database className="h-12 w-12 text-orange-600" />}
               status="not-connected"
+              lastSync=""
             />
             <CrmIntegrationCard
               name="Microsoft Dynamics"
               description="Connect to Microsoft Dynamics 365 for enterprise CRM capabilities"
               icon={<Database className="h-12 w-12 text-indigo-600" />}
               status="not-connected"
+              lastSync=""
             />
             <CrmIntegrationCard
               name="Zoho CRM"
               description="Integrate with Zoho CRM for sales automation and analytics"
               icon={<Database className="h-12 w-12 text-green-600" />}
               status="not-connected"
+              lastSync=""
             />
             <CrmIntegrationCard
               name="Zendesk"
@@ -139,24 +162,28 @@ export default function IntegrationsPage() {
               description="Integrate with Vonage for global voice and messaging solutions"
               icon={<Phone className="h-12 w-12 text-purple-600" />}
               status="not-connected"
+              lastSync=""
             />
             <CallForwardingCard
               name="Amazon Connect"
               description="Use Amazon Connect for cloud-based contact center services"
               icon={<Phone className="h-12 w-12 text-yellow-600" />}
               status="not-connected"
+              lastSync=""
             />
             <CallForwardingCard
               name="RingCentral"
               description="Connect to RingCentral for cloud communications and call management"
               icon={<Phone className="h-12 w-12 text-blue-600" />}
               status="not-connected"
+              lastSync=""
             />
             <CallForwardingCard
               name="8x8"
               description="Integrate with 8x8 for cloud voice, video, and contact center solutions"
               icon={<Phone className="h-12 w-12 text-green-600" />}
               status="not-connected"
+              lastSync=""
             />
             <Card className="border-dashed">
               <CardContent className="flex flex-col items-center justify-center p-6 h-full min-h-[220px]">
@@ -550,7 +577,7 @@ export default function IntegrationsPage() {
   )
 }
 
-function CrmIntegrationCard({ name, description, icon, status, lastSync }) {
+function CrmIntegrationCard({ name, description, icon, status, lastSync }: CrmIntegrationCardProps) {
   const [showConfigDialog, setShowConfigDialog] = useState(false)
 
   return (
@@ -644,8 +671,12 @@ function CrmIntegrationCard({ name, description, icon, status, lastSync }) {
   )
 }
 
-function CallForwardingCard({ name, description, icon, status, lastSync }) {
+function CallForwardingCard({ name, description, icon, status, lastSync }: CallForwardingCardProps) {
   const [showConfigDialog, setShowConfigDialog] = useState(false)
+  const [showNumberManager, setShowNumberManager] = useState(false)
+
+  // For Twilio-specific functionality
+  const isTwilio = name === "Twilio"
 
   return (
     <>
@@ -681,11 +712,19 @@ function CallForwardingCard({ name, description, icon, status, lastSync }) {
         <CardFooter>
           {status === "connected" ? (
             <div className="flex gap-2 w-full">
-              <Button variant="outline" className="flex-1">
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => isTwilio ? setShowConfigDialog(true) : null}
+              >
                 <Settings className="mr-2 h-4 w-4" />
                 Configure
               </Button>
-              <Button variant="outline" className="flex-1">
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => isTwilio ? setShowNumberManager(true) : null}
+              >
                 <Phone className="mr-2 h-4 w-4" />
                 Manage Numbers
               </Button>
@@ -699,49 +738,63 @@ function CallForwardingCard({ name, description, icon, status, lastSync }) {
         </CardFooter>
       </Card>
 
-      <Dialog open={showConfigDialog} onOpenChange={setShowConfigDialog}>
-        <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader>
-            <DialogTitle>Connect to {name}</DialogTitle>
-            <DialogDescription>Enter your {name} credentials to establish the connection.</DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="account-sid">Account SID</Label>
-              <Input id="account-sid" placeholder="Enter your Account SID" />
-              <p className="text-xs text-muted-foreground">You can find your Account SID in your {name} dashboard.</p>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="auth-token">Auth Token</Label>
-              <Input id="auth-token" type="password" placeholder="Enter your Auth Token" />
-              <p className="text-xs text-muted-foreground">
-                Keep this secure. Never share your Auth Token with anyone.
-              </p>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="phone-numbers">Phone Numbers</Label>
-              <div className="rounded-md border p-4">
-                <div className="flex items-center justify-between mb-4">
-                  <p className="text-sm font-medium">No phone numbers added yet</p>
-                  <Button variant="outline" size="sm">
-                    <Plus className="h-4 w-4 mr-1" />
-                    Add Number
-                  </Button>
-                </div>
+      {/* Use our custom Twilio components for Twilio, or the generic dialog for other providers */}
+      {isTwilio ? (
+        <>
+          <TwilioConfigDialog
+            open={showConfigDialog}
+            onOpenChange={setShowConfigDialog}
+          />
+          <TwilioPhoneNumberManager
+            open={showNumberManager}
+            onOpenChange={setShowNumberManager}
+          />
+        </>
+      ) : (
+        <Dialog open={showConfigDialog} onOpenChange={setShowConfigDialog}>
+          <DialogContent className="sm:max-w-[500px]">
+            <DialogHeader>
+              <DialogTitle>Connect to {name}</DialogTitle>
+              <DialogDescription>Enter your {name} credentials to establish the connection.</DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="account-sid">Account SID</Label>
+                <Input id="account-sid" placeholder="Enter your Account SID" />
+                <p className="text-xs text-muted-foreground">You can find your Account SID in your {name} dashboard.</p>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="auth-token">Auth Token</Label>
+                <Input id="auth-token" type="password" placeholder="Enter your Auth Token" />
                 <p className="text-xs text-muted-foreground">
-                  You can add phone numbers after connecting your account.
+                  Keep this secure. Never share your Auth Token with anyone.
                 </p>
               </div>
+              <div className="space-y-2">
+                <Label htmlFor="phone-numbers">Phone Numbers</Label>
+                <div className="rounded-md border p-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <p className="text-sm font-medium">No phone numbers added yet</p>
+                    <Button variant="outline" size="sm">
+                      <Plus className="h-4 w-4 mr-1" />
+                      Add Number
+                    </Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    You can add phone numbers after connecting your account.
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowConfigDialog(false)}>
-              Cancel
-            </Button>
-            <Button>Connect</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowConfigDialog(false)}>
+                Cancel
+              </Button>
+              <Button>Connect</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </>
   )
 }

@@ -1,7 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import {
   AlertCircle,
   Clock,
@@ -41,11 +42,59 @@ import { Separator } from "@/components/ui/separator"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Progress } from "@/components/ui/progress"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { useToast } from "@/components/ui/use-toast"
+import { useSocket } from "@/contexts/SocketContext"
+import { LiveCallDisplay } from "./components/LiveCallDisplay"
 
 export default function LiveCallsPage() {
   const [activeTab, setActiveTab] = useState("active-calls")
   const [twilioConfigured, setTwilioConfigured] = useState(false)
-  const [showSetupDialog, setShowSetupDialog] = useState(false)
+  const router = useRouter();
+  
+  // Check if Twilio is configured
+  useEffect(() => {
+    const checkTwilioConfig = async () => {
+      try {
+        // Check if there's an active Twilio integration
+        const response = await fetch('/api/integrations/twilio');
+        
+        if (response.ok) {
+          const data = await response.json();
+          
+          // If we get a successful response with a connected status, Twilio is configured
+          if (data && data.status === 'connected') {
+            setTwilioConfigured(true);
+            return;
+          }
+        }
+        
+        // If the above check fails, try to check for any integrations with Twilio
+        const integrationsResponse = await fetch('/api/integrations');
+        if (integrationsResponse.ok) {
+          const integrations = await integrationsResponse.json();
+          const twilioIntegration = integrations.find((i: any) => i.name === 'Twilio' && i.status === 'Connected');
+          
+          if (twilioIntegration) {
+            setTwilioConfigured(true);
+            return;
+          }
+        }
+        
+        // If we get here, Twilio is not configured
+        setTwilioConfigured(false);
+      } catch (error) {
+        console.error('Error checking Twilio configuration:', error);
+        setTwilioConfigured(false);
+      }
+    };
+    
+    checkTwilioConfig();
+  }, []);
+
+  // Navigate to integrations page to configure Twilio
+  const navigateToIntegrations = () => {
+    router.push('/dashboard/integrations');
+  };
 
   return (
     <div className="flex flex-col space-y-6 p-6">
@@ -74,8 +123,8 @@ export default function LiveCallsPage() {
           <AlertTitle>Twilio integration not configured</AlertTitle>
           <AlertDescription>
             Set up your Twilio integration to enable live call forwarding and management.
-            <Button variant="link" className="text-amber-800 p-0 h-auto ml-2" onClick={() => setShowSetupDialog(true)}>
-              Configure now
+            <Button variant="link" className="text-amber-800 p-0 h-auto ml-2" onClick={navigateToIntegrations}>
+              Configure in Integrations
             </Button>
           </AlertDescription>
         </Alert>
@@ -97,9 +146,9 @@ export default function LiveCallsPage() {
           ) : (
             <SetupRequiredPanel
               title="Set up Twilio to manage live calls"
-              description="Configure your Twilio integration to start managing and monitoring live calls."
-              buttonText="Configure Twilio"
-              onClick={() => setShowSetupDialog(true)}
+              description="Configure your Twilio integration in the Integrations page to start managing and monitoring live calls."
+              buttonText="Go to Integrations"
+              onClick={navigateToIntegrations}
               icon={<PhoneCall className="h-12 w-12 text-muted-foreground" />}
             />
           )}
@@ -111,16 +160,16 @@ export default function LiveCallsPage() {
           ) : (
             <SetupRequiredPanel
               title="Set up Twilio to manage call queue"
-              description="Configure your Twilio integration to start managing your call queue."
-              buttonText="Configure Twilio"
-              onClick={() => setShowSetupDialog(true)}
+              description="Configure your Twilio integration in the Integrations page to start managing your call queue."
+              buttonText="Go to Integrations"
+              onClick={navigateToIntegrations}
               icon={<Clock className="h-12 w-12 text-muted-foreground" />}
             />
           )}
         </TabsContent>
 
         <TabsContent value="forwarding" className="space-y-4">
-          <CallForwardingPanel isConfigured={twilioConfigured} onSetupClick={() => setShowSetupDialog(true)} />
+          <CallForwardingPanel isConfigured={twilioConfigured} onSetupClick={navigateToIntegrations} />
         </TabsContent>
 
         <TabsContent value="history" className="space-y-4">
@@ -128,53 +177,186 @@ export default function LiveCallsPage() {
         </TabsContent>
       </Tabs>
 
-      <TwilioSetupDialog
-        open={showSetupDialog}
-        onOpenChange={setShowSetupDialog}
-        onComplete={() => {
-          setTwilioConfigured(true)
-          setShowSetupDialog(false)
-        }}
-      />
+      {/* No longer need the TwilioSetupDialog as configuration is done in the Integrations page */}
     </div>
   )
 }
 
 function ActiveCallsPanel() {
-  const activeCalls = [
-    {
-      id: "call-1234",
-      caller: {
-        name: "Sarah Johnson",
-        number: "+1 (555) 123-4567",
-        avatar: "/placeholder.svg?height=40&width=40",
-      },
-      agent: {
-        name: "Michael Chen",
-        avatar: "/placeholder.svg?height=40&width=40",
-      },
-      duration: "12:34",
-      status: "in-progress",
-      sentiment: "positive",
-      topics: ["Account Access", "Password Reset"],
-    },
-    {
-      id: "call-1235",
-      caller: {
-        name: "James Wilson",
-        number: "+1 (555) 987-6543",
-        avatar: "/placeholder.svg?height=40&width=40",
-      },
-      agent: {
-        name: "Emma Rodriguez",
-        avatar: "/placeholder.svg?height=40&width=40",
-      },
-      duration: "03:18",
-      status: "in-progress",
-      sentiment: "neutral",
-      topics: ["Billing Question", "Subscription"],
-    },
-  ]
+  const [activeCalls, setActiveCalls] = useState<any[]>([]);
+  const [selectedCall, setSelectedCall] = useState<string | null>(null);
+  const { socket, isConnected } = useSocket();
+  const { toast } = useToast();
+
+  // Fetch active calls from the database
+  useEffect(() => {
+    const fetchActiveCalls = async () => {
+      try {
+        const response = await fetch('/api/calls/active');
+        if (response.ok) {
+          const data = await response.json();
+          
+          // Transform the data to match our UI format
+          const formattedCalls = data.map((call: any) => ({
+            id: call.id,
+            callSid: call.callId, // Include the Twilio Call SID
+            status: call.status.toLowerCase() === 'active' ? 'in-progress' : call.status.toLowerCase(),
+            startTime: new Date(call.startTime),
+            duration: call.duration || Math.floor((Date.now() - new Date(call.startTime).getTime()) / 1000),
+            caller: {
+              name: call.callerName || 'Unknown Caller',
+              number: call.callerPhone || 'Unknown Number',
+              avatar: "/placeholder.svg?height=40&width=40",
+            },
+            agent: {
+              name: call.agent?.name || 'AI Assistant',
+              avatar: call.agent?.image || "/placeholder.svg?height=40&width=40",
+            },
+            sentiment: call.sentiment?.toLowerCase() || 'neutral',
+          }));
+          
+          console.log('Formatted calls:', formattedCalls);
+          
+          setActiveCalls(formattedCalls);
+        }
+      } catch (error) {
+        console.error('Error fetching active calls:', error);
+      }
+    };
+    
+    fetchActiveCalls();
+    
+    // Set up a polling interval to refresh active calls
+    const interval = setInterval(fetchActiveCalls, 5000); // every 5 seconds
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  // Connect to the WebSocket and listen for call events
+  useEffect(() => {
+    if (socket && isConnected) {
+      // Listen for new calls
+      socket.on('call:start', (callData: any) => {
+        setActiveCalls(prev => {
+          // Check if call already exists
+          if (prev.some(call => call.callSid === callData.callSid)) {
+            return prev;
+          }
+          
+          const newCall = {
+            id: callData.id,
+            callSid: callData.callSid,
+            status: 'in-progress',
+            startTime: new Date(callData.startTime || Date.now()),
+            duration: 0,
+            caller: {
+              name: callData.caller?.name || 'Unknown Caller',
+              number: callData.caller?.number || 'Unknown Number',
+              avatar: "/placeholder.svg?height=40&width=40",
+            },
+            agent: {
+              name: callData.agent?.name || 'AI Assistant',
+              avatar: callData.agent?.avatar || "/placeholder.svg?height=40&width=40",
+            },
+            sentiment: 'neutral',
+          };
+          
+          console.log('Adding new call:', newCall);
+          return [...prev, newCall];
+        });
+        
+        toast({
+          title: "New Call",
+          description: `Incoming call from ${callData.caller?.name || 'Unknown Caller'}`,
+        });
+      });
+
+      // Listen for call status updates
+      socket.on('call:status_update', (data: any) => {
+        setActiveCalls(prev => prev.map(call =>
+          (call.id === data.callId || call.callSid === data.callSid)
+            ? { ...call, status: data.status, duration: data.duration || call.duration }
+            : call
+        ));
+        
+        // Remove completed calls after a delay
+        if (data.status === 'completed' || data.status === 'ended') {
+          setTimeout(() => {
+            setActiveCalls(prev => prev.filter(call =>
+              !(call.id === data.callId || call.callSid === data.callSid)
+            ));
+            
+            if (selectedCall === data.callId) {
+              setSelectedCall(null);
+            }
+          }, 5000); // Keep completed calls visible for 5 seconds
+        }
+      });
+
+      // Listen for call sentiment updates
+      socket.on('call:sentiment_update', (data: any) => {
+        setActiveCalls(prev => prev.map(call =>
+          (call.id === data.callId || call.callSid === data.callSid)
+            ? { ...call, sentiment: data.sentiment }
+            : call
+        ));
+      });
+
+      // Listen for call agent assignments
+      socket.on('call:agent_assigned', (data: any) => {
+        setActiveCalls(prev => prev.map(call =>
+          (call.id === data.callId || call.callSid === data.callSid)
+            ? { ...call, agent: data.agent }
+            : call
+        ));
+      });
+
+      // Listen for transcript updates
+      socket.on('call:transcript_update', (data: any) => {
+        // If the selected call is receiving a transcript update, we don't need to do anything
+        // The LiveCallDisplay component will handle this
+        
+        // But we could update the UI to show that a new message was received
+        if (data.callId && !selectedCall) {
+          setActiveCalls(prev => prev.map(call =>
+            (call.id === data.callId || call.callSid === data.callSid)
+              ? { ...call, hasNewMessage: true }
+              : call
+          ));
+        }
+      });
+
+      // Clean up listeners when component unmounts
+      return () => {
+        socket.off('call:start');
+        socket.off('call:status_update');
+        socket.off('call:sentiment_update');
+        socket.off('call:agent_assigned');
+        socket.off('call:transcript_update');
+      };
+    }
+  }, [socket, isConnected, selectedCall, toast]);
+
+  // Handle call end
+  const handleEndCall = (callId: string) => {
+    if (socket && isConnected) {
+      socket.emit('call:end', { callId });
+    }
+    
+    setActiveCalls(prev => prev.filter(call => call.id !== callId));
+    
+    if (selectedCall === callId) {
+      setSelectedCall(null);
+    }
+  };
+
+  // Handle call transfer
+  const handleTransferCall = (callId: string) => {
+    toast({
+      title: "Transfer Initiated",
+      description: "Call transfer functionality is not implemented in this demo.",
+    });
+  };
 
   return (
     <div className="space-y-4">
@@ -186,11 +368,86 @@ function ActiveCallsPanel() {
         </Button>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        {activeCalls.map((call) => (
-          <ActiveCallCard key={call.id} call={call} />
-        ))}
-      </div>
+      {selectedCall ? (
+        // Show detailed view of selected call
+        <div className="space-y-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setSelectedCall(null)}
+          >
+            Back to All Calls
+          </Button>
+          
+          {activeCalls.filter(call => call.id === selectedCall).map(call => (
+            <LiveCallDisplay
+              key={call.id}
+              initialCallData={call}
+              onEndCall={() => handleEndCall(call.id)}
+              onTransferCall={() => handleTransferCall(call.id)}
+            />
+          ))}
+        </div>
+      ) : (
+        // Show grid of all active calls
+        <div className="grid gap-4 md:grid-cols-2">
+          {activeCalls.map((call) => (
+            <Card
+              key={call.id}
+              className="cursor-pointer hover:border-primary/50 transition-colors"
+              onClick={() => setSelectedCall(call.id)}
+            >
+              <CardHeader className="pb-2">
+                <div className="flex justify-between items-start">
+                  <Badge variant="outline" className="bg-indigo-100 text-indigo-800 border-indigo-200">
+                    <Clock className="h-3 w-3 mr-1" />
+                    {Math.floor(call.duration / 60)}:{(call.duration % 60).toString().padStart(2, '0')}
+                  </Badge>
+                  {call.sentiment && (
+                    <Badge
+                      variant="secondary"
+                      className={
+                        call.sentiment === "positive" ? "bg-green-100 text-green-800" :
+                        call.sentiment === "negative" ? "bg-red-100 text-red-800" :
+                        "bg-slate-100 text-slate-800"
+                      }
+                    >
+                      {call.sentiment.charAt(0).toUpperCase() + call.sentiment.slice(1)}
+                    </Badge>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent className="pb-2">
+                <div className="flex justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <Avatar className="h-8 w-8 border border-slate-200">
+                      <AvatarImage src={call.caller.avatar || "/placeholder.svg"} alt={call.caller.name} />
+                      <AvatarFallback>{call.caller.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <h4 className="font-medium text-sm">{call.caller.name}</h4>
+                      <p className="text-xs text-muted-foreground">{call.caller.number}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="text-right">
+                      <h4 className="font-medium text-sm">{call.agent.name}</h4>
+                      <p className="text-xs text-muted-foreground">Agent</p>
+                    </div>
+                    <Avatar className="h-8 w-8 border border-slate-200">
+                      <AvatarImage src={call.agent.avatar || "/placeholder.svg"} alt={call.agent.name} />
+                      <AvatarFallback>{call.agent.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                  </div>
+                </div>
+                <div className="text-sm text-center mt-2">
+                  Click to view live transcript
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
 
       {activeCalls.length === 0 && (
         <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-8">
@@ -200,14 +457,14 @@ function ActiveCallsPanel() {
         </div>
       )}
     </div>
-  )
+  );
 }
 
-function ActiveCallCard({ call }) {
+function ActiveCallCard({ call }: { call: any }) {
   const [isMuted, setIsMuted] = useState(false)
   const [isListening, setIsListening] = useState(true)
 
-  const getSentimentColor = (sentiment) => {
+  const getSentimentColor = (sentiment: string) => {
     switch (sentiment) {
       case "positive":
         return "bg-green-100 text-green-800"
@@ -264,7 +521,7 @@ function ActiveCallCard({ call }) {
           <div>
             <p className="text-sm font-medium mb-1">Detected Topics:</p>
             <div className="flex flex-wrap gap-1">
-              {call.topics.map((topic, i) => (
+              {call.topics.map((topic: string, i: number) => (
                 <Badge key={i} variant="outline" className="bg-slate-100">
                   {topic}
                 </Badge>
@@ -374,7 +631,7 @@ function CallQueuePanel() {
     },
   ]
 
-  const getPriorityColor = (priority) => {
+  const getPriorityColor = (priority: string) => {
     switch (priority) {
       case "High":
         return "bg-red-100 text-red-800"
@@ -474,7 +731,7 @@ function CallQueuePanel() {
   )
 }
 
-function CallForwardingPanel({ isConfigured, onSetupClick }) {
+function CallForwardingPanel({ isConfigured, onSetupClick }: { isConfigured: boolean, onSetupClick: () => void }) {
   const [forwardingEnabled, setForwardingEnabled] = useState(true)
 
   const forwardingRules = [
@@ -705,7 +962,7 @@ function RecentCallHistoryPanel() {
     },
   ]
 
-  const getStatusColor = (status) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case "completed":
         return "bg-green-100 text-green-800"
@@ -718,7 +975,7 @@ function RecentCallHistoryPanel() {
     }
   }
 
-  const getStatusLabel = (status) => {
+  const getStatusLabel = (status: string) => {
     switch (status) {
       case "completed":
         return "Completed"
@@ -815,7 +1072,13 @@ function RecentCallHistoryPanel() {
   )
 }
 
-function SetupRequiredPanel({ title, description, buttonText, onClick, icon }) {
+function SetupRequiredPanel({ title, description, buttonText, onClick, icon }: {
+  title: string,
+  description: string,
+  buttonText: string,
+  onClick: () => void,
+  icon: React.ReactNode
+}) {
   return (
     <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
       {icon}
@@ -828,7 +1091,11 @@ function SetupRequiredPanel({ title, description, buttonText, onClick, icon }) {
   )
 }
 
-function TwilioSetupDialog({ open, onOpenChange, onComplete }) {
+function TwilioSetupDialog({ open, onOpenChange, onComplete }: {
+  open: boolean,
+  onOpenChange: (open: boolean) => void,
+  onComplete: () => void
+}) {
   const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
 
@@ -1020,7 +1287,7 @@ function TwilioSetupDialog({ open, onOpenChange, onComplete }) {
   )
 }
 
-function MoreVertical(props) {
+function MoreVertical(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -1041,7 +1308,7 @@ function MoreVertical(props) {
   )
 }
 
-function InfoIcon(props) {
+function InfoIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -1062,7 +1329,7 @@ function InfoIcon(props) {
   )
 }
 
-function Loader2(props) {
+function Loader2(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

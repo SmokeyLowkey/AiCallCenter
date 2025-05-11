@@ -161,7 +161,7 @@ export async function GET(request: NextRequest) {
           with: transcript.sharedWith
         } : null,
         summary: transcript.summary || '',
-        content: transcript.content
+        content: formatTranscriptContent(transcript.content)
       };
     }).filter(Boolean);
     
@@ -181,6 +181,34 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+// Helper function to format transcript content
+function formatTranscriptContent(content: any): any {
+  // If content is already an array, return it
+  if (Array.isArray(content)) {
+    return content;
+  }
+  
+  // If content is a string, try to parse it as JSON
+  if (typeof content === 'string') {
+    try {
+      const parsedContent = JSON.parse(content);
+      return parsedContent;
+    } catch (error) {
+      console.error('Error parsing transcript content:', error);
+      // If parsing fails, return an empty array
+      return [];
+    }
+  }
+  
+  // If content is null or undefined, return an empty array
+  if (content === null || content === undefined) {
+    return [];
+  }
+  
+  // If content is an object, return it as is
+  return content;
 }
 
 // Update transcript flags (star, flag, share)
