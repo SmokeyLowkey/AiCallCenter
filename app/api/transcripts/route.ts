@@ -1,177 +1,177 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient, CallStatus } from '@/lib/generated/prisma';
-
-const prisma = new PrismaClient();
+import { getToken } from 'next-auth/jwt';
+import { prisma } from '@/lib/prisma';
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    
-    // Parse query parameters
-    const search = searchParams.get('search');
-    const status = searchParams.get('status');
-    const sentiment = searchParams.get('sentiment');
-    const isStarred = searchParams.get('starred') === 'true';
-    const isFlagged = searchParams.get('flagged') === 'true';
-    const isShared = searchParams.get('shared') === 'true';
-    const topic = searchParams.get('topic');
-    const agentId = searchParams.get('agentId');
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '10');
+    // Get the user's session token
+    const token = await getToken({ 
+      req: request,
+      secret: process.env.NEXTAUTH_SECRET
+    });
+
+    if (!token || !token.sub) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    // Get the user
+    const user = await prisma.user.findUnique({
+      where: { id: token.sub },
+      include: { team: true }
+    });
+
+    if (!user) {
+      return NextResponse.json(
+        { error: 'User not found' },
+        { status: 404 }
+      );
+    }
+
+    // Get query parameters
+    const searchParams = request.nextUrl.searchParams;
+    const filter = searchParams.get('filter') || 'all';
+    const search = searchParams.get('search') || '';
     const sortBy = searchParams.get('sortBy') || 'date-desc';
-    
-    // Calculate pagination
-    const skip = (page - 1) * limit;
-    
-    // Build where clause for calls
-    const callWhereClause: any = {};
-    
-    if (status) {
-      callWhereClause.status = status;
-    }
-    
-    if (sentiment) {
-      callWhereClause.sentiment = sentiment;
-    }
-    
-    if (agentId) {
-      callWhereClause.agentId = agentId;
-    }
-    
-    if (search) {
-      // Search in caller name, caller phone, or transcript content
-      callWhereClause.OR = [
-        { callerName: { contains: search, mode: 'insensitive' } },
-        { callerPhone: { contains: search, mode: 'insensitive' } },
-      ];
-    }
-    
-    // Build where clause for transcripts
-    const transcriptWhereClause: any = {};
-    
-    if (isStarred) {
-      transcriptWhereClause.isStarred = true;
-    }
-    
-    if (isFlagged) {
-      transcriptWhereClause.isFlagged = true;
-    }
-    
-    if (isShared) {
-      transcriptWhereClause.isShared = true;
-    }
-    
-    // Combine call and transcript where clauses
-    const whereClause: any = {
-      transcript: transcriptWhereClause,
-      ...callWhereClause
-    };
-    
-    // Add topic filter if provided
-    if (topic) {
-      whereClause.topics = {
-        some: {
-          name: {
-            contains: topic,
-            mode: 'insensitive'
+    const page = parseInt(searchParams.get('page') || '1');
+    const pageSize = parseInt(searchParams.get('pageSize') || '10');
+
+    // Build the query
+    const baseQuery: any = {
+      where: {
+        call: {
+          teamId: user.teamId
+        }
+      },
+      include: {
+        call: {
+          include: {
+            agent: {
+              select: {
+                id: true,
+                name: true,
+                image: true
+              }
+            },
+            topics: true
           }
         }
-      };
-    }
-    
-    // Determine sort order
-    let orderBy: any = {};
-    
-    switch (sortBy) {
-      case 'date-asc':
-        orderBy = { startTime: 'asc' };
-        break;
-      case 'date-desc':
-        orderBy = { startTime: 'desc' };
-        break;
-      case 'duration-asc':
-        orderBy = { duration: 'asc' };
-        break;
-      case 'duration-desc':
-        orderBy = { duration: 'desc' };
-        break;
-      default:
-        orderBy = { startTime: 'desc' };
-    }
-    
-    // Get total count for pagination
-    const totalCount = await prisma.call.count({
-      where: whereClause
-    });
-    
-    // Fetch calls with transcripts
-    const calls = await prisma.call.findMany({
-      where: whereClause,
-      include: {
-        agent: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            image: true
-          }
-        },
-        transcript: true,
-        topics: true
-      },
-      orderBy,
-      skip,
-      take: limit
-    });
-    
-    // Format the response
-    const transcripts = calls.map(call => {
-      const transcript = call.transcript;
-      
-      if (!transcript) {
-        return null;
       }
+    };
+
+    // Apply filter
+    if (filter === 'flagged') {
+      baseQuery.where.isFlagged = true;
+    } else if (filter === 'starred') {
+      baseQuery.where.isStarred = true;
+    } else if (filter === 'shared') {
+      baseQuery.where.isShared = true;
+    }
+
+    // Apply search
+    if (search) {
+      baseQuery.where.OR = [
+        { summary: { contains: search, mode: 'insensitive' } },
+        { call: { callerName: { contains: search, mode: 'insensitive' } } },
+        { call: { agent: { name: { contains: search, mode: 'insensitive' } } } }
+      ];
+    }
+
+    // Count total records for pagination
+    const totalCount = await prisma.transcript.count({
+      where: baseQuery.where
+    });
+
+    // Apply sorting
+    if (sortBy === 'date-desc') {
+      baseQuery.orderBy = { call: { startTime: 'desc' } };
+    } else if (sortBy === 'date-asc') {
+      baseQuery.orderBy = { call: { startTime: 'asc' } };
+    } else if (sortBy === 'duration-desc') {
+      baseQuery.orderBy = { call: { duration: 'desc' } };
+    } else if (sortBy === 'duration-asc') {
+      baseQuery.orderBy = { call: { duration: 'asc' } };
+    } else if (sortBy === 'sentiment-desc' || sortBy === 'sentiment-asc') {
+      // For sentiment sorting, we'll need to handle this in memory after fetching
+      // since it's not a direct field we can sort on in the database
+      baseQuery.orderBy = { call: { startTime: 'desc' } }; // Default sort for now
+    }
+
+    // Apply pagination
+    baseQuery.skip = (page - 1) * pageSize;
+    baseQuery.take = pageSize;
+
+    // Execute the query
+    const transcripts = await prisma.transcript.findMany(baseQuery);
+
+    // Format the response
+    const formattedTranscripts = transcripts.map(transcript => {
+      // Type assertion to access the included relations
+      const transcriptWithRelations = transcript as any;
+      const call = transcriptWithRelations.call;
       
-      // Extract topics
-      const topics = call.topics.map(topic => topic.name);
+      // Format topics
+      const topics = call.topics.map((topic: any) => topic.name);
+      
+      // Determine sentiment value for sorting if needed
+      const sentimentValue = 
+        call.sentiment === 'positive' ? 3 :
+        call.sentiment === 'neutral' ? 2 :
+        call.sentiment === 'negative' ? 1 : 0;
       
       return {
-        id: call.id,
-        callId: call.callId,
+        id: transcript.id,
+        callId: call.id,
         customer: {
-          name: call.callerName || 'Unknown',
+          name: call.callerName || 'Unknown Caller',
           phone: call.callerPhone,
-          avatar: call.callerAvatar || '/placeholder.svg?height=40&width=40'
+          avatar: call.callerAvatar || '/placeholder.svg'
         },
         agent: call.agent ? {
           id: call.agent.id,
-          name: call.agent.name || 'Unknown',
-          avatar: call.agent.image || '/placeholder.svg?height=40&width=40'
+          name: call.agent.name || 'Unknown Agent',
+          avatar: call.agent.image || '/placeholder.svg'
         } : null,
-        date: call.startTime,
-        duration: call.duration || 0,
+        date: call.startTime.toLocaleString(),
+        duration: formatDuration(call.duration || 0),
         sentiment: call.sentiment || 'neutral',
         topics,
         starred: transcript.isStarred,
         flagged: transcript.isFlagged,
         flagReason: transcript.flagReason,
         shared: transcript.isShared ? {
-          by: transcript.sharedBy || '',
-          date: transcript.sharedAt,
-          with: transcript.sharedWith
+          by: transcript.sharedBy || 'Unknown',
+          date: transcript.sharedAt?.toLocaleString() || 'Unknown',
+          with: transcript.sharedWith || []
         } : null,
-        summary: transcript.summary || '',
-        content: formatTranscriptContent(transcript.content)
+        summary: transcript.summary || 'No summary available',
+        content: transcript.content,
+        _sentimentValue: sentimentValue // For client-side sorting
       };
-    }).filter(Boolean);
-    
+    });
+
+    // Apply sentiment sorting if needed
+    if (sortBy === 'sentiment-desc') {
+      formattedTranscripts.sort((a, b) => b._sentimentValue - a._sentimentValue);
+    } else if (sortBy === 'sentiment-asc') {
+      formattedTranscripts.sort((a, b) => a._sentimentValue - b._sentimentValue);
+    }
+
+    // Remove the internal sorting field
+    formattedTranscripts.forEach(t => {
+      const transcript = t as any;
+      delete transcript._sentimentValue;
+    });
+
     return NextResponse.json({
-      transcripts,
+      transcripts: formattedTranscripts,
       pagination: {
-        total: totalCount,
         page,
-        limit,
-        pages: Math.ceil(totalCount / limit)
+        pageSize,
+        totalCount,
+        totalPages: Math.ceil(totalCount / pageSize)
       }
     });
   } catch (error) {
@@ -183,99 +183,9 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// Helper function to format transcript content
-function formatTranscriptContent(content: any): any {
-  // If content is already an array, return it
-  if (Array.isArray(content)) {
-    return content;
-  }
-  
-  // If content is a string, try to parse it as JSON
-  if (typeof content === 'string') {
-    try {
-      const parsedContent = JSON.parse(content);
-      return parsedContent;
-    } catch (error) {
-      console.error('Error parsing transcript content:', error);
-      // If parsing fails, return an empty array
-      return [];
-    }
-  }
-  
-  // If content is null or undefined, return an empty array
-  if (content === null || content === undefined) {
-    return [];
-  }
-  
-  // If content is an object, return it as is
-  return content;
-}
-
-// Update transcript flags (star, flag, share)
-export async function PATCH(request: NextRequest) {
-  try {
-    const data = await request.json();
-    const { id, action, value } = data;
-    
-    if (!id || !action) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
-    }
-    
-    // Find the transcript
-    const transcript = await prisma.transcript.findUnique({
-      where: { callId: id }
-    });
-    
-    if (!transcript) {
-      return NextResponse.json(
-        { error: 'Transcript not found' },
-        { status: 404 }
-      );
-    }
-    
-    // Update based on action
-    let updateData: any = {};
-    
-    switch (action) {
-      case 'star':
-        updateData.isStarred = value === true;
-        break;
-      case 'flag':
-        updateData.isFlagged = value === true;
-        if (value && data.reason) {
-          updateData.flagReason = data.reason;
-        }
-        break;
-      case 'share':
-        updateData.isShared = value === true;
-        if (value) {
-          updateData.sharedBy = data.sharedBy;
-          updateData.sharedWith = data.sharedWith;
-          updateData.sharedAt = new Date();
-        }
-        break;
-      default:
-        return NextResponse.json(
-          { error: 'Invalid action' },
-          { status: 400 }
-        );
-    }
-    
-    // Update the transcript
-    const updatedTranscript = await prisma.transcript.update({
-      where: { id: transcript.id },
-      data: updateData
-    });
-    
-    return NextResponse.json(updatedTranscript);
-  } catch (error) {
-    console.error('Error updating transcript:', error);
-    return NextResponse.json(
-      { error: 'Failed to update transcript' },
-      { status: 500 }
-    );
-  }
+// Helper function to format duration in seconds to MM:SS format
+function formatDuration(seconds: number): string {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 }
