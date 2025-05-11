@@ -1,28 +1,35 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { 
-  Card, 
-  CardContent, 
-  CardFooter, 
-  CardHeader 
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { 
-  Clock, 
-  Mic, 
-  MicOff, 
-  PhoneForwarded, 
-  PhoneOff, 
-  Volume2, 
-  VolumeX 
+import {
+  Clock,
+  Mic,
+  MicOff,
+  PhoneForwarded,
+  PhoneOff,
+  Volume2,
+  VolumeX,
+  Lightbulb,
+  MessageSquare,
+  Info,
+  Eye
 } from "lucide-react";
 import { LiveTranscript } from "./LiveTranscript";
 import { useSocket } from "@/contexts/SocketContext";
 import { useToast } from "@/components/ui/use-toast";
+import { AISuggestion } from "@/lib/services/ai-assistant";
+import { useSession } from "next-auth/react";
+import { TranscriptViewDialog } from "../../transcripts/components/TranscriptViewDialog";
 
 interface Participant {
   name: string;
@@ -74,9 +81,13 @@ export function LiveCallDisplay({ initialCallData, onEndCall, onTransferCall }: 
       timestamp: new Date(),
     }
   ]);
+  const [aiSuggestion, setAiSuggestion] = useState<AISuggestion | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [viewTranscriptDialog, setViewTranscriptDialog] = useState(false);
 
   const { socket, isConnected } = useSocket();
   const { toast } = useToast();
+  const { data: session } = useSession();
 
   // Connect to the call room when the component mounts
   useEffect(() => {
@@ -138,7 +149,53 @@ export function LiveCallDisplay({ initialCallData, onEndCall, onTransferCall }: 
             }
             
             console.log('Adding new message to transcript');
-            return [...prevMessages, newMessage];
+            // Add the new message
+            const updatedMessages = [...prevMessages, newMessage];
+            
+            // Process the new message for AI suggestions
+            // Only process if we're not already processing and it's not a system message
+            if (!isProcessing && newMessage.sender !== 'system') {
+              setIsProcessing(true);
+              
+              // Only process if we have at least 3 messages (including the system message)
+              if (updatedMessages.length >= 3) {
+                // Call the AI suggestions API
+                fetch('/api/ai-suggestions', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    messages: updatedMessages,
+                    callId: callData.id,
+                  }),
+                })
+                  .then(response => {
+                    if (response.status === 204) {
+                      // No suggestion generated
+                      console.log('No AI suggestion generated');
+                      return null;
+                    }
+                    return response.json();
+                  })
+                  .then(suggestion => {
+                    if (suggestion && suggestion.confidence >= 0.6) {
+                      console.log('✅ New AI suggestion generated:', suggestion);
+                      setAiSuggestion(suggestion);
+                    }
+                    setIsProcessing(false);
+                  })
+                  .catch(error => {
+                    console.error('❌ Error processing message for AI suggestion:', error);
+                    setIsProcessing(false);
+                  });
+              } else {
+                // Not enough messages yet
+                setIsProcessing(false);
+              }
+            }
+            
+            return updatedMessages;
           });
         } else {
           console.log('❌ Transcript does not match our call, ignoring');
@@ -312,22 +369,95 @@ export function LiveCallDisplay({ initialCallData, onEndCall, onTransferCall }: 
         </div>
 
         {/* Live Transcript */}
-        <div className="mt-4 border rounded-md p-2 h-80 overflow-y-auto bg-slate-50">
-          <LiveTranscript 
-            messages={messages} 
+        <div className="mt-4 border rounded-md p-2 h-80 overflow-y-auto bg-slate-50 relative">
+          <LiveTranscript
+            messages={messages}
             caller={callData.caller}
             agent={callData.agent}
           />
+          <Button
+            variant="outline"
+            size="sm"
+            className="absolute top-2 right-2 bg-white"
+            onClick={() => setViewTranscriptDialog(true)}
+          >
+            <Eye className="h-4 w-4 mr-1" />
+            View Full
+          </Button>
         </div>
+
+        {/* Transcript Dialog */}
+        {viewTranscriptDialog && (
+          <TranscriptViewDialog
+            transcript={{
+              id: callData.callSid || callData.id,
+              customer: {
+                name: callData.caller.name,
+                phone: callData.caller.number,
+                avatar: callData.caller.avatar || "/placeholder.svg",
+              },
+              agent: {
+                name: callData.agent.name,
+                avatar: callData.agent.avatar || "/placeholder.svg",
+              },
+              duration: formatDuration(elapsedTime),
+              date: new Date(callData.startTime).toLocaleString(),
+              sentiment: callData.sentiment || "neutral",
+              topics: ["Account Access", "Password Reset"],
+              starred: false,
+              flagged: false,
+              summary: "Live call in progress",
+            }}
+            open={viewTranscriptDialog}
+            onOpenChange={setViewTranscriptDialog}
+          />
+        )}
 
         {/* AI Assistance */}
         <div className="mt-4">
-          <p className="text-sm font-medium mb-2">AI Assistance:</p>
-          <div className="p-3 bg-indigo-50 rounded-lg text-sm">
-            <p className="text-indigo-800">
-              <strong>Suggested response:</strong> "I can help reset your password. Let me verify your identity first, and then we'll get you back into your account right away."
-            </p>
+          <div className="flex justify-between items-center mb-2">
+            <p className="text-sm font-medium">AI Assistance:</p>
+            {isProcessing && (
+              <Badge variant="outline" className="bg-blue-50 text-blue-800 border-blue-200">
+                Processing...
+              </Badge>
+            )}
           </div>
+          
+          {aiSuggestion ? (
+            <div className="p-3 bg-indigo-50 rounded-lg text-sm">
+              <div className="flex items-start gap-2">
+                {aiSuggestion.type === 'response' && <MessageSquare className="h-4 w-4 text-indigo-600 mt-1" />}
+                {aiSuggestion.type === 'information' && <Info className="h-4 w-4 text-indigo-600 mt-1" />}
+                {aiSuggestion.type === 'action' && <Lightbulb className="h-4 w-4 text-indigo-600 mt-1" />}
+                
+                <div className="flex-1">
+                  <p className="text-indigo-800">
+                    <strong>
+                      {aiSuggestion.type === 'response' && 'Suggested response:'}
+                      {aiSuggestion.type === 'information' && 'Helpful information:'}
+                      {aiSuggestion.type === 'action' && 'Recommended action:'}
+                    </strong> {aiSuggestion.text}
+                  </p>
+                  
+                  {aiSuggestion.sources && aiSuggestion.sources.length > 0 && (
+                    <div className="mt-2 text-xs text-indigo-600">
+                      <p className="font-medium">Sources:</p>
+                      <ul className="list-disc list-inside">
+                        {aiSuggestion.sources.slice(0, 2).map((source, index) => (
+                          <li key={index}>{source.title}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="p-3 bg-slate-50 rounded-lg text-sm text-slate-500 italic">
+              AI suggestions will appear here as the conversation progresses...
+            </div>
+          )}
         </div>
       </CardContent>
       
