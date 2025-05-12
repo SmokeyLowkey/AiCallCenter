@@ -14,8 +14,8 @@ if (!global.socketClient) {
   try {
     // In a production environment, you would use a shared instance
     // For this example, we'll create a simple connection to the Socket.IO server
-    // Use the ngrok URL for the Socket.IO connection
-    const socket = socketIO('https://6116-24-72-111-53.ngrok-free.app');
+    // Use the BASE_URL environment variable for the Socket.IO connection
+    const socket = socketIO(process.env.BASE_URL || 'http://localhost:3000');
     
     // Store the socket for later use
     global.socketClient = socket;
@@ -35,11 +35,7 @@ export async function POST(request: NextRequest) {
     const to = formData.get('To') as string;
     const direction = formData.get('Direction') as string;
     
-    // Define VIP phone numbers that should always be answered
-    const vipPhoneNumbers = ['+13062092891']; // Add your phone number here
-    const isVipCaller = vipPhoneNumbers.includes(from);
-    
-    console.log(`Incoming call: ${callSid} from ${from} to ${to}, direction: ${direction}, VIP: ${isVipCaller}`);
+    console.log(`Incoming call: ${callSid} from ${from} to ${to}, direction: ${direction}`);
 
     // Create a new TwiML response
     const twiml = new VoiceResponse();
@@ -77,9 +73,32 @@ export async function POST(request: NextRequest) {
         },
       });
     }
+    
+    // Check if this is a VIP caller by looking up the phone number in the database
+    let isVipCaller = false;
+    let vipDetails = null;
+    
+    try {
+      // Look up the phone number in the VIP phone numbers table
+      const vipNumber = integration.teamId ? await prisma.vIPPhoneNumber.findFirst({
+        where: {
+          phoneNumber: from,
+          teamId: integration.teamId
+        }
+      }) : null;
+      
+      if (vipNumber) {
+        isVipCaller = true;
+        vipDetails = vipNumber;
+        console.log(`VIP caller detected: ${vipNumber.name} (${from})`);
+      }
+    } catch (error) {
+      console.error('Error checking VIP status:', error);
+      // Continue even if VIP check fails
+    }
 
-    // Get caller name from Twilio if available, or use a default
-    const callerName = formData.get('CallerName') as string || 'Unknown Caller';
+    // Get caller name from Twilio if available, use VIP name if available, or use a default
+    const callerName = vipDetails?.name || formData.get('CallerName') as string || 'Unknown Caller';
 
     // Create a new call record in the database
     let call: any;
@@ -167,13 +186,14 @@ export async function POST(request: NextRequest) {
 
       // For VIP callers, we want to silently listen to the entire call
       if (isVipCaller) {
+        console.log(`Handling VIP caller: ${callerName} (${from})`);
         // Add a short pause to keep the call open
         twiml.pause({ length: 1 });
         
         // Use gather with a very long timeout to keep listening
         const gather = twiml.gather({
           input: ['speech'] as any,
-          action: 'https://6116-24-72-111-53.ngrok-free.app/api/integrations/twilio/voice/transcribe',
+          action: `${process.env.BASE_URL}/api/integrations/twilio/voice/transcribe`,
           speechTimeout: 'auto',
           speechModel: 'phone_call',
           enhanced: true,
@@ -186,12 +206,12 @@ export async function POST(request: NextRequest) {
         // Enable call recording for the entire call
         // Note: This needs to be before the gather to record the entire call
         twiml.record({
-          action: 'https://6116-24-72-111-53.ngrok-free.app/api/integrations/twilio/voice/recording',
+          action: `${process.env.BASE_URL}/api/integrations/twilio/voice/recording`,
           transcribe: true,
-          transcribeCallback: 'https://6116-24-72-111-53.ngrok-free.app/api/integrations/twilio/voice/transcribe',
+          transcribeCallback: `${process.env.BASE_URL}/api/integrations/twilio/voice/transcribe`,
           playBeep: false,
           trim: 'trim-silence',
-          recordingStatusCallback: 'https://6116-24-72-111-53.ngrok-free.app/api/integrations/twilio/voice/status',
+          recordingStatusCallback: `${process.env.BASE_URL}/api/integrations/twilio/voice/status`,
           recordingStatusCallbackEvent: ['completed', 'in-progress'],
         });
       } else {
@@ -201,7 +221,7 @@ export async function POST(request: NextRequest) {
         // Enable real-time transcription
         const gather = twiml.gather({
           input: ['speech'] as any,
-          action: 'https://6116-24-72-111-53.ngrok-free.app/api/integrations/twilio/voice/transcribe',
+          action: `${process.env.BASE_URL}/api/integrations/twilio/voice/transcribe`,
           speechTimeout: 'auto',
           speechModel: 'phone_call',
           enhanced: true,
@@ -261,6 +281,7 @@ export async function POST(request: NextRequest) {
 
       // Check if this is a VIP caller
       if (isVipCaller) {
+        console.log(`Handling queued VIP caller: ${callerName} (${from})`);
         // For VIP callers, we want to silently listen to the entire call
         // Add a short pause to keep the call open
         twiml.pause({ length: 1 });
@@ -268,7 +289,7 @@ export async function POST(request: NextRequest) {
         // Use gather with a very long timeout to keep listening
         const gather = twiml.gather({
           input: ['speech'] as any,
-          action: 'https://6116-24-72-111-53.ngrok-free.app/api/integrations/twilio/voice/transcribe',
+          action: `${process.env.BASE_URL}/api/integrations/twilio/voice/transcribe`,
           speechTimeout: 'auto',
           speechModel: 'phone_call',
           enhanced: true,
@@ -283,11 +304,11 @@ export async function POST(request: NextRequest) {
       
         // Enable real-time transcription for the voicemail
         twiml.record({
-          action: 'https://6116-24-72-111-53.ngrok-free.app/api/integrations/twilio/voice/recording',
+          action: `${process.env.BASE_URL}/api/integrations/twilio/voice/recording`,
           transcribe: true,
-          transcribeCallback: 'https://6116-24-72-111-53.ngrok-free.app/api/integrations/twilio/voice/transcribe',
+          transcribeCallback: `${process.env.BASE_URL}/api/integrations/twilio/voice/transcribe`,
           maxLength: 120,
-          recordingStatusCallback: 'https://6116-24-72-111-53.ngrok-free.app/api/integrations/twilio/voice/status',
+          recordingStatusCallback: `${process.env.BASE_URL}/api/integrations/twilio/voice/status`,
           recordingStatusCallbackEvent: ['completed', 'in-progress'],
         });
       }

@@ -14,7 +14,7 @@ if (!global.socketClient) {
   try {
     // In a production environment, you would use a shared instance
     // For this example, we'll create a simple connection to the Socket.IO server
-    const socket = require('socket.io-client')(process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:3000');
+    const socket = require('socket.io-client')(process.env.BASE_URL || 'http://localhost:3000');
     
     // Store the socket for later use
     global.socketClient = socket;

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { VIPPhoneNumberManager } from "./components/VIPPhoneNumberManager"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import {
@@ -892,6 +893,9 @@ function CallForwardingPanel({ isConfigured, onSetupClick }: { isConfigured: boo
           </div>
         </CardContent>
       </Card>
+
+      {/* VIP Phone Numbers Manager */}
+      <VIPPhoneNumberManager />
     </div>
   )
 }

@@ -113,6 +113,11 @@ export type Integration = $Result.DefaultSelection<Prisma.$IntegrationPayload>
  * 
  */
 export type AnalyticsData = $Result.DefaultSelection<Prisma.$AnalyticsDataPayload>
+/**
+ * Model VIPPhoneNumber
+ * 
+ */
+export type VIPPhoneNumber = $Result.DefaultSelection<Prisma.$VIPPhoneNumberPayload>
 
 /**
  * Enums
@@ -485,6 +490,16 @@ export class PrismaClient<
     * ```
     */
   get analyticsData(): Prisma.AnalyticsDataDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.vIPPhoneNumber`: Exposes CRUD operations for the **VIPPhoneNumber** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more VIPPhoneNumbers
+    * const vIPPhoneNumbers = await prisma.vIPPhoneNumber.findMany()
+    * ```
+    */
+  get vIPPhoneNumber(): Prisma.VIPPhoneNumberDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -944,7 +959,8 @@ export namespace Prisma {
     QueuedCall: 'QueuedCall',
     ForwardingRule: 'ForwardingRule',
     Integration: 'Integration',
-    AnalyticsData: 'AnalyticsData'
+    AnalyticsData: 'AnalyticsData',
+    VIPPhoneNumber: 'VIPPhoneNumber'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -963,7 +979,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "account" | "session" | "user" | "verificationToken" | "team" | "teamMember" | "inviteCode" | "department" | "call" | "transcript" | "callTopic" | "topic" | "insight" | "callInsight" | "document" | "category" | "queuedCall" | "forwardingRule" | "integration" | "analyticsData"
+      modelProps: "account" | "session" | "user" | "verificationToken" | "team" | "teamMember" | "inviteCode" | "department" | "call" | "transcript" | "callTopic" | "topic" | "insight" | "callInsight" | "document" | "category" | "queuedCall" | "forwardingRule" | "integration" | "analyticsData" | "vIPPhoneNumber"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2447,6 +2463,80 @@ export namespace Prisma {
           }
         }
       }
+      VIPPhoneNumber: {
+        payload: Prisma.$VIPPhoneNumberPayload<ExtArgs>
+        fields: Prisma.VIPPhoneNumberFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.VIPPhoneNumberFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VIPPhoneNumberPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.VIPPhoneNumberFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VIPPhoneNumberPayload>
+          }
+          findFirst: {
+            args: Prisma.VIPPhoneNumberFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VIPPhoneNumberPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.VIPPhoneNumberFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VIPPhoneNumberPayload>
+          }
+          findMany: {
+            args: Prisma.VIPPhoneNumberFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VIPPhoneNumberPayload>[]
+          }
+          create: {
+            args: Prisma.VIPPhoneNumberCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VIPPhoneNumberPayload>
+          }
+          createMany: {
+            args: Prisma.VIPPhoneNumberCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.VIPPhoneNumberCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VIPPhoneNumberPayload>[]
+          }
+          delete: {
+            args: Prisma.VIPPhoneNumberDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VIPPhoneNumberPayload>
+          }
+          update: {
+            args: Prisma.VIPPhoneNumberUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VIPPhoneNumberPayload>
+          }
+          deleteMany: {
+            args: Prisma.VIPPhoneNumberDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.VIPPhoneNumberUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.VIPPhoneNumberUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VIPPhoneNumberPayload>[]
+          }
+          upsert: {
+            args: Prisma.VIPPhoneNumberUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VIPPhoneNumberPayload>
+          }
+          aggregate: {
+            args: Prisma.VIPPhoneNumberAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateVIPPhoneNumber>
+          }
+          groupBy: {
+            args: Prisma.VIPPhoneNumberGroupByArgs<ExtArgs>
+            result: $Utils.Optional<VIPPhoneNumberGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.VIPPhoneNumberCountArgs<ExtArgs>
+            result: $Utils.Optional<VIPPhoneNumberCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2551,6 +2641,7 @@ export namespace Prisma {
     forwardingRule?: ForwardingRuleOmit
     integration?: IntegrationOmit
     analyticsData?: AnalyticsDataOmit
+    vIPPhoneNumber?: VIPPhoneNumberOmit
   }
 
   /* Types for Logging */
@@ -2757,6 +2848,7 @@ export namespace Prisma {
     integrations: number
     analyticsData: number
     documents: number
+    vipPhoneNumbers: number
   }
 
   export type TeamCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2769,6 +2861,7 @@ export namespace Prisma {
     integrations?: boolean | TeamCountOutputTypeCountIntegrationsArgs
     analyticsData?: boolean | TeamCountOutputTypeCountAnalyticsDataArgs
     documents?: boolean | TeamCountOutputTypeCountDocumentsArgs
+    vipPhoneNumbers?: boolean | TeamCountOutputTypeCountVipPhoneNumbersArgs
   }
 
   // Custom InputTypes
@@ -2843,6 +2936,13 @@ export namespace Prisma {
    */
   export type TeamCountOutputTypeCountDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DocumentWhereInput
+  }
+
+  /**
+   * TeamCountOutputType without action
+   */
+  export type TeamCountOutputTypeCountVipPhoneNumbersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VIPPhoneNumberWhereInput
   }
 
 
@@ -8135,6 +8235,7 @@ export namespace Prisma {
     integrations?: boolean | Team$integrationsArgs<ExtArgs>
     analyticsData?: boolean | Team$analyticsDataArgs<ExtArgs>
     documents?: boolean | Team$documentsArgs<ExtArgs>
+    vipPhoneNumbers?: boolean | Team$vipPhoneNumbersArgs<ExtArgs>
     _count?: boolean | TeamCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["team"]>
 
@@ -8188,6 +8289,7 @@ export namespace Prisma {
     integrations?: boolean | Team$integrationsArgs<ExtArgs>
     analyticsData?: boolean | Team$analyticsDataArgs<ExtArgs>
     documents?: boolean | Team$documentsArgs<ExtArgs>
+    vipPhoneNumbers?: boolean | Team$vipPhoneNumbersArgs<ExtArgs>
     _count?: boolean | TeamCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TeamIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8210,6 +8312,7 @@ export namespace Prisma {
       integrations: Prisma.$IntegrationPayload<ExtArgs>[]
       analyticsData: Prisma.$AnalyticsDataPayload<ExtArgs>[]
       documents: Prisma.$DocumentPayload<ExtArgs>[]
+      vipPhoneNumbers: Prisma.$VIPPhoneNumberPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -8625,6 +8728,7 @@ export namespace Prisma {
     integrations<T extends Team$integrationsArgs<ExtArgs> = {}>(args?: Subset<T, Team$integrationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     analyticsData<T extends Team$analyticsDataArgs<ExtArgs> = {}>(args?: Subset<T, Team$analyticsDataArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AnalyticsDataPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     documents<T extends Team$documentsArgs<ExtArgs> = {}>(args?: Subset<T, Team$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    vipPhoneNumbers<T extends Team$vipPhoneNumbersArgs<ExtArgs> = {}>(args?: Subset<T, Team$vipPhoneNumbersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VIPPhoneNumberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9272,6 +9376,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: DocumentScalarFieldEnum | DocumentScalarFieldEnum[]
+  }
+
+  /**
+   * Team.vipPhoneNumbers
+   */
+  export type Team$vipPhoneNumbersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VIPPhoneNumber
+     */
+    select?: VIPPhoneNumberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VIPPhoneNumber
+     */
+    omit?: VIPPhoneNumberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VIPPhoneNumberInclude<ExtArgs> | null
+    where?: VIPPhoneNumberWhereInput
+    orderBy?: VIPPhoneNumberOrderByWithRelationInput | VIPPhoneNumberOrderByWithRelationInput[]
+    cursor?: VIPPhoneNumberWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VIPPhoneNumberScalarFieldEnum | VIPPhoneNumberScalarFieldEnum[]
   }
 
   /**
@@ -26473,6 +26601,1090 @@ export namespace Prisma {
 
 
   /**
+   * Model VIPPhoneNumber
+   */
+
+  export type AggregateVIPPhoneNumber = {
+    _count: VIPPhoneNumberCountAggregateOutputType | null
+    _min: VIPPhoneNumberMinAggregateOutputType | null
+    _max: VIPPhoneNumberMaxAggregateOutputType | null
+  }
+
+  export type VIPPhoneNumberMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    phoneNumber: string | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    teamId: string | null
+  }
+
+  export type VIPPhoneNumberMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    phoneNumber: string | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    teamId: string | null
+  }
+
+  export type VIPPhoneNumberCountAggregateOutputType = {
+    id: number
+    name: number
+    phoneNumber: number
+    notes: number
+    createdAt: number
+    updatedAt: number
+    teamId: number
+    _all: number
+  }
+
+
+  export type VIPPhoneNumberMinAggregateInputType = {
+    id?: true
+    name?: true
+    phoneNumber?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+    teamId?: true
+  }
+
+  export type VIPPhoneNumberMaxAggregateInputType = {
+    id?: true
+    name?: true
+    phoneNumber?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+    teamId?: true
+  }
+
+  export type VIPPhoneNumberCountAggregateInputType = {
+    id?: true
+    name?: true
+    phoneNumber?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+    teamId?: true
+    _all?: true
+  }
+
+  export type VIPPhoneNumberAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which VIPPhoneNumber to aggregate.
+     */
+    where?: VIPPhoneNumberWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VIPPhoneNumbers to fetch.
+     */
+    orderBy?: VIPPhoneNumberOrderByWithRelationInput | VIPPhoneNumberOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: VIPPhoneNumberWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VIPPhoneNumbers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VIPPhoneNumbers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned VIPPhoneNumbers
+    **/
+    _count?: true | VIPPhoneNumberCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: VIPPhoneNumberMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: VIPPhoneNumberMaxAggregateInputType
+  }
+
+  export type GetVIPPhoneNumberAggregateType<T extends VIPPhoneNumberAggregateArgs> = {
+        [P in keyof T & keyof AggregateVIPPhoneNumber]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateVIPPhoneNumber[P]>
+      : GetScalarType<T[P], AggregateVIPPhoneNumber[P]>
+  }
+
+
+
+
+  export type VIPPhoneNumberGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VIPPhoneNumberWhereInput
+    orderBy?: VIPPhoneNumberOrderByWithAggregationInput | VIPPhoneNumberOrderByWithAggregationInput[]
+    by: VIPPhoneNumberScalarFieldEnum[] | VIPPhoneNumberScalarFieldEnum
+    having?: VIPPhoneNumberScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: VIPPhoneNumberCountAggregateInputType | true
+    _min?: VIPPhoneNumberMinAggregateInputType
+    _max?: VIPPhoneNumberMaxAggregateInputType
+  }
+
+  export type VIPPhoneNumberGroupByOutputType = {
+    id: string
+    name: string
+    phoneNumber: string
+    notes: string | null
+    createdAt: Date
+    updatedAt: Date
+    teamId: string
+    _count: VIPPhoneNumberCountAggregateOutputType | null
+    _min: VIPPhoneNumberMinAggregateOutputType | null
+    _max: VIPPhoneNumberMaxAggregateOutputType | null
+  }
+
+  type GetVIPPhoneNumberGroupByPayload<T extends VIPPhoneNumberGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<VIPPhoneNumberGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof VIPPhoneNumberGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], VIPPhoneNumberGroupByOutputType[P]>
+            : GetScalarType<T[P], VIPPhoneNumberGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type VIPPhoneNumberSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    phoneNumber?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    teamId?: boolean
+    team?: boolean | TeamDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["vIPPhoneNumber"]>
+
+  export type VIPPhoneNumberSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    phoneNumber?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    teamId?: boolean
+    team?: boolean | TeamDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["vIPPhoneNumber"]>
+
+  export type VIPPhoneNumberSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    phoneNumber?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    teamId?: boolean
+    team?: boolean | TeamDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["vIPPhoneNumber"]>
+
+  export type VIPPhoneNumberSelectScalar = {
+    id?: boolean
+    name?: boolean
+    phoneNumber?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    teamId?: boolean
+  }
+
+  export type VIPPhoneNumberOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "phoneNumber" | "notes" | "createdAt" | "updatedAt" | "teamId", ExtArgs["result"]["vIPPhoneNumber"]>
+  export type VIPPhoneNumberInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    team?: boolean | TeamDefaultArgs<ExtArgs>
+  }
+  export type VIPPhoneNumberIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    team?: boolean | TeamDefaultArgs<ExtArgs>
+  }
+  export type VIPPhoneNumberIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    team?: boolean | TeamDefaultArgs<ExtArgs>
+  }
+
+  export type $VIPPhoneNumberPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "VIPPhoneNumber"
+    objects: {
+      team: Prisma.$TeamPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      phoneNumber: string
+      notes: string | null
+      createdAt: Date
+      updatedAt: Date
+      teamId: string
+    }, ExtArgs["result"]["vIPPhoneNumber"]>
+    composites: {}
+  }
+
+  type VIPPhoneNumberGetPayload<S extends boolean | null | undefined | VIPPhoneNumberDefaultArgs> = $Result.GetResult<Prisma.$VIPPhoneNumberPayload, S>
+
+  type VIPPhoneNumberCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<VIPPhoneNumberFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: VIPPhoneNumberCountAggregateInputType | true
+    }
+
+  export interface VIPPhoneNumberDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['VIPPhoneNumber'], meta: { name: 'VIPPhoneNumber' } }
+    /**
+     * Find zero or one VIPPhoneNumber that matches the filter.
+     * @param {VIPPhoneNumberFindUniqueArgs} args - Arguments to find a VIPPhoneNumber
+     * @example
+     * // Get one VIPPhoneNumber
+     * const vIPPhoneNumber = await prisma.vIPPhoneNumber.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends VIPPhoneNumberFindUniqueArgs>(args: SelectSubset<T, VIPPhoneNumberFindUniqueArgs<ExtArgs>>): Prisma__VIPPhoneNumberClient<$Result.GetResult<Prisma.$VIPPhoneNumberPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one VIPPhoneNumber that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {VIPPhoneNumberFindUniqueOrThrowArgs} args - Arguments to find a VIPPhoneNumber
+     * @example
+     * // Get one VIPPhoneNumber
+     * const vIPPhoneNumber = await prisma.vIPPhoneNumber.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends VIPPhoneNumberFindUniqueOrThrowArgs>(args: SelectSubset<T, VIPPhoneNumberFindUniqueOrThrowArgs<ExtArgs>>): Prisma__VIPPhoneNumberClient<$Result.GetResult<Prisma.$VIPPhoneNumberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first VIPPhoneNumber that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VIPPhoneNumberFindFirstArgs} args - Arguments to find a VIPPhoneNumber
+     * @example
+     * // Get one VIPPhoneNumber
+     * const vIPPhoneNumber = await prisma.vIPPhoneNumber.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends VIPPhoneNumberFindFirstArgs>(args?: SelectSubset<T, VIPPhoneNumberFindFirstArgs<ExtArgs>>): Prisma__VIPPhoneNumberClient<$Result.GetResult<Prisma.$VIPPhoneNumberPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first VIPPhoneNumber that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VIPPhoneNumberFindFirstOrThrowArgs} args - Arguments to find a VIPPhoneNumber
+     * @example
+     * // Get one VIPPhoneNumber
+     * const vIPPhoneNumber = await prisma.vIPPhoneNumber.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends VIPPhoneNumberFindFirstOrThrowArgs>(args?: SelectSubset<T, VIPPhoneNumberFindFirstOrThrowArgs<ExtArgs>>): Prisma__VIPPhoneNumberClient<$Result.GetResult<Prisma.$VIPPhoneNumberPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more VIPPhoneNumbers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VIPPhoneNumberFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all VIPPhoneNumbers
+     * const vIPPhoneNumbers = await prisma.vIPPhoneNumber.findMany()
+     * 
+     * // Get first 10 VIPPhoneNumbers
+     * const vIPPhoneNumbers = await prisma.vIPPhoneNumber.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const vIPPhoneNumberWithIdOnly = await prisma.vIPPhoneNumber.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends VIPPhoneNumberFindManyArgs>(args?: SelectSubset<T, VIPPhoneNumberFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VIPPhoneNumberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a VIPPhoneNumber.
+     * @param {VIPPhoneNumberCreateArgs} args - Arguments to create a VIPPhoneNumber.
+     * @example
+     * // Create one VIPPhoneNumber
+     * const VIPPhoneNumber = await prisma.vIPPhoneNumber.create({
+     *   data: {
+     *     // ... data to create a VIPPhoneNumber
+     *   }
+     * })
+     * 
+     */
+    create<T extends VIPPhoneNumberCreateArgs>(args: SelectSubset<T, VIPPhoneNumberCreateArgs<ExtArgs>>): Prisma__VIPPhoneNumberClient<$Result.GetResult<Prisma.$VIPPhoneNumberPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many VIPPhoneNumbers.
+     * @param {VIPPhoneNumberCreateManyArgs} args - Arguments to create many VIPPhoneNumbers.
+     * @example
+     * // Create many VIPPhoneNumbers
+     * const vIPPhoneNumber = await prisma.vIPPhoneNumber.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends VIPPhoneNumberCreateManyArgs>(args?: SelectSubset<T, VIPPhoneNumberCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many VIPPhoneNumbers and returns the data saved in the database.
+     * @param {VIPPhoneNumberCreateManyAndReturnArgs} args - Arguments to create many VIPPhoneNumbers.
+     * @example
+     * // Create many VIPPhoneNumbers
+     * const vIPPhoneNumber = await prisma.vIPPhoneNumber.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many VIPPhoneNumbers and only return the `id`
+     * const vIPPhoneNumberWithIdOnly = await prisma.vIPPhoneNumber.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends VIPPhoneNumberCreateManyAndReturnArgs>(args?: SelectSubset<T, VIPPhoneNumberCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VIPPhoneNumberPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a VIPPhoneNumber.
+     * @param {VIPPhoneNumberDeleteArgs} args - Arguments to delete one VIPPhoneNumber.
+     * @example
+     * // Delete one VIPPhoneNumber
+     * const VIPPhoneNumber = await prisma.vIPPhoneNumber.delete({
+     *   where: {
+     *     // ... filter to delete one VIPPhoneNumber
+     *   }
+     * })
+     * 
+     */
+    delete<T extends VIPPhoneNumberDeleteArgs>(args: SelectSubset<T, VIPPhoneNumberDeleteArgs<ExtArgs>>): Prisma__VIPPhoneNumberClient<$Result.GetResult<Prisma.$VIPPhoneNumberPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one VIPPhoneNumber.
+     * @param {VIPPhoneNumberUpdateArgs} args - Arguments to update one VIPPhoneNumber.
+     * @example
+     * // Update one VIPPhoneNumber
+     * const vIPPhoneNumber = await prisma.vIPPhoneNumber.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends VIPPhoneNumberUpdateArgs>(args: SelectSubset<T, VIPPhoneNumberUpdateArgs<ExtArgs>>): Prisma__VIPPhoneNumberClient<$Result.GetResult<Prisma.$VIPPhoneNumberPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more VIPPhoneNumbers.
+     * @param {VIPPhoneNumberDeleteManyArgs} args - Arguments to filter VIPPhoneNumbers to delete.
+     * @example
+     * // Delete a few VIPPhoneNumbers
+     * const { count } = await prisma.vIPPhoneNumber.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends VIPPhoneNumberDeleteManyArgs>(args?: SelectSubset<T, VIPPhoneNumberDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more VIPPhoneNumbers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VIPPhoneNumberUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many VIPPhoneNumbers
+     * const vIPPhoneNumber = await prisma.vIPPhoneNumber.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends VIPPhoneNumberUpdateManyArgs>(args: SelectSubset<T, VIPPhoneNumberUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more VIPPhoneNumbers and returns the data updated in the database.
+     * @param {VIPPhoneNumberUpdateManyAndReturnArgs} args - Arguments to update many VIPPhoneNumbers.
+     * @example
+     * // Update many VIPPhoneNumbers
+     * const vIPPhoneNumber = await prisma.vIPPhoneNumber.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more VIPPhoneNumbers and only return the `id`
+     * const vIPPhoneNumberWithIdOnly = await prisma.vIPPhoneNumber.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends VIPPhoneNumberUpdateManyAndReturnArgs>(args: SelectSubset<T, VIPPhoneNumberUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VIPPhoneNumberPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one VIPPhoneNumber.
+     * @param {VIPPhoneNumberUpsertArgs} args - Arguments to update or create a VIPPhoneNumber.
+     * @example
+     * // Update or create a VIPPhoneNumber
+     * const vIPPhoneNumber = await prisma.vIPPhoneNumber.upsert({
+     *   create: {
+     *     // ... data to create a VIPPhoneNumber
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the VIPPhoneNumber we want to update
+     *   }
+     * })
+     */
+    upsert<T extends VIPPhoneNumberUpsertArgs>(args: SelectSubset<T, VIPPhoneNumberUpsertArgs<ExtArgs>>): Prisma__VIPPhoneNumberClient<$Result.GetResult<Prisma.$VIPPhoneNumberPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of VIPPhoneNumbers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VIPPhoneNumberCountArgs} args - Arguments to filter VIPPhoneNumbers to count.
+     * @example
+     * // Count the number of VIPPhoneNumbers
+     * const count = await prisma.vIPPhoneNumber.count({
+     *   where: {
+     *     // ... the filter for the VIPPhoneNumbers we want to count
+     *   }
+     * })
+    **/
+    count<T extends VIPPhoneNumberCountArgs>(
+      args?: Subset<T, VIPPhoneNumberCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], VIPPhoneNumberCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a VIPPhoneNumber.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VIPPhoneNumberAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends VIPPhoneNumberAggregateArgs>(args: Subset<T, VIPPhoneNumberAggregateArgs>): Prisma.PrismaPromise<GetVIPPhoneNumberAggregateType<T>>
+
+    /**
+     * Group by VIPPhoneNumber.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VIPPhoneNumberGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends VIPPhoneNumberGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: VIPPhoneNumberGroupByArgs['orderBy'] }
+        : { orderBy?: VIPPhoneNumberGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, VIPPhoneNumberGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetVIPPhoneNumberGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the VIPPhoneNumber model
+   */
+  readonly fields: VIPPhoneNumberFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for VIPPhoneNumber.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__VIPPhoneNumberClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    team<T extends TeamDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TeamDefaultArgs<ExtArgs>>): Prisma__TeamClient<$Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the VIPPhoneNumber model
+   */
+  interface VIPPhoneNumberFieldRefs {
+    readonly id: FieldRef<"VIPPhoneNumber", 'String'>
+    readonly name: FieldRef<"VIPPhoneNumber", 'String'>
+    readonly phoneNumber: FieldRef<"VIPPhoneNumber", 'String'>
+    readonly notes: FieldRef<"VIPPhoneNumber", 'String'>
+    readonly createdAt: FieldRef<"VIPPhoneNumber", 'DateTime'>
+    readonly updatedAt: FieldRef<"VIPPhoneNumber", 'DateTime'>
+    readonly teamId: FieldRef<"VIPPhoneNumber", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * VIPPhoneNumber findUnique
+   */
+  export type VIPPhoneNumberFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VIPPhoneNumber
+     */
+    select?: VIPPhoneNumberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VIPPhoneNumber
+     */
+    omit?: VIPPhoneNumberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VIPPhoneNumberInclude<ExtArgs> | null
+    /**
+     * Filter, which VIPPhoneNumber to fetch.
+     */
+    where: VIPPhoneNumberWhereUniqueInput
+  }
+
+  /**
+   * VIPPhoneNumber findUniqueOrThrow
+   */
+  export type VIPPhoneNumberFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VIPPhoneNumber
+     */
+    select?: VIPPhoneNumberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VIPPhoneNumber
+     */
+    omit?: VIPPhoneNumberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VIPPhoneNumberInclude<ExtArgs> | null
+    /**
+     * Filter, which VIPPhoneNumber to fetch.
+     */
+    where: VIPPhoneNumberWhereUniqueInput
+  }
+
+  /**
+   * VIPPhoneNumber findFirst
+   */
+  export type VIPPhoneNumberFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VIPPhoneNumber
+     */
+    select?: VIPPhoneNumberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VIPPhoneNumber
+     */
+    omit?: VIPPhoneNumberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VIPPhoneNumberInclude<ExtArgs> | null
+    /**
+     * Filter, which VIPPhoneNumber to fetch.
+     */
+    where?: VIPPhoneNumberWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VIPPhoneNumbers to fetch.
+     */
+    orderBy?: VIPPhoneNumberOrderByWithRelationInput | VIPPhoneNumberOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for VIPPhoneNumbers.
+     */
+    cursor?: VIPPhoneNumberWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VIPPhoneNumbers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VIPPhoneNumbers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of VIPPhoneNumbers.
+     */
+    distinct?: VIPPhoneNumberScalarFieldEnum | VIPPhoneNumberScalarFieldEnum[]
+  }
+
+  /**
+   * VIPPhoneNumber findFirstOrThrow
+   */
+  export type VIPPhoneNumberFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VIPPhoneNumber
+     */
+    select?: VIPPhoneNumberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VIPPhoneNumber
+     */
+    omit?: VIPPhoneNumberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VIPPhoneNumberInclude<ExtArgs> | null
+    /**
+     * Filter, which VIPPhoneNumber to fetch.
+     */
+    where?: VIPPhoneNumberWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VIPPhoneNumbers to fetch.
+     */
+    orderBy?: VIPPhoneNumberOrderByWithRelationInput | VIPPhoneNumberOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for VIPPhoneNumbers.
+     */
+    cursor?: VIPPhoneNumberWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VIPPhoneNumbers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VIPPhoneNumbers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of VIPPhoneNumbers.
+     */
+    distinct?: VIPPhoneNumberScalarFieldEnum | VIPPhoneNumberScalarFieldEnum[]
+  }
+
+  /**
+   * VIPPhoneNumber findMany
+   */
+  export type VIPPhoneNumberFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VIPPhoneNumber
+     */
+    select?: VIPPhoneNumberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VIPPhoneNumber
+     */
+    omit?: VIPPhoneNumberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VIPPhoneNumberInclude<ExtArgs> | null
+    /**
+     * Filter, which VIPPhoneNumbers to fetch.
+     */
+    where?: VIPPhoneNumberWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VIPPhoneNumbers to fetch.
+     */
+    orderBy?: VIPPhoneNumberOrderByWithRelationInput | VIPPhoneNumberOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing VIPPhoneNumbers.
+     */
+    cursor?: VIPPhoneNumberWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VIPPhoneNumbers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VIPPhoneNumbers.
+     */
+    skip?: number
+    distinct?: VIPPhoneNumberScalarFieldEnum | VIPPhoneNumberScalarFieldEnum[]
+  }
+
+  /**
+   * VIPPhoneNumber create
+   */
+  export type VIPPhoneNumberCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VIPPhoneNumber
+     */
+    select?: VIPPhoneNumberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VIPPhoneNumber
+     */
+    omit?: VIPPhoneNumberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VIPPhoneNumberInclude<ExtArgs> | null
+    /**
+     * The data needed to create a VIPPhoneNumber.
+     */
+    data: XOR<VIPPhoneNumberCreateInput, VIPPhoneNumberUncheckedCreateInput>
+  }
+
+  /**
+   * VIPPhoneNumber createMany
+   */
+  export type VIPPhoneNumberCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many VIPPhoneNumbers.
+     */
+    data: VIPPhoneNumberCreateManyInput | VIPPhoneNumberCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * VIPPhoneNumber createManyAndReturn
+   */
+  export type VIPPhoneNumberCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VIPPhoneNumber
+     */
+    select?: VIPPhoneNumberSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the VIPPhoneNumber
+     */
+    omit?: VIPPhoneNumberOmit<ExtArgs> | null
+    /**
+     * The data used to create many VIPPhoneNumbers.
+     */
+    data: VIPPhoneNumberCreateManyInput | VIPPhoneNumberCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VIPPhoneNumberIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * VIPPhoneNumber update
+   */
+  export type VIPPhoneNumberUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VIPPhoneNumber
+     */
+    select?: VIPPhoneNumberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VIPPhoneNumber
+     */
+    omit?: VIPPhoneNumberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VIPPhoneNumberInclude<ExtArgs> | null
+    /**
+     * The data needed to update a VIPPhoneNumber.
+     */
+    data: XOR<VIPPhoneNumberUpdateInput, VIPPhoneNumberUncheckedUpdateInput>
+    /**
+     * Choose, which VIPPhoneNumber to update.
+     */
+    where: VIPPhoneNumberWhereUniqueInput
+  }
+
+  /**
+   * VIPPhoneNumber updateMany
+   */
+  export type VIPPhoneNumberUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update VIPPhoneNumbers.
+     */
+    data: XOR<VIPPhoneNumberUpdateManyMutationInput, VIPPhoneNumberUncheckedUpdateManyInput>
+    /**
+     * Filter which VIPPhoneNumbers to update
+     */
+    where?: VIPPhoneNumberWhereInput
+    /**
+     * Limit how many VIPPhoneNumbers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * VIPPhoneNumber updateManyAndReturn
+   */
+  export type VIPPhoneNumberUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VIPPhoneNumber
+     */
+    select?: VIPPhoneNumberSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the VIPPhoneNumber
+     */
+    omit?: VIPPhoneNumberOmit<ExtArgs> | null
+    /**
+     * The data used to update VIPPhoneNumbers.
+     */
+    data: XOR<VIPPhoneNumberUpdateManyMutationInput, VIPPhoneNumberUncheckedUpdateManyInput>
+    /**
+     * Filter which VIPPhoneNumbers to update
+     */
+    where?: VIPPhoneNumberWhereInput
+    /**
+     * Limit how many VIPPhoneNumbers to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VIPPhoneNumberIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * VIPPhoneNumber upsert
+   */
+  export type VIPPhoneNumberUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VIPPhoneNumber
+     */
+    select?: VIPPhoneNumberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VIPPhoneNumber
+     */
+    omit?: VIPPhoneNumberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VIPPhoneNumberInclude<ExtArgs> | null
+    /**
+     * The filter to search for the VIPPhoneNumber to update in case it exists.
+     */
+    where: VIPPhoneNumberWhereUniqueInput
+    /**
+     * In case the VIPPhoneNumber found by the `where` argument doesn't exist, create a new VIPPhoneNumber with this data.
+     */
+    create: XOR<VIPPhoneNumberCreateInput, VIPPhoneNumberUncheckedCreateInput>
+    /**
+     * In case the VIPPhoneNumber was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<VIPPhoneNumberUpdateInput, VIPPhoneNumberUncheckedUpdateInput>
+  }
+
+  /**
+   * VIPPhoneNumber delete
+   */
+  export type VIPPhoneNumberDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VIPPhoneNumber
+     */
+    select?: VIPPhoneNumberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VIPPhoneNumber
+     */
+    omit?: VIPPhoneNumberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VIPPhoneNumberInclude<ExtArgs> | null
+    /**
+     * Filter which VIPPhoneNumber to delete.
+     */
+    where: VIPPhoneNumberWhereUniqueInput
+  }
+
+  /**
+   * VIPPhoneNumber deleteMany
+   */
+  export type VIPPhoneNumberDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which VIPPhoneNumbers to delete
+     */
+    where?: VIPPhoneNumberWhereInput
+    /**
+     * Limit how many VIPPhoneNumbers to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * VIPPhoneNumber without action
+   */
+  export type VIPPhoneNumberDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VIPPhoneNumber
+     */
+    select?: VIPPhoneNumberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VIPPhoneNumber
+     */
+    omit?: VIPPhoneNumberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VIPPhoneNumberInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -26798,6 +28010,19 @@ export namespace Prisma {
   };
 
   export type AnalyticsDataScalarFieldEnum = (typeof AnalyticsDataScalarFieldEnum)[keyof typeof AnalyticsDataScalarFieldEnum]
+
+
+  export const VIPPhoneNumberScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    phoneNumber: 'phoneNumber',
+    notes: 'notes',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    teamId: 'teamId'
+  };
+
+  export type VIPPhoneNumberScalarFieldEnum = (typeof VIPPhoneNumberScalarFieldEnum)[keyof typeof VIPPhoneNumberScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -27384,6 +28609,7 @@ export namespace Prisma {
     integrations?: IntegrationListRelationFilter
     analyticsData?: AnalyticsDataListRelationFilter
     documents?: DocumentListRelationFilter
+    vipPhoneNumbers?: VIPPhoneNumberListRelationFilter
   }
 
   export type TeamOrderByWithRelationInput = {
@@ -27406,6 +28632,7 @@ export namespace Prisma {
     integrations?: IntegrationOrderByRelationAggregateInput
     analyticsData?: AnalyticsDataOrderByRelationAggregateInput
     documents?: DocumentOrderByRelationAggregateInput
+    vipPhoneNumbers?: VIPPhoneNumberOrderByRelationAggregateInput
   }
 
   export type TeamWhereUniqueInput = Prisma.AtLeast<{
@@ -27431,6 +28658,7 @@ export namespace Prisma {
     integrations?: IntegrationListRelationFilter
     analyticsData?: AnalyticsDataListRelationFilter
     documents?: DocumentListRelationFilter
+    vipPhoneNumbers?: VIPPhoneNumberListRelationFilter
   }, "id">
 
   export type TeamOrderByWithAggregationInput = {
@@ -28648,6 +29876,72 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"AnalyticsData"> | Date | string
   }
 
+  export type VIPPhoneNumberWhereInput = {
+    AND?: VIPPhoneNumberWhereInput | VIPPhoneNumberWhereInput[]
+    OR?: VIPPhoneNumberWhereInput[]
+    NOT?: VIPPhoneNumberWhereInput | VIPPhoneNumberWhereInput[]
+    id?: StringFilter<"VIPPhoneNumber"> | string
+    name?: StringFilter<"VIPPhoneNumber"> | string
+    phoneNumber?: StringFilter<"VIPPhoneNumber"> | string
+    notes?: StringNullableFilter<"VIPPhoneNumber"> | string | null
+    createdAt?: DateTimeFilter<"VIPPhoneNumber"> | Date | string
+    updatedAt?: DateTimeFilter<"VIPPhoneNumber"> | Date | string
+    teamId?: StringFilter<"VIPPhoneNumber"> | string
+    team?: XOR<TeamScalarRelationFilter, TeamWhereInput>
+  }
+
+  export type VIPPhoneNumberOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    phoneNumber?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    teamId?: SortOrder
+    team?: TeamOrderByWithRelationInput
+  }
+
+  export type VIPPhoneNumberWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    teamId_phoneNumber?: VIPPhoneNumberTeamIdPhoneNumberCompoundUniqueInput
+    AND?: VIPPhoneNumberWhereInput | VIPPhoneNumberWhereInput[]
+    OR?: VIPPhoneNumberWhereInput[]
+    NOT?: VIPPhoneNumberWhereInput | VIPPhoneNumberWhereInput[]
+    name?: StringFilter<"VIPPhoneNumber"> | string
+    phoneNumber?: StringFilter<"VIPPhoneNumber"> | string
+    notes?: StringNullableFilter<"VIPPhoneNumber"> | string | null
+    createdAt?: DateTimeFilter<"VIPPhoneNumber"> | Date | string
+    updatedAt?: DateTimeFilter<"VIPPhoneNumber"> | Date | string
+    teamId?: StringFilter<"VIPPhoneNumber"> | string
+    team?: XOR<TeamScalarRelationFilter, TeamWhereInput>
+  }, "id" | "teamId_phoneNumber">
+
+  export type VIPPhoneNumberOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    phoneNumber?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    teamId?: SortOrder
+    _count?: VIPPhoneNumberCountOrderByAggregateInput
+    _max?: VIPPhoneNumberMaxOrderByAggregateInput
+    _min?: VIPPhoneNumberMinOrderByAggregateInput
+  }
+
+  export type VIPPhoneNumberScalarWhereWithAggregatesInput = {
+    AND?: VIPPhoneNumberScalarWhereWithAggregatesInput | VIPPhoneNumberScalarWhereWithAggregatesInput[]
+    OR?: VIPPhoneNumberScalarWhereWithAggregatesInput[]
+    NOT?: VIPPhoneNumberScalarWhereWithAggregatesInput | VIPPhoneNumberScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"VIPPhoneNumber"> | string
+    name?: StringWithAggregatesFilter<"VIPPhoneNumber"> | string
+    phoneNumber?: StringWithAggregatesFilter<"VIPPhoneNumber"> | string
+    notes?: StringNullableWithAggregatesFilter<"VIPPhoneNumber"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"VIPPhoneNumber"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"VIPPhoneNumber"> | Date | string
+    teamId?: StringWithAggregatesFilter<"VIPPhoneNumber"> | string
+  }
+
   export type AccountCreateInput = {
     id?: string
     type: string
@@ -29104,6 +30398,7 @@ export namespace Prisma {
     integrations?: IntegrationCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataCreateNestedManyWithoutTeamInput
     documents?: DocumentCreateNestedManyWithoutTeamInput
+    vipPhoneNumbers?: VIPPhoneNumberCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUncheckedCreateInput = {
@@ -29125,6 +30420,7 @@ export namespace Prisma {
     integrations?: IntegrationUncheckedCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataUncheckedCreateNestedManyWithoutTeamInput
     documents?: DocumentUncheckedCreateNestedManyWithoutTeamInput
+    vipPhoneNumbers?: VIPPhoneNumberUncheckedCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUpdateInput = {
@@ -29146,6 +30442,7 @@ export namespace Prisma {
     integrations?: IntegrationUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUpdateManyWithoutTeamNestedInput
     documents?: DocumentUpdateManyWithoutTeamNestedInput
+    vipPhoneNumbers?: VIPPhoneNumberUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateInput = {
@@ -29167,6 +30464,7 @@ export namespace Prisma {
     integrations?: IntegrationUncheckedUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUncheckedUpdateManyWithoutTeamNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutTeamNestedInput
+    vipPhoneNumbers?: VIPPhoneNumberUncheckedUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamCreateManyInput = {
@@ -30498,6 +31796,75 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type VIPPhoneNumberCreateInput = {
+    id?: string
+    name: string
+    phoneNumber: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    team: TeamCreateNestedOneWithoutVipPhoneNumbersInput
+  }
+
+  export type VIPPhoneNumberUncheckedCreateInput = {
+    id?: string
+    name: string
+    phoneNumber: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    teamId: string
+  }
+
+  export type VIPPhoneNumberUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    team?: TeamUpdateOneRequiredWithoutVipPhoneNumbersNestedInput
+  }
+
+  export type VIPPhoneNumberUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    teamId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type VIPPhoneNumberCreateManyInput = {
+    id?: string
+    name: string
+    phoneNumber: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    teamId: string
+  }
+
+  export type VIPPhoneNumberUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VIPPhoneNumberUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    teamId?: StringFieldUpdateOperationsInput | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -31107,6 +32474,12 @@ export namespace Prisma {
     none?: IntegrationWhereInput
   }
 
+  export type VIPPhoneNumberListRelationFilter = {
+    every?: VIPPhoneNumberWhereInput
+    some?: VIPPhoneNumberWhereInput
+    none?: VIPPhoneNumberWhereInput
+  }
+
   export type UserOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -31120,6 +32493,10 @@ export namespace Prisma {
   }
 
   export type IntegrationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type VIPPhoneNumberOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -31946,6 +33323,41 @@ export namespace Prisma {
     value?: SortOrder
   }
 
+  export type VIPPhoneNumberTeamIdPhoneNumberCompoundUniqueInput = {
+    teamId: string
+    phoneNumber: string
+  }
+
+  export type VIPPhoneNumberCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    phoneNumber?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    teamId?: SortOrder
+  }
+
+  export type VIPPhoneNumberMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    phoneNumber?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    teamId?: SortOrder
+  }
+
+  export type VIPPhoneNumberMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    phoneNumber?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    teamId?: SortOrder
+  }
+
   export type UserCreateNestedOneWithoutAccountsInput = {
     create?: XOR<UserCreateWithoutAccountsInput, UserUncheckedCreateWithoutAccountsInput>
     connectOrCreate?: UserCreateOrConnectWithoutAccountsInput
@@ -32520,6 +33932,13 @@ export namespace Prisma {
     connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
   }
 
+  export type VIPPhoneNumberCreateNestedManyWithoutTeamInput = {
+    create?: XOR<VIPPhoneNumberCreateWithoutTeamInput, VIPPhoneNumberUncheckedCreateWithoutTeamInput> | VIPPhoneNumberCreateWithoutTeamInput[] | VIPPhoneNumberUncheckedCreateWithoutTeamInput[]
+    connectOrCreate?: VIPPhoneNumberCreateOrConnectWithoutTeamInput | VIPPhoneNumberCreateOrConnectWithoutTeamInput[]
+    createMany?: VIPPhoneNumberCreateManyTeamInputEnvelope
+    connect?: VIPPhoneNumberWhereUniqueInput | VIPPhoneNumberWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutTeamInput = {
     create?: XOR<UserCreateWithoutTeamInput, UserUncheckedCreateWithoutTeamInput> | UserCreateWithoutTeamInput[] | UserUncheckedCreateWithoutTeamInput[]
     connectOrCreate?: UserCreateOrConnectWithoutTeamInput | UserCreateOrConnectWithoutTeamInput[]
@@ -32581,6 +34000,13 @@ export namespace Prisma {
     connectOrCreate?: DocumentCreateOrConnectWithoutTeamInput | DocumentCreateOrConnectWithoutTeamInput[]
     createMany?: DocumentCreateManyTeamInputEnvelope
     connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+  }
+
+  export type VIPPhoneNumberUncheckedCreateNestedManyWithoutTeamInput = {
+    create?: XOR<VIPPhoneNumberCreateWithoutTeamInput, VIPPhoneNumberUncheckedCreateWithoutTeamInput> | VIPPhoneNumberCreateWithoutTeamInput[] | VIPPhoneNumberUncheckedCreateWithoutTeamInput[]
+    connectOrCreate?: VIPPhoneNumberCreateOrConnectWithoutTeamInput | VIPPhoneNumberCreateOrConnectWithoutTeamInput[]
+    createMany?: VIPPhoneNumberCreateManyTeamInputEnvelope
+    connect?: VIPPhoneNumberWhereUniqueInput | VIPPhoneNumberWhereUniqueInput[]
   }
 
   export type UserUpdateOneRequiredWithoutOwnedTeamsNestedInput = {
@@ -32717,6 +34143,20 @@ export namespace Prisma {
     deleteMany?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
   }
 
+  export type VIPPhoneNumberUpdateManyWithoutTeamNestedInput = {
+    create?: XOR<VIPPhoneNumberCreateWithoutTeamInput, VIPPhoneNumberUncheckedCreateWithoutTeamInput> | VIPPhoneNumberCreateWithoutTeamInput[] | VIPPhoneNumberUncheckedCreateWithoutTeamInput[]
+    connectOrCreate?: VIPPhoneNumberCreateOrConnectWithoutTeamInput | VIPPhoneNumberCreateOrConnectWithoutTeamInput[]
+    upsert?: VIPPhoneNumberUpsertWithWhereUniqueWithoutTeamInput | VIPPhoneNumberUpsertWithWhereUniqueWithoutTeamInput[]
+    createMany?: VIPPhoneNumberCreateManyTeamInputEnvelope
+    set?: VIPPhoneNumberWhereUniqueInput | VIPPhoneNumberWhereUniqueInput[]
+    disconnect?: VIPPhoneNumberWhereUniqueInput | VIPPhoneNumberWhereUniqueInput[]
+    delete?: VIPPhoneNumberWhereUniqueInput | VIPPhoneNumberWhereUniqueInput[]
+    connect?: VIPPhoneNumberWhereUniqueInput | VIPPhoneNumberWhereUniqueInput[]
+    update?: VIPPhoneNumberUpdateWithWhereUniqueWithoutTeamInput | VIPPhoneNumberUpdateWithWhereUniqueWithoutTeamInput[]
+    updateMany?: VIPPhoneNumberUpdateManyWithWhereWithoutTeamInput | VIPPhoneNumberUpdateManyWithWhereWithoutTeamInput[]
+    deleteMany?: VIPPhoneNumberScalarWhereInput | VIPPhoneNumberScalarWhereInput[]
+  }
+
   export type UserUncheckedUpdateManyWithoutTeamNestedInput = {
     create?: XOR<UserCreateWithoutTeamInput, UserUncheckedCreateWithoutTeamInput> | UserCreateWithoutTeamInput[] | UserUncheckedCreateWithoutTeamInput[]
     connectOrCreate?: UserCreateOrConnectWithoutTeamInput | UserCreateOrConnectWithoutTeamInput[]
@@ -32841,6 +34281,20 @@ export namespace Prisma {
     update?: DocumentUpdateWithWhereUniqueWithoutTeamInput | DocumentUpdateWithWhereUniqueWithoutTeamInput[]
     updateMany?: DocumentUpdateManyWithWhereWithoutTeamInput | DocumentUpdateManyWithWhereWithoutTeamInput[]
     deleteMany?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
+  }
+
+  export type VIPPhoneNumberUncheckedUpdateManyWithoutTeamNestedInput = {
+    create?: XOR<VIPPhoneNumberCreateWithoutTeamInput, VIPPhoneNumberUncheckedCreateWithoutTeamInput> | VIPPhoneNumberCreateWithoutTeamInput[] | VIPPhoneNumberUncheckedCreateWithoutTeamInput[]
+    connectOrCreate?: VIPPhoneNumberCreateOrConnectWithoutTeamInput | VIPPhoneNumberCreateOrConnectWithoutTeamInput[]
+    upsert?: VIPPhoneNumberUpsertWithWhereUniqueWithoutTeamInput | VIPPhoneNumberUpsertWithWhereUniqueWithoutTeamInput[]
+    createMany?: VIPPhoneNumberCreateManyTeamInputEnvelope
+    set?: VIPPhoneNumberWhereUniqueInput | VIPPhoneNumberWhereUniqueInput[]
+    disconnect?: VIPPhoneNumberWhereUniqueInput | VIPPhoneNumberWhereUniqueInput[]
+    delete?: VIPPhoneNumberWhereUniqueInput | VIPPhoneNumberWhereUniqueInput[]
+    connect?: VIPPhoneNumberWhereUniqueInput | VIPPhoneNumberWhereUniqueInput[]
+    update?: VIPPhoneNumberUpdateWithWhereUniqueWithoutTeamInput | VIPPhoneNumberUpdateWithWhereUniqueWithoutTeamInput[]
+    updateMany?: VIPPhoneNumberUpdateManyWithWhereWithoutTeamInput | VIPPhoneNumberUpdateManyWithWhereWithoutTeamInput[]
+    deleteMany?: VIPPhoneNumberScalarWhereInput | VIPPhoneNumberScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutMemberTeamsInput = {
@@ -33395,6 +34849,20 @@ export namespace Prisma {
     delete?: TeamWhereInput | boolean
     connect?: TeamWhereUniqueInput
     update?: XOR<XOR<TeamUpdateToOneWithWhereWithoutAnalyticsDataInput, TeamUpdateWithoutAnalyticsDataInput>, TeamUncheckedUpdateWithoutAnalyticsDataInput>
+  }
+
+  export type TeamCreateNestedOneWithoutVipPhoneNumbersInput = {
+    create?: XOR<TeamCreateWithoutVipPhoneNumbersInput, TeamUncheckedCreateWithoutVipPhoneNumbersInput>
+    connectOrCreate?: TeamCreateOrConnectWithoutVipPhoneNumbersInput
+    connect?: TeamWhereUniqueInput
+  }
+
+  export type TeamUpdateOneRequiredWithoutVipPhoneNumbersNestedInput = {
+    create?: XOR<TeamCreateWithoutVipPhoneNumbersInput, TeamUncheckedCreateWithoutVipPhoneNumbersInput>
+    connectOrCreate?: TeamCreateOrConnectWithoutVipPhoneNumbersInput
+    upsert?: TeamUpsertWithoutVipPhoneNumbersInput
+    connect?: TeamWhereUniqueInput
+    update?: XOR<XOR<TeamUpdateToOneWithWhereWithoutVipPhoneNumbersInput, TeamUpdateWithoutVipPhoneNumbersInput>, TeamUncheckedUpdateWithoutVipPhoneNumbersInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -34099,6 +35567,7 @@ export namespace Prisma {
     integrations?: IntegrationCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataCreateNestedManyWithoutTeamInput
     documents?: DocumentCreateNestedManyWithoutTeamInput
+    vipPhoneNumbers?: VIPPhoneNumberCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUncheckedCreateWithoutMembersInput = {
@@ -34119,6 +35588,7 @@ export namespace Prisma {
     integrations?: IntegrationUncheckedCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataUncheckedCreateNestedManyWithoutTeamInput
     documents?: DocumentUncheckedCreateNestedManyWithoutTeamInput
+    vipPhoneNumbers?: VIPPhoneNumberUncheckedCreateNestedManyWithoutTeamInput
   }
 
   export type TeamCreateOrConnectWithoutMembersInput = {
@@ -34144,6 +35614,7 @@ export namespace Prisma {
     integrations?: IntegrationCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataCreateNestedManyWithoutTeamInput
     documents?: DocumentCreateNestedManyWithoutTeamInput
+    vipPhoneNumbers?: VIPPhoneNumberCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUncheckedCreateWithoutOwnerInput = {
@@ -34164,6 +35635,7 @@ export namespace Prisma {
     integrations?: IntegrationUncheckedCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataUncheckedCreateNestedManyWithoutTeamInput
     documents?: DocumentUncheckedCreateNestedManyWithoutTeamInput
+    vipPhoneNumbers?: VIPPhoneNumberUncheckedCreateNestedManyWithoutTeamInput
   }
 
   export type TeamCreateOrConnectWithoutOwnerInput = {
@@ -34520,6 +35992,7 @@ export namespace Prisma {
     integrations?: IntegrationUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUpdateManyWithoutTeamNestedInput
     documents?: DocumentUpdateManyWithoutTeamNestedInput
+    vipPhoneNumbers?: VIPPhoneNumberUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateWithoutMembersInput = {
@@ -34540,6 +36013,7 @@ export namespace Prisma {
     integrations?: IntegrationUncheckedUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUncheckedUpdateManyWithoutTeamNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutTeamNestedInput
+    vipPhoneNumbers?: VIPPhoneNumberUncheckedUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUpsertWithWhereUniqueWithoutOwnerInput = {
@@ -35451,6 +36925,34 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type VIPPhoneNumberCreateWithoutTeamInput = {
+    id?: string
+    name: string
+    phoneNumber: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type VIPPhoneNumberUncheckedCreateWithoutTeamInput = {
+    id?: string
+    name: string
+    phoneNumber: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type VIPPhoneNumberCreateOrConnectWithoutTeamInput = {
+    where: VIPPhoneNumberWhereUniqueInput
+    create: XOR<VIPPhoneNumberCreateWithoutTeamInput, VIPPhoneNumberUncheckedCreateWithoutTeamInput>
+  }
+
+  export type VIPPhoneNumberCreateManyTeamInputEnvelope = {
+    data: VIPPhoneNumberCreateManyTeamInput | VIPPhoneNumberCreateManyTeamInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutOwnedTeamsInput = {
     update: XOR<UserUpdateWithoutOwnedTeamsInput, UserUncheckedUpdateWithoutOwnedTeamsInput>
     create: XOR<UserCreateWithoutOwnedTeamsInput, UserUncheckedCreateWithoutOwnedTeamsInput>
@@ -35753,6 +37255,35 @@ export namespace Prisma {
     data: XOR<DocumentUpdateManyMutationInput, DocumentUncheckedUpdateManyWithoutTeamInput>
   }
 
+  export type VIPPhoneNumberUpsertWithWhereUniqueWithoutTeamInput = {
+    where: VIPPhoneNumberWhereUniqueInput
+    update: XOR<VIPPhoneNumberUpdateWithoutTeamInput, VIPPhoneNumberUncheckedUpdateWithoutTeamInput>
+    create: XOR<VIPPhoneNumberCreateWithoutTeamInput, VIPPhoneNumberUncheckedCreateWithoutTeamInput>
+  }
+
+  export type VIPPhoneNumberUpdateWithWhereUniqueWithoutTeamInput = {
+    where: VIPPhoneNumberWhereUniqueInput
+    data: XOR<VIPPhoneNumberUpdateWithoutTeamInput, VIPPhoneNumberUncheckedUpdateWithoutTeamInput>
+  }
+
+  export type VIPPhoneNumberUpdateManyWithWhereWithoutTeamInput = {
+    where: VIPPhoneNumberScalarWhereInput
+    data: XOR<VIPPhoneNumberUpdateManyMutationInput, VIPPhoneNumberUncheckedUpdateManyWithoutTeamInput>
+  }
+
+  export type VIPPhoneNumberScalarWhereInput = {
+    AND?: VIPPhoneNumberScalarWhereInput | VIPPhoneNumberScalarWhereInput[]
+    OR?: VIPPhoneNumberScalarWhereInput[]
+    NOT?: VIPPhoneNumberScalarWhereInput | VIPPhoneNumberScalarWhereInput[]
+    id?: StringFilter<"VIPPhoneNumber"> | string
+    name?: StringFilter<"VIPPhoneNumber"> | string
+    phoneNumber?: StringFilter<"VIPPhoneNumber"> | string
+    notes?: StringNullableFilter<"VIPPhoneNumber"> | string | null
+    createdAt?: DateTimeFilter<"VIPPhoneNumber"> | Date | string
+    updatedAt?: DateTimeFilter<"VIPPhoneNumber"> | Date | string
+    teamId?: StringFilter<"VIPPhoneNumber"> | string
+  }
+
   export type UserCreateWithoutMemberTeamsInput = {
     id?: string
     name?: string | null
@@ -35848,6 +37379,7 @@ export namespace Prisma {
     integrations?: IntegrationCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataCreateNestedManyWithoutTeamInput
     documents?: DocumentCreateNestedManyWithoutTeamInput
+    vipPhoneNumbers?: VIPPhoneNumberCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUncheckedCreateWithoutTeamMembersInput = {
@@ -35868,6 +37400,7 @@ export namespace Prisma {
     integrations?: IntegrationUncheckedCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataUncheckedCreateNestedManyWithoutTeamInput
     documents?: DocumentUncheckedCreateNestedManyWithoutTeamInput
+    vipPhoneNumbers?: VIPPhoneNumberUncheckedCreateNestedManyWithoutTeamInput
   }
 
   export type TeamCreateOrConnectWithoutTeamMembersInput = {
@@ -35987,6 +37520,7 @@ export namespace Prisma {
     integrations?: IntegrationUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUpdateManyWithoutTeamNestedInput
     documents?: DocumentUpdateManyWithoutTeamNestedInput
+    vipPhoneNumbers?: VIPPhoneNumberUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateWithoutTeamMembersInput = {
@@ -36007,6 +37541,7 @@ export namespace Prisma {
     integrations?: IntegrationUncheckedUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUncheckedUpdateManyWithoutTeamNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutTeamNestedInput
+    vipPhoneNumbers?: VIPPhoneNumberUncheckedUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamCreateWithoutInviteCodesInput = {
@@ -36027,6 +37562,7 @@ export namespace Prisma {
     integrations?: IntegrationCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataCreateNestedManyWithoutTeamInput
     documents?: DocumentCreateNestedManyWithoutTeamInput
+    vipPhoneNumbers?: VIPPhoneNumberCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUncheckedCreateWithoutInviteCodesInput = {
@@ -36047,6 +37583,7 @@ export namespace Prisma {
     integrations?: IntegrationUncheckedCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataUncheckedCreateNestedManyWithoutTeamInput
     documents?: DocumentUncheckedCreateNestedManyWithoutTeamInput
+    vipPhoneNumbers?: VIPPhoneNumberUncheckedCreateNestedManyWithoutTeamInput
   }
 
   export type TeamCreateOrConnectWithoutInviteCodesInput = {
@@ -36083,6 +37620,7 @@ export namespace Prisma {
     integrations?: IntegrationUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUpdateManyWithoutTeamNestedInput
     documents?: DocumentUpdateManyWithoutTeamNestedInput
+    vipPhoneNumbers?: VIPPhoneNumberUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateWithoutInviteCodesInput = {
@@ -36103,6 +37641,7 @@ export namespace Prisma {
     integrations?: IntegrationUncheckedUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUncheckedUpdateManyWithoutTeamNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutTeamNestedInput
+    vipPhoneNumbers?: VIPPhoneNumberUncheckedUpdateManyWithoutTeamNestedInput
   }
 
   export type UserCreateWithoutDepartmentInput = {
@@ -36379,6 +37918,7 @@ export namespace Prisma {
     integrations?: IntegrationCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataCreateNestedManyWithoutTeamInput
     documents?: DocumentCreateNestedManyWithoutTeamInput
+    vipPhoneNumbers?: VIPPhoneNumberCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUncheckedCreateWithoutCallsInput = {
@@ -36399,6 +37939,7 @@ export namespace Prisma {
     integrations?: IntegrationUncheckedCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataUncheckedCreateNestedManyWithoutTeamInput
     documents?: DocumentUncheckedCreateNestedManyWithoutTeamInput
+    vipPhoneNumbers?: VIPPhoneNumberUncheckedCreateNestedManyWithoutTeamInput
   }
 
   export type TeamCreateOrConnectWithoutCallsInput = {
@@ -36612,6 +38153,7 @@ export namespace Prisma {
     integrations?: IntegrationUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUpdateManyWithoutTeamNestedInput
     documents?: DocumentUpdateManyWithoutTeamNestedInput
+    vipPhoneNumbers?: VIPPhoneNumberUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateWithoutCallsInput = {
@@ -36632,6 +38174,7 @@ export namespace Prisma {
     integrations?: IntegrationUncheckedUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUncheckedUpdateManyWithoutTeamNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutTeamNestedInput
+    vipPhoneNumbers?: VIPPhoneNumberUncheckedUpdateManyWithoutTeamNestedInput
   }
 
   export type CallCreateWithoutTranscriptInput = {
@@ -37167,6 +38710,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleCreateNestedManyWithoutTeamInput
     integrations?: IntegrationCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataCreateNestedManyWithoutTeamInput
+    vipPhoneNumbers?: VIPPhoneNumberCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUncheckedCreateWithoutDocumentsInput = {
@@ -37187,6 +38731,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUncheckedCreateNestedManyWithoutTeamInput
     integrations?: IntegrationUncheckedCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataUncheckedCreateNestedManyWithoutTeamInput
+    vipPhoneNumbers?: VIPPhoneNumberUncheckedCreateNestedManyWithoutTeamInput
   }
 
   export type TeamCreateOrConnectWithoutDocumentsInput = {
@@ -37327,6 +38872,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUpdateManyWithoutTeamNestedInput
     integrations?: IntegrationUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUpdateManyWithoutTeamNestedInput
+    vipPhoneNumbers?: VIPPhoneNumberUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateWithoutDocumentsInput = {
@@ -37347,6 +38893,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUncheckedUpdateManyWithoutTeamNestedInput
     integrations?: IntegrationUncheckedUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUncheckedUpdateManyWithoutTeamNestedInput
+    vipPhoneNumbers?: VIPPhoneNumberUncheckedUpdateManyWithoutTeamNestedInput
   }
 
   export type UserUpsertWithoutUploadedDocumentsInput = {
@@ -37591,6 +39138,7 @@ export namespace Prisma {
     integrations?: IntegrationCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataCreateNestedManyWithoutTeamInput
     documents?: DocumentCreateNestedManyWithoutTeamInput
+    vipPhoneNumbers?: VIPPhoneNumberCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUncheckedCreateWithoutQueuedCallsInput = {
@@ -37611,6 +39159,7 @@ export namespace Prisma {
     integrations?: IntegrationUncheckedCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataUncheckedCreateNestedManyWithoutTeamInput
     documents?: DocumentUncheckedCreateNestedManyWithoutTeamInput
+    vipPhoneNumbers?: VIPPhoneNumberUncheckedCreateNestedManyWithoutTeamInput
   }
 
   export type TeamCreateOrConnectWithoutQueuedCallsInput = {
@@ -37730,6 +39279,7 @@ export namespace Prisma {
     integrations?: IntegrationUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUpdateManyWithoutTeamNestedInput
     documents?: DocumentUpdateManyWithoutTeamNestedInput
+    vipPhoneNumbers?: VIPPhoneNumberUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateWithoutQueuedCallsInput = {
@@ -37750,6 +39300,7 @@ export namespace Prisma {
     integrations?: IntegrationUncheckedUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUncheckedUpdateManyWithoutTeamNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutTeamNestedInput
+    vipPhoneNumbers?: VIPPhoneNumberUncheckedUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamCreateWithoutForwardingRulesInput = {
@@ -37770,6 +39321,7 @@ export namespace Prisma {
     integrations?: IntegrationCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataCreateNestedManyWithoutTeamInput
     documents?: DocumentCreateNestedManyWithoutTeamInput
+    vipPhoneNumbers?: VIPPhoneNumberCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUncheckedCreateWithoutForwardingRulesInput = {
@@ -37790,6 +39342,7 @@ export namespace Prisma {
     integrations?: IntegrationUncheckedCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataUncheckedCreateNestedManyWithoutTeamInput
     documents?: DocumentUncheckedCreateNestedManyWithoutTeamInput
+    vipPhoneNumbers?: VIPPhoneNumberUncheckedCreateNestedManyWithoutTeamInput
   }
 
   export type TeamCreateOrConnectWithoutForwardingRulesInput = {
@@ -37826,6 +39379,7 @@ export namespace Prisma {
     integrations?: IntegrationUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUpdateManyWithoutTeamNestedInput
     documents?: DocumentUpdateManyWithoutTeamNestedInput
+    vipPhoneNumbers?: VIPPhoneNumberUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateWithoutForwardingRulesInput = {
@@ -37846,6 +39400,7 @@ export namespace Prisma {
     integrations?: IntegrationUncheckedUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUncheckedUpdateManyWithoutTeamNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutTeamNestedInput
+    vipPhoneNumbers?: VIPPhoneNumberUncheckedUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamCreateWithoutIntegrationsInput = {
@@ -37866,6 +39421,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataCreateNestedManyWithoutTeamInput
     documents?: DocumentCreateNestedManyWithoutTeamInput
+    vipPhoneNumbers?: VIPPhoneNumberCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUncheckedCreateWithoutIntegrationsInput = {
@@ -37886,6 +39442,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUncheckedCreateNestedManyWithoutTeamInput
     analyticsData?: AnalyticsDataUncheckedCreateNestedManyWithoutTeamInput
     documents?: DocumentUncheckedCreateNestedManyWithoutTeamInput
+    vipPhoneNumbers?: VIPPhoneNumberUncheckedCreateNestedManyWithoutTeamInput
   }
 
   export type TeamCreateOrConnectWithoutIntegrationsInput = {
@@ -37922,6 +39479,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUpdateManyWithoutTeamNestedInput
     documents?: DocumentUpdateManyWithoutTeamNestedInput
+    vipPhoneNumbers?: VIPPhoneNumberUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateWithoutIntegrationsInput = {
@@ -37942,6 +39500,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUncheckedUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUncheckedUpdateManyWithoutTeamNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutTeamNestedInput
+    vipPhoneNumbers?: VIPPhoneNumberUncheckedUpdateManyWithoutTeamNestedInput
   }
 
   export type UserCreateWithoutAnalyticsDataInput = {
@@ -38039,6 +39598,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleCreateNestedManyWithoutTeamInput
     integrations?: IntegrationCreateNestedManyWithoutTeamInput
     documents?: DocumentCreateNestedManyWithoutTeamInput
+    vipPhoneNumbers?: VIPPhoneNumberCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUncheckedCreateWithoutAnalyticsDataInput = {
@@ -38059,6 +39619,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUncheckedCreateNestedManyWithoutTeamInput
     integrations?: IntegrationUncheckedCreateNestedManyWithoutTeamInput
     documents?: DocumentUncheckedCreateNestedManyWithoutTeamInput
+    vipPhoneNumbers?: VIPPhoneNumberUncheckedCreateNestedManyWithoutTeamInput
   }
 
   export type TeamCreateOrConnectWithoutAnalyticsDataInput = {
@@ -38178,6 +39739,7 @@ export namespace Prisma {
     forwardingRules?: ForwardingRuleUpdateManyWithoutTeamNestedInput
     integrations?: IntegrationUpdateManyWithoutTeamNestedInput
     documents?: DocumentUpdateManyWithoutTeamNestedInput
+    vipPhoneNumbers?: VIPPhoneNumberUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateWithoutAnalyticsDataInput = {
@@ -38197,6 +39759,107 @@ export namespace Prisma {
     queuedCalls?: QueuedCallUncheckedUpdateManyWithoutTeamNestedInput
     forwardingRules?: ForwardingRuleUncheckedUpdateManyWithoutTeamNestedInput
     integrations?: IntegrationUncheckedUpdateManyWithoutTeamNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutTeamNestedInput
+    vipPhoneNumbers?: VIPPhoneNumberUncheckedUpdateManyWithoutTeamNestedInput
+  }
+
+  export type TeamCreateWithoutVipPhoneNumbersInput = {
+    id?: string
+    name: string
+    description?: string | null
+    industry?: string | null
+    companyId?: string | null
+    companyName?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    owner: UserCreateNestedOneWithoutOwnedTeamsInput
+    members?: UserCreateNestedManyWithoutTeamInput
+    teamMembers?: TeamMemberCreateNestedManyWithoutTeamInput
+    inviteCodes?: InviteCodeCreateNestedManyWithoutTeamInput
+    calls?: CallCreateNestedManyWithoutTeamInput
+    queuedCalls?: QueuedCallCreateNestedManyWithoutTeamInput
+    forwardingRules?: ForwardingRuleCreateNestedManyWithoutTeamInput
+    integrations?: IntegrationCreateNestedManyWithoutTeamInput
+    analyticsData?: AnalyticsDataCreateNestedManyWithoutTeamInput
+    documents?: DocumentCreateNestedManyWithoutTeamInput
+  }
+
+  export type TeamUncheckedCreateWithoutVipPhoneNumbersInput = {
+    id?: string
+    name: string
+    description?: string | null
+    industry?: string | null
+    companyId?: string | null
+    companyName?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ownerId: string
+    members?: UserUncheckedCreateNestedManyWithoutTeamInput
+    teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutTeamInput
+    inviteCodes?: InviteCodeUncheckedCreateNestedManyWithoutTeamInput
+    calls?: CallUncheckedCreateNestedManyWithoutTeamInput
+    queuedCalls?: QueuedCallUncheckedCreateNestedManyWithoutTeamInput
+    forwardingRules?: ForwardingRuleUncheckedCreateNestedManyWithoutTeamInput
+    integrations?: IntegrationUncheckedCreateNestedManyWithoutTeamInput
+    analyticsData?: AnalyticsDataUncheckedCreateNestedManyWithoutTeamInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutTeamInput
+  }
+
+  export type TeamCreateOrConnectWithoutVipPhoneNumbersInput = {
+    where: TeamWhereUniqueInput
+    create: XOR<TeamCreateWithoutVipPhoneNumbersInput, TeamUncheckedCreateWithoutVipPhoneNumbersInput>
+  }
+
+  export type TeamUpsertWithoutVipPhoneNumbersInput = {
+    update: XOR<TeamUpdateWithoutVipPhoneNumbersInput, TeamUncheckedUpdateWithoutVipPhoneNumbersInput>
+    create: XOR<TeamCreateWithoutVipPhoneNumbersInput, TeamUncheckedCreateWithoutVipPhoneNumbersInput>
+    where?: TeamWhereInput
+  }
+
+  export type TeamUpdateToOneWithWhereWithoutVipPhoneNumbersInput = {
+    where?: TeamWhereInput
+    data: XOR<TeamUpdateWithoutVipPhoneNumbersInput, TeamUncheckedUpdateWithoutVipPhoneNumbersInput>
+  }
+
+  export type TeamUpdateWithoutVipPhoneNumbersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneRequiredWithoutOwnedTeamsNestedInput
+    members?: UserUpdateManyWithoutTeamNestedInput
+    teamMembers?: TeamMemberUpdateManyWithoutTeamNestedInput
+    inviteCodes?: InviteCodeUpdateManyWithoutTeamNestedInput
+    calls?: CallUpdateManyWithoutTeamNestedInput
+    queuedCalls?: QueuedCallUpdateManyWithoutTeamNestedInput
+    forwardingRules?: ForwardingRuleUpdateManyWithoutTeamNestedInput
+    integrations?: IntegrationUpdateManyWithoutTeamNestedInput
+    analyticsData?: AnalyticsDataUpdateManyWithoutTeamNestedInput
+    documents?: DocumentUpdateManyWithoutTeamNestedInput
+  }
+
+  export type TeamUncheckedUpdateWithoutVipPhoneNumbersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    members?: UserUncheckedUpdateManyWithoutTeamNestedInput
+    teamMembers?: TeamMemberUncheckedUpdateManyWithoutTeamNestedInput
+    inviteCodes?: InviteCodeUncheckedUpdateManyWithoutTeamNestedInput
+    calls?: CallUncheckedUpdateManyWithoutTeamNestedInput
+    queuedCalls?: QueuedCallUncheckedUpdateManyWithoutTeamNestedInput
+    forwardingRules?: ForwardingRuleUncheckedUpdateManyWithoutTeamNestedInput
+    integrations?: IntegrationUncheckedUpdateManyWithoutTeamNestedInput
+    analyticsData?: AnalyticsDataUncheckedUpdateManyWithoutTeamNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutTeamNestedInput
   }
 
@@ -38330,6 +39993,7 @@ export namespace Prisma {
     integrations?: IntegrationUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUpdateManyWithoutTeamNestedInput
     documents?: DocumentUpdateManyWithoutTeamNestedInput
+    vipPhoneNumbers?: VIPPhoneNumberUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateWithoutOwnerInput = {
@@ -38350,6 +40014,7 @@ export namespace Prisma {
     integrations?: IntegrationUncheckedUpdateManyWithoutTeamNestedInput
     analyticsData?: AnalyticsDataUncheckedUpdateManyWithoutTeamNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutTeamNestedInput
+    vipPhoneNumbers?: VIPPhoneNumberUncheckedUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateManyWithoutOwnerInput = {
@@ -38805,6 +40470,15 @@ export namespace Prisma {
     vectorizedAt?: Date | string | null
   }
 
+  export type VIPPhoneNumberCreateManyTeamInput = {
+    id?: string
+    name: string
+    phoneNumber: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type UserUpdateWithoutTeamInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39226,6 +40900,33 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     vectorized?: BoolFieldUpdateOperationsInput | boolean
     vectorizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type VIPPhoneNumberUpdateWithoutTeamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VIPPhoneNumberUncheckedUpdateWithoutTeamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VIPPhoneNumberUncheckedUpdateManyWithoutTeamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserCreateManyDepartmentInput = {

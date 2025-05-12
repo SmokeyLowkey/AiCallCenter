@@ -131,6 +131,7 @@ model Team {
   integrations    Integration[]
   analyticsData   AnalyticsData[]
   documents       Document[]
+  vipPhoneNumbers VIPPhoneNumber[]
 }
 
 model TeamMember {
@@ -446,4 +447,19 @@ enum UserRole {
   ADMIN
   AGENT
   MANAGER
+}
+
+// VIP Phone Numbers model
+model VIPPhoneNumber {
+  id          String   @id @default(cuid())
+  name        String
+  phoneNumber String
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  teamId      String
+  team        Team     @relation(fields: [teamId], references: [id])
+
+  @@unique([teamId, phoneNumber])
+  @@index([phoneNumber])
 }

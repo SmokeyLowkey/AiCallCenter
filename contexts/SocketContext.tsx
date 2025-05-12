@@ -34,7 +34,7 @@ export function SocketProvider({ children }: SocketProviderProps) {
     console.log('Connecting to Socket.IO server...');
     
     // Create socket connection
-    const socketInstance = io(process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:3000', {
+    const socketInstance = io(process.env.NEXT_PUBLIC_BASE_URL || process.env.BASE_URL || 'http://localhost:3000', {
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
       transports: ['websocket', 'polling'], // Try WebSocket first, then fall back to polling

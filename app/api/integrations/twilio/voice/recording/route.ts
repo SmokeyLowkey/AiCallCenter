@@ -15,7 +15,7 @@ if (!global.socketClient) {
   try {
     // In a production environment, you would use a shared instance
     // For this example, we'll create a simple connection to the Socket.IO server
-    const socket = socketIO('https://6116-24-72-111-53.ngrok-free.app');
+    const socket = socketIO(process.env.BASE_URL || 'http://localhost:3000');
     
     // Store the socket for later use
     global.socketClient = socket;
