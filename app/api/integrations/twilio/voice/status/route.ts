@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { io as socketIO } from 'socket.io-client';
-import { queueAudioForProcessing } from '@/lib/services/audio-processor';
+import { processRecording } from '@/lib/services/audio-processor';
+import twilio from 'twilio';
 
 // Declare global socket client
 declare global {
@@ -32,7 +33,32 @@ export async function POST(request: NextRequest) {
     const callStatus = formData.get('CallStatus') as string;
     const duration = formData.get('CallDuration') as string;
     
-    console.log(`Call status update: ${callSid}, status: ${callStatus}, duration: ${duration}`);
+    // Check if this is a recording status callback
+    const recordingSid = formData.get('RecordingSid') as string;
+    const recordingStatus = formData.get('RecordingStatus') as string;
+    const recordingUrl = formData.get('RecordingUrl') as string;
+    const recordingDuration = formData.get('RecordingDuration') as string;
+    
+    // Log the appropriate message based on the type of callback
+    if (recordingSid) {
+      console.log(`🎙️ RECORDING STATUS UPDATE: ${recordingSid} for call ${callSid}`);
+      console.log(`🎙️ Recording details:`, {
+        recordingSid,
+        callSid,
+        status: recordingStatus,
+        duration: recordingDuration,
+        url: recordingUrl,
+        formData: Object.fromEntries(formData.entries())
+      });
+    } else {
+      console.log(`📞 CALL STATUS UPDATE: ${callSid}, status: ${callStatus}, duration: ${duration}`);
+      console.log(`📞 Call details:`, {
+        callSid,
+        status: callStatus,
+        duration,
+        formData: Object.fromEntries(formData.entries())
+      });
+    }
 
     // Map Twilio call status to our internal status
     let internalStatus: 'ACTIVE' | 'COMPLETED' | 'QUEUED';
@@ -124,12 +150,111 @@ export async function POST(request: NextRequest) {
           callSid: callSid,
           duration: duration ? parseInt(duration) : 0,
         });
-        // Queue the audio for processing with AssemblyAI
-        try {
-          console.log(`Queuing completed call ${callSid} for audio processing`);
-          await queueAudioForProcessing(callSid);
-        } catch (processingError) {
-          console.error('Error queuing audio for processing:', processingError);
+        
+        // Process the recording if we have a recording SID
+        if (recordingSid && recordingUrl) {
+          try {
+            console.log(`🔄 PROCESSING RECORDING ${recordingSid} for call ${callSid}`);
+            console.log(`🔄 Recording URL: ${recordingUrl}`);
+            
+            // Get the team ID
+            const team = await prisma.team.findFirst({
+              where: {
+                id: call.teamId || undefined,
+              },
+            });
+
+            if (!team) {
+              console.error(`Team not found for call: ${callSid}`);
+            } else {
+              // Process the recording directly
+              await processRecording(
+                recordingSid,
+                recordingUrl,
+                call.id,
+                team.id,
+                team.companyId || undefined
+              );
+              
+              console.log(`✅ RECORDING ${recordingSid} PROCESSED SUCCESSFULLY for call: ${callSid}`);
+            }
+          } catch (processingError) {
+            console.error(`❌ ERROR PROCESSING RECORDING ${recordingSid}:`, processingError);
+            // Log more details about the error
+            if (processingError instanceof Error) {
+              console.error(`❌ Error message: ${processingError.message}`);
+              console.error(`❌ Error stack: ${processingError.stack}`);
+            }
+          }
+        }
+        // Also try to get recordings from Twilio if the call is completed
+        else if (callStatus === 'completed') {
+          try {
+            console.log(`🔄 PROCESSING RECORDING FOR CALL ${callSid} (via Twilio API)`);
+            
+            // Get the team ID
+            const team = await prisma.team.findFirst({
+              where: {
+                id: call.teamId || undefined,
+              },
+            });
+
+            if (!team) {
+              console.error(`Team not found for call: ${callSid}`);
+            } else {
+              // Wait a short delay to ensure the recording is ready
+              console.log('Waiting 5 seconds for recording to be ready...');
+              await new Promise(resolve => setTimeout(resolve, 5000));
+              
+              // Initialize Twilio client to get recordings
+              const accountSid = process.env.TWILIO_ACCOUNT_SID || '';
+              const authToken = process.env.TWILIO_AUTH_TOKEN || '';
+              const client = twilio(accountSid, authToken);
+              
+              // Get recordings for this call
+              const recordings = await client.recordings.list({ callSid });
+              
+              if (recordings.length === 0) {
+                console.log('❌ NO RECORDINGS FOUND FOR CALL', {
+                  callSid,
+                  accountSid: process.env.TWILIO_ACCOUNT_SID?.substring(0, 5) + '...',
+                  authToken: process.env.TWILIO_AUTH_TOKEN ? 'present' : 'missing'
+                });
+              } else {
+                // Use the most recent recording
+                const recording = recordings[0];
+                console.log('✅ FOUND RECORDING VIA TWILIO API', {
+                  recordingSid: recording.sid,
+                  status: recording.status,
+                  duration: recording.duration,
+                  channels: recording.channels,
+                  source: recording.source,
+                  uri: recording.uri
+                });
+                
+                // Get the recording URL
+                const recordingUrl = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Recordings/${recording.sid}`;
+                
+                // Process the recording
+                await processRecording(
+                  recording.sid,
+                  recordingUrl,
+                  call.id,
+                  team.id,
+                  team.companyId || undefined
+                );
+                
+                console.log(`✅ RECORDING PROCESSED SUCCESSFULLY for call: ${callSid}`);
+              }
+            }
+          } catch (processingError) {
+            console.error('❌ ERROR PROCESSING RECORDING:', processingError);
+            // Log more details about the error
+            if (processingError instanceof Error) {
+              console.error(`❌ Error message: ${processingError.message}`);
+              console.error(`❌ Error stack: ${processingError.stack}`);
+            }
+          }
         }
       }
     }

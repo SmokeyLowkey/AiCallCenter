@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import VoiceResponse from 'twilio/lib/twiml/VoiceResponse';
 import { queueAudioForProcessing } from '@/lib/services/audio-processor';
+import twilio from 'twilio';
 
 // Declare global socket client
 declare global {
@@ -179,8 +180,29 @@ export async function POST(request: NextRequest) {
       // Queue the audio for processing
       console.log('PRIORITY 3: Queuing audio for S3 upload and AssemblyAI processing');
       
-      // Call the queueAudioForProcessing function
-      await queueAudioForProcessing(callSid);
+      // Initialize Twilio client to get recordings
+      const accountSid = process.env.TWILIO_ACCOUNT_SID || '';
+      const authToken = process.env.TWILIO_AUTH_TOKEN || '';
+      const client = twilio(accountSid, authToken);
+      
+      // Get recordings for this call
+      const recordings = await client.recordings.list({ callSid });
+      
+      if (recordings.length === 0) {
+        console.log('No recordings found for call', { callSid });
+      } else {
+        // Use the most recent recording
+        const recording = recordings[0];
+        console.log('Found recording', { recordingSid: recording.sid });
+        
+        // Get the recording URL
+        const recordingUrl = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Recordings/${recording.sid}`;
+        
+        // Process the recording
+        await queueAudioForProcessing(callSid, recording.sid);
+        
+        console.log(`Recording queued for processing: ${callSid}`);
+      }
     } catch (processingError) {
       console.error('Error queuing audio for processing:', processingError);
     }

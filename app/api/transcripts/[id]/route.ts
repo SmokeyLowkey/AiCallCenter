@@ -77,6 +77,21 @@ export async function GET(
       );
     }
 
+    // Import the getPresignedUrl function
+    const { getPresignedUrl } = await import('@/lib/services/s3');
+    
+    // Get the recording URL if available
+    let recordingUrl = null;
+    if (call.recordingUrl) {
+      try {
+        // Generate a presigned URL for the recording
+        recordingUrl = await getPresignedUrl(call.recordingUrl);
+        console.log(`Generated presigned URL for recording: ${call.id}`);
+      } catch (error) {
+        console.error(`Error getting presigned URL for recording ${call.recordingUrl}:`, error);
+      }
+    }
+
     // Format the response
     const formattedTranscript = {
       id: transcript.id,
@@ -117,7 +132,8 @@ export async function GET(
         trend: insightRelation.insight.trend,
         change: insightRelation.insight.change,
         recommendations: insightRelation.insight.recommendations
-      }))
+      })),
+      recordingUrl: recordingUrl
     };
 
     return NextResponse.json(formattedTranscript);

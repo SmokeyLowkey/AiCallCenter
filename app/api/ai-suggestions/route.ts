@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
     // Process the transcript and generate AI suggestions
     console.log(`🧠 Processing transcript for call ${callId} with ${messages.length} messages`);
     const teamId = user.teamId || 'default'; // Provide a default value if teamId is null
-    const suggestion = await processTranscript(messages, teamId);
+    const suggestion = await processTranscript(messages, teamId, undefined, callId);
 
     // If no suggestion was generated, return a 204 No Content response
     if (!suggestion) {

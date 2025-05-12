@@ -182,6 +182,18 @@ export async function POST(request: NextRequest) {
         });
         
         // No prompts - completely silent
+        
+        // Enable call recording for the entire call
+        // Note: This needs to be before the gather to record the entire call
+        twiml.record({
+          action: 'https://6116-24-72-111-53.ngrok-free.app/api/integrations/twilio/voice/recording',
+          transcribe: true,
+          transcribeCallback: 'https://6116-24-72-111-53.ngrok-free.app/api/integrations/twilio/voice/transcribe',
+          playBeep: false,
+          trim: 'trim-silence',
+          recordingStatusCallback: 'https://6116-24-72-111-53.ngrok-free.app/api/integrations/twilio/voice/status',
+          recordingStatusCallbackEvent: ['completed', 'in-progress'],
+        });
       } else {
         // For regular callers
         twiml.say('Thank you for calling. An agent will be with you shortly.');
@@ -197,6 +209,18 @@ export async function POST(request: NextRequest) {
         });
         
         gather.say('Please describe your issue, and our AI will assist you while connecting to an agent.');
+        
+        // Enable call recording for the entire call
+        // Note: This needs to be before the gather to record the entire call
+        twiml.record({
+          action: 'https://6116-24-72-111-53.ngrok-free.app/api/integrations/twilio/voice/recording',
+          transcribe: true,
+          transcribeCallback: 'https://6116-24-72-111-53.ngrok-free.app/api/integrations/twilio/voice/transcribe',
+          playBeep: false,
+          trim: 'trim-silence',
+          recordingStatusCallback: 'https://6116-24-72-111-53.ngrok-free.app/api/integrations/twilio/voice/status',
+          recordingStatusCallbackEvent: ['completed', 'in-progress'],
+        });
         
         // Add a fallback if no speech is detected
         twiml.say('We didn\'t hear anything. Please call back when you\'re ready to speak with us.');
@@ -263,6 +287,8 @@ export async function POST(request: NextRequest) {
           transcribe: true,
           transcribeCallback: 'https://6116-24-72-111-53.ngrok-free.app/api/integrations/twilio/voice/transcribe',
           maxLength: 120,
+          recordingStatusCallback: 'https://6116-24-72-111-53.ngrok-free.app/api/integrations/twilio/voice/status',
+          recordingStatusCallbackEvent: ['completed', 'in-progress'],
         });
       }
     }

@@ -51,6 +51,7 @@ interface TranscriptViewDialogProps {
       with: string[];
     };
     summary: string;
+    recordingUrl?: string | null;
   };
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -160,10 +161,21 @@ export function TranscriptViewDialog({ transcript: initialTranscript, open, onOp
               </Badge>
             </DialogTitle>
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm">
-                <Download className="mr-2 h-4 w-4" />
-                Download
-              </Button>
+              {fullTranscript.recordingUrl ? (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => window.open(fullTranscript.recordingUrl!, '_blank')}
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  Download Recording
+                </Button>
+              ) : (
+                <Button variant="outline" size="sm" disabled>
+                  <Download className="mr-2 h-4 w-4" />
+                  No Recording
+                </Button>
+              )}
               <Button variant="outline" size="sm">
                 <Share2 className="mr-2 h-4 w-4" />
                 Share
@@ -326,6 +338,24 @@ export function TranscriptViewDialog({ transcript: initialTranscript, open, onOp
                   <div>
                     <p className="text-sm text-muted-foreground">Call Type</p>
                     <p className="font-medium">Inbound</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Recording</p>
+                    <p className="font-medium">
+                      {fullTranscript.recordingUrl ? (
+                        <a
+                          href={fullTranscript.recordingUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-indigo-600 hover:underline flex items-center"
+                        >
+                          <Download className="h-4 w-4 mr-1" />
+                          Download Recording
+                        </a>
+                      ) : (
+                        "No recording available"
+                      )}
+                    </p>
                   </div>
                 </div>
               </div>

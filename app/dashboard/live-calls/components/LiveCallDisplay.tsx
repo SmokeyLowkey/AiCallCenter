@@ -73,14 +73,7 @@ export function LiveCallDisplay({ initialCallData, onEndCall, onTransferCall }: 
   const [isListening, setIsListening] = useState(true);
   const [elapsedTime, setElapsedTime] = useState(initialCallData.duration);
   const [callData, setCallData] = useState<CallData>(initialCallData);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      sender: 'system',
-      text: 'Call connected',
-      timestamp: new Date(),
-    }
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [aiSuggestion, setAiSuggestion] = useState<AISuggestion | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [viewTranscriptDialog, setViewTranscriptDialog] = useState(false);
@@ -88,6 +81,58 @@ export function LiveCallDisplay({ initialCallData, onEndCall, onTransferCall }: 
   const { socket, isConnected } = useSocket();
   const { toast } = useToast();
   const { data: session } = useSession();
+
+  // Fetch existing transcript when the component mounts
+  useEffect(() => {
+    // Initialize with a system message
+    setMessages([
+      {
+        id: 'system-connected',
+        sender: 'system',
+        text: 'Call connected',
+        timestamp: new Date(),
+      }
+    ]);
+
+    // Fetch any existing transcript for this call
+    const fetchExistingTranscript = async () => {
+      try {
+        const response = await fetch(`/api/transcripts/call/${callData.id}`);
+        if (response.ok) {
+          const data = await response.json();
+          
+          if (data && data.content && Array.isArray(data.content)) {
+            // Transform the transcript content into messages
+            const existingMessages = data.content.map((item: any) => ({
+              id: item.id || `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+              sender: item.speaker === 'caller' ? 'caller' :
+                     item.speaker === 'agent' ? 'agent' : 'system',
+              text: item.text || item.transcript,
+              timestamp: new Date(item.timestamp || Date.now()),
+              confidence: item.confidence,
+            }));
+            
+            // Add the existing messages to the state
+            setMessages(prev => {
+              // Filter out duplicates
+              const newMessages = existingMessages.filter((newMsg: Message) =>
+                !prev.some((existingMsg: Message) =>
+                  existingMsg.text === newMsg.text &&
+                  existingMsg.sender === newMsg.sender
+                )
+              );
+              
+              return [...prev, ...newMessages];
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching existing transcript:', error);
+      }
+    };
+    
+    fetchExistingTranscript();
+  }, [callData.id]);
 
   // Connect to the call room when the component mounts
   useEffect(() => {
@@ -103,6 +148,12 @@ export function LiveCallDisplay({ initialCallData, onEndCall, onTransferCall }: 
       
       // Force a direct connection to ensure we're receiving events
       socket.emit('call:connect', {
+        callId: callData.id,
+        callSid: initialCallData.callSid
+      });
+
+      // Request the latest transcript
+      socket.emit('call:request_transcript', {
         callId: callData.id,
         callSid: initialCallData.callSid
       });
@@ -138,10 +189,17 @@ export function LiveCallDisplay({ initialCallData, onEndCall, onTransferCall }: 
           // Use a callback to ensure we're working with the latest state
           setMessages(prevMessages => {
             // Check if this message already exists (avoid duplicates)
-            const exists = prevMessages.some(msg =>
-              msg.text === newMessage.text &&
-              msg.sender === newMessage.sender
-            );
+            // Use the message ID if available, otherwise fall back to text+sender comparison
+            const exists = prevMessages.some(msg => {
+              // If both messages have IDs, compare them
+              if (msg.id && newMessage.id) {
+                return msg.id === newMessage.id;
+              }
+              
+              // Otherwise, compare text and sender
+              return msg.text === newMessage.text &&
+                     msg.sender === newMessage.sender;
+            });
             
             if (exists) {
               console.log('Message already exists, not adding duplicate');
@@ -182,6 +240,29 @@ export function LiveCallDisplay({ initialCallData, onEndCall, onTransferCall }: 
                     if (suggestion && suggestion.confidence >= 0.6) {
                       console.log('✅ New AI suggestion generated:', suggestion);
                       setAiSuggestion(suggestion);
+                      
+                      // Add the AI suggestion to the transcript immediately
+                      const suggestionMessage: Message = {
+                        id: `ai-suggestion-${Date.now()}`,
+                        sender: 'system',
+                        text: `AI Suggestion: ${suggestion.type} - ${suggestion.text}`,
+                        timestamp: new Date(),
+                      };
+                      
+                      // Add the suggestion to the messages
+                      setMessages(prev => [...prev, suggestionMessage]);
+                      
+                      // Send the suggestion to the server to be saved with the transcript
+                      if (socket && isConnected) {
+                        socket.emit('call:transcript_update', {
+                          callId: callData.id,
+                          callSid: callData.callSid,
+                          id: suggestionMessage.id,
+                          speaker: 'system',
+                          transcript: suggestionMessage.text,
+                          timestamp: suggestionMessage.timestamp,
+                        });
+                      }
                     }
                     setIsProcessing(false);
                   })
@@ -210,19 +291,7 @@ export function LiveCallDisplay({ initialCallData, onEndCall, onTransferCall }: 
       // Also listen for the generic transcript event
       socket.on('transcript_update', handleTranscriptUpdate);
       
-      // Add a test message to verify the component is working
-      setTimeout(() => {
-        console.log('Adding test message to transcript');
-        setMessages(prev => [
-          ...prev,
-          {
-            id: `test-${Date.now()}`,
-            sender: 'system',
-            text: 'Test message - If you see this, the component is working correctly',
-            timestamp: new Date(),
-          }
-        ]);
-      }, 2000);
+      // No longer need the test message as we're fetching real data
 
       // Listen for call status updates
       socket.on('call:status_update', (data) => {
@@ -230,6 +299,31 @@ export function LiveCallDisplay({ initialCallData, onEndCall, onTransferCall }: 
           setCallData(prev => ({ ...prev, status: data.status }));
           
           if (data.status === 'completed') {
+            // Save AI suggestion to transcript if available
+            if (aiSuggestion) {
+              const suggestionMessage: Message = {
+                id: `ai-suggestion-${Date.now()}`,
+                sender: 'system',
+                text: `AI Suggestion: ${aiSuggestion.type} - ${aiSuggestion.text}`,
+                timestamp: new Date(),
+              };
+              
+              // Add the suggestion to the messages
+              setMessages(prev => [...prev, suggestionMessage]);
+              
+              // Send the suggestion to the server to be saved with the transcript
+              if (socket && isConnected) {
+                socket.emit('call:transcript_update', {
+                  callId: callData.id,
+                  callSid: callData.callSid,
+                  id: suggestionMessage.id,
+                  speaker: 'system',
+                  transcript: suggestionMessage.text,
+                  timestamp: suggestionMessage.timestamp,
+                });
+              }
+            }
+            
             toast({
               title: "Call Ended",
               description: `Call with ${callData.caller.name} has ended.`,
@@ -369,21 +463,22 @@ export function LiveCallDisplay({ initialCallData, onEndCall, onTransferCall }: 
         </div>
 
         {/* Live Transcript */}
-        <div className="mt-4 border rounded-md p-2 h-80 overflow-y-auto bg-slate-50 relative">
+        <div className="mt-4 border rounded-md p-2 h-[32rem] overflow-y-auto bg-slate-50 relative">
+          {isProcessing && (
+            <Badge
+              variant="outline"
+              className="absolute top-2 left-2 bg-blue-50 text-blue-800 border-blue-200 z-10"
+            >
+              Processing...
+            </Badge>
+          )}
           <LiveTranscript
             messages={messages}
             caller={callData.caller}
             agent={callData.agent}
+            aiSuggestion={aiSuggestion}
+            afterCallerMessage={true}
           />
-          <Button
-            variant="outline"
-            size="sm"
-            className="absolute top-2 right-2 bg-white"
-            onClick={() => setViewTranscriptDialog(true)}
-          >
-            <Eye className="h-4 w-4 mr-1" />
-            View Full
-          </Button>
         </div>
 
         {/* Transcript Dialog */}
@@ -412,53 +507,6 @@ export function LiveCallDisplay({ initialCallData, onEndCall, onTransferCall }: 
             onOpenChange={setViewTranscriptDialog}
           />
         )}
-
-        {/* AI Assistance */}
-        <div className="mt-4">
-          <div className="flex justify-between items-center mb-2">
-            <p className="text-sm font-medium">AI Assistance:</p>
-            {isProcessing && (
-              <Badge variant="outline" className="bg-blue-50 text-blue-800 border-blue-200">
-                Processing...
-              </Badge>
-            )}
-          </div>
-          
-          {aiSuggestion ? (
-            <div className="p-3 bg-indigo-50 rounded-lg text-sm">
-              <div className="flex items-start gap-2">
-                {aiSuggestion.type === 'response' && <MessageSquare className="h-4 w-4 text-indigo-600 mt-1" />}
-                {aiSuggestion.type === 'information' && <Info className="h-4 w-4 text-indigo-600 mt-1" />}
-                {aiSuggestion.type === 'action' && <Lightbulb className="h-4 w-4 text-indigo-600 mt-1" />}
-                
-                <div className="flex-1">
-                  <p className="text-indigo-800">
-                    <strong>
-                      {aiSuggestion.type === 'response' && 'Suggested response:'}
-                      {aiSuggestion.type === 'information' && 'Helpful information:'}
-                      {aiSuggestion.type === 'action' && 'Recommended action:'}
-                    </strong> {aiSuggestion.text}
-                  </p>
-                  
-                  {aiSuggestion.sources && aiSuggestion.sources.length > 0 && (
-                    <div className="mt-2 text-xs text-indigo-600">
-                      <p className="font-medium">Sources:</p>
-                      <ul className="list-disc list-inside">
-                        {aiSuggestion.sources.slice(0, 2).map((source, index) => (
-                          <li key={index}>{source.title}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="p-3 bg-slate-50 rounded-lg text-sm text-slate-500 italic">
-              AI suggestions will appear here as the conversation progresses...
-            </div>
-          )}
-        </div>
       </CardContent>
       
       <CardFooter className="bg-slate-50 flex justify-between p-3">

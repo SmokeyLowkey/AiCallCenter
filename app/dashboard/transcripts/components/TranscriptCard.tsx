@@ -48,6 +48,7 @@ interface TranscriptCardProps {
       with: string[];
     };
     summary: string;
+    recordingUrl?: string | null;
   };
   onView: () => void;
   showFlagReason?: boolean;
@@ -112,9 +113,16 @@ export function TranscriptCard({
                   <Eye className="mr-2 h-4 w-4" />
                   View Transcript
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    if (transcript.recordingUrl) {
+                      window.open(transcript.recordingUrl, '_blank');
+                    }
+                  }}
+                  disabled={!transcript.recordingUrl}
+                >
                   <Download className="mr-2 h-4 w-4" />
-                  Download
+                  {transcript.recordingUrl ? 'Download Recording' : 'No Recording Available'}
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Share2 className="mr-2 h-4 w-4" />
@@ -220,10 +228,18 @@ export function TranscriptCard({
           <Clock className="h-4 w-4" />
           <span>{transcript.duration}</span>
         </div>
-        <Button variant="outline" size="sm" onClick={onView}>
-          <Eye className="mr-2 h-4 w-4" />
-          View Transcript
-        </Button>
+        <div className="flex gap-2">
+          {transcript.recordingUrl && (
+            <Button variant="outline" size="sm" onClick={() => window.open(transcript.recordingUrl!, '_blank')}>
+              <Download className="mr-2 h-4 w-4" />
+              Recording
+            </Button>
+          )}
+          <Button variant="outline" size="sm" onClick={onView}>
+            <Eye className="mr-2 h-4 w-4" />
+            View Transcript
+          </Button>
+        </div>
       </CardFooter>
     </Card>
   )

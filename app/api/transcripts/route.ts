@@ -106,8 +106,11 @@ export async function GET(request: NextRequest) {
     // Execute the query
     const transcripts = await prisma.transcript.findMany(baseQuery);
 
-    // Format the response
-    const formattedTranscripts = transcripts.map(transcript => {
+    // Import the getPresignedUrl function
+    const { getPresignedUrl } = await import('@/lib/services/s3');
+    
+    // Prepare the transcript data without the recording URLs
+    const transcriptData = transcripts.map(transcript => {
       // Type assertion to access the included relations
       const transcriptWithRelations = transcript as any;
       const call = transcriptWithRelations.call;
@@ -116,10 +119,47 @@ export async function GET(request: NextRequest) {
       const topics = call.topics.map((topic: any) => topic.name);
       
       // Determine sentiment value for sorting if needed
-      const sentimentValue = 
+      const sentimentValue =
         call.sentiment === 'positive' ? 3 :
         call.sentiment === 'neutral' ? 2 :
         call.sentiment === 'negative' ? 1 : 0;
+      
+      return {
+        transcript,
+        call,
+        topics,
+        sentimentValue,
+        hasRecording: !!call.recordingUrl
+      };
+    });
+    
+    // Get presigned URLs for recordings in parallel
+    const recordingUrlPromises = transcriptData.map(async (data) => {
+      if (data.hasRecording && data.call.recordingUrl) {
+        try {
+          const url = await getPresignedUrl(data.call.recordingUrl);
+          console.log(`Generated presigned URL for recording: ${data.call.id}`);
+          return { callId: data.call.id, url };
+        } catch (error) {
+          console.error(`Error getting presigned URL for recording ${data.call.recordingUrl}:`, error);
+          return { callId: data.call.id, url: null };
+        }
+      }
+      return { callId: data.call.id, url: null };
+    });
+    
+    // Wait for all presigned URLs to be generated
+    const recordingUrls = await Promise.all(recordingUrlPromises);
+    
+    // Create a map of call IDs to recording URLs
+    const recordingUrlMap = new Map();
+    recordingUrls.forEach(item => {
+      recordingUrlMap.set(item.callId, item.url);
+    });
+    
+    // Format the final response
+    const formattedTranscripts = transcriptData.map(data => {
+      const { transcript, call, topics, sentimentValue } = data;
       
       return {
         id: transcript.id,
@@ -148,6 +188,7 @@ export async function GET(request: NextRequest) {
         } : null,
         summary: transcript.summary || 'No summary available',
         content: transcript.content,
+        recordingUrl: recordingUrlMap.get(call.id), // Add the recording URL
         _sentimentValue: sentimentValue // For client-side sorting
       };
     });

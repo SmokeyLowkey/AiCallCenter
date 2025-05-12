@@ -35,13 +35,20 @@ const WINDOW_SIZE = 10;
 // Minimum confidence threshold for suggestions
 const MIN_CONFIDENCE = 0.7;
 
+// Rate limiting: minimum time between suggestions (in milliseconds)
+const MIN_TIME_BETWEEN_SUGGESTIONS = 10000; // 10 seconds
+
+// Store the last suggestion timestamp for each call
+const lastSuggestionTimestamps: Record<string, number> = {};
+
 /**
  * Process transcript messages to generate AI suggestions
  */
 export async function processTranscript(
   messages: TranscriptMessage[],
   teamId: string,
-  companyId?: string
+  companyId?: string,
+  callId?: string
 ): Promise<AISuggestion | null> {
   try {
     console.log(`🧠 Processing ${messages.length} transcript messages`);
@@ -49,6 +56,18 @@ export async function processTranscript(
     // If there are no messages, return null
     if (messages.length === 0) {
       return null;
+    }
+    
+    // Apply rate limiting if callId is provided
+    if (callId) {
+      const now = Date.now();
+      const lastSuggestionTime = lastSuggestionTimestamps[callId] || 0;
+      const timeSinceLastSuggestion = now - lastSuggestionTime;
+      
+      if (timeSinceLastSuggestion < MIN_TIME_BETWEEN_SUGGESTIONS) {
+        console.log(`⏱️ Rate limiting: Only ${timeSinceLastSuggestion}ms since last suggestion for call ${callId}, minimum is ${MIN_TIME_BETWEEN_SUGGESTIONS}ms`);
+        return null;
+      }
     }
     
     // Get the most recent messages (sliding window)
@@ -63,6 +82,11 @@ export async function processTranscript(
     }
     
     console.log(`✅ Trigger detected: ${trigger.type}`);
+    
+    // Update the last suggestion timestamp for this call
+    if (callId) {
+      lastSuggestionTimestamps[callId] = Date.now();
+    }
     
     // Extract key information from the transcript
     const keyInfo = extractKeyInformation(recentMessages);
@@ -167,9 +191,12 @@ function detectTrigger(messages: TranscriptMessage[]): { type: string; confidenc
     }
   }
   
-  // If we've processed at least 5 messages, generate a suggestion anyway
-  if (messages.length >= 5) {
-    return { type: 'regular_update', confidence: 0.6 };
+  // If we've processed at least 10 messages, generate a suggestion, but less frequently
+  if (messages.length >= 10) {
+    // Only trigger on every 5th message to reduce frequency
+    if (messages.length % 5 === 0) {
+      return { type: 'regular_update', confidence: 0.6 };
+    }
   }
   
   return null;
@@ -362,11 +389,12 @@ export async function processNewMessage(
   newMessage: TranscriptMessage,
   previousMessages: TranscriptMessage[],
   teamId: string,
+  callId?: string,
   companyId?: string
 ): Promise<AISuggestion | null> {
   // Combine previous messages with the new message
   const allMessages = [...previousMessages, newMessage];
   
   // Process the transcript
-  return processTranscript(allMessages, teamId, companyId);
+  return processTranscript(allMessages, teamId, companyId, callId);
 }

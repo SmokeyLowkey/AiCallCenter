@@ -45,6 +45,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { useToast } from "@/components/ui/use-toast"
 import { useSocket } from "@/contexts/SocketContext"
 import { LiveCallDisplay } from "./components/LiveCallDisplay"
+import { TranscriptViewDialog } from "../transcripts/components/TranscriptViewDialog"
 
 export default function LiveCallsPage() {
   const [activeTab, setActiveTab] = useState("active-calls")
@@ -187,6 +188,13 @@ function ActiveCallsPanel() {
   const [selectedCall, setSelectedCall] = useState<string | null>(null);
   const { socket, isConnected } = useSocket();
   const { toast } = useToast();
+  
+  // Auto-select the first call when component mounts
+  useEffect(() => {
+    if (activeCalls.length === 1) {
+      setSelectedCall(activeCalls[0].id);
+    }
+  }, [activeCalls]);
 
   // Fetch active calls from the database
   useEffect(() => {
@@ -218,6 +226,11 @@ function ActiveCallsPanel() {
           console.log('Formatted calls:', formattedCalls);
           
           setActiveCalls(formattedCalls);
+          
+          // If there's only one active call, automatically select it
+          if (formattedCalls.length === 1 && !selectedCall) {
+            setSelectedCall(formattedCalls[0].id);
+          }
         }
       } catch (error) {
         console.error('Error fetching active calls:', error);
@@ -237,32 +250,45 @@ function ActiveCallsPanel() {
     if (socket && isConnected) {
       // Listen for new calls
       socket.on('call:start', (callData: any) => {
+        const newCall = {
+          id: callData.id,
+          callSid: callData.callSid,
+          status: 'in-progress',
+          startTime: new Date(callData.startTime || Date.now()),
+          duration: 0,
+          caller: {
+            name: callData.caller?.name || 'Unknown Caller',
+            number: callData.caller?.number || 'Unknown Number',
+            avatar: "/placeholder.svg?height=40&width=40",
+          },
+          agent: {
+            name: callData.agent?.name || 'AI Assistant',
+            avatar: callData.agent?.avatar || "/placeholder.svg?height=40&width=40",
+          },
+          sentiment: 'neutral',
+        };
+        
+        console.log('Adding new call:', newCall);
+        
+        // Update the calls list and select the new call
         setActiveCalls(prev => {
           // Check if call already exists
           if (prev.some(call => call.callSid === callData.callSid)) {
             return prev;
           }
           
-          const newCall = {
-            id: callData.id,
-            callSid: callData.callSid,
-            status: 'in-progress',
-            startTime: new Date(callData.startTime || Date.now()),
-            duration: 0,
-            caller: {
-              name: callData.caller?.name || 'Unknown Caller',
-              number: callData.caller?.number || 'Unknown Number',
-              avatar: "/placeholder.svg?height=40&width=40",
-            },
-            agent: {
-              name: callData.agent?.name || 'AI Assistant',
-              avatar: callData.agent?.avatar || "/placeholder.svg?height=40&width=40",
-            },
-            sentiment: 'neutral',
-          };
+          // Remove completed calls when a new call comes in
+          const activeCalls = prev.filter(call => call.status === 'in-progress');
           
-          console.log('Adding new call:', newCall);
-          return [...prev, newCall];
+          // Add the new call to the list
+          const updatedCalls = [...activeCalls, newCall];
+          
+          // Select the new call after a short delay to ensure the state is updated
+          setTimeout(() => {
+            setSelectedCall(newCall.id);
+          }, 100);
+          
+          return updatedCalls;
         });
         
         toast({
@@ -279,17 +305,13 @@ function ActiveCallsPanel() {
             : call
         ));
         
-        // Remove completed calls after a delay
+        // Mark calls as completed but don't remove them
         if (data.status === 'completed' || data.status === 'ended') {
-          setTimeout(() => {
-            setActiveCalls(prev => prev.filter(call =>
-              !(call.id === data.callId || call.callSid === data.callSid)
-            ));
-            
-            if (selectedCall === data.callId) {
-              setSelectedCall(null);
-            }
-          }, 5000); // Keep completed calls visible for 5 seconds
+          setActiveCalls(prev => prev.map(call =>
+            (call.id === data.callId || call.callSid === data.callSid)
+              ? { ...call, status: 'completed' }
+              : call
+          ));
         }
       });
 
@@ -368,84 +390,65 @@ function ActiveCallsPanel() {
         </Button>
       </div>
 
-      {selectedCall ? (
-        // Show detailed view of selected call
-        <div className="space-y-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setSelectedCall(null)}
-          >
-            Back to All Calls
-          </Button>
-          
-          {activeCalls.filter(call => call.id === selectedCall).map(call => (
-            <LiveCallDisplay
-              key={call.id}
-              initialCallData={call}
-              onEndCall={() => handleEndCall(call.id)}
-              onTransferCall={() => handleTransferCall(call.id)}
-            />
-          ))}
-        </div>
-      ) : (
-        // Show grid of all active calls
-        <div className="grid gap-4 md:grid-cols-2">
-          {activeCalls.map((call) => (
-            <Card
-              key={call.id}
-              className="cursor-pointer hover:border-primary/50 transition-colors"
-              onClick={() => setSelectedCall(call.id)}
-            >
-              <CardHeader className="pb-2">
-                <div className="flex justify-between items-start">
-                  <Badge variant="outline" className="bg-indigo-100 text-indigo-800 border-indigo-200">
-                    <Clock className="h-3 w-3 mr-1" />
-                    {Math.floor(call.duration / 60)}:{(call.duration % 60).toString().padStart(2, '0')}
-                  </Badge>
-                  {call.sentiment && (
+      {/* Always show active calls in expanded view if there are any calls */}
+      {activeCalls.length > 0 ? (
+        // Show all calls in a stacked view
+        <div className="space-y-8">
+          {/* Show active calls first, then completed calls */}
+          {activeCalls
+            .sort((a, b) => {
+              // Sort by status (in-progress first) and then by start time (newest first)
+              if (a.status === 'in-progress' && b.status !== 'in-progress') return -1;
+              if (a.status !== 'in-progress' && b.status === 'in-progress') return 1;
+              return new Date(b.startTime).getTime() - new Date(a.startTime).getTime();
+            })
+            .map(call => (
+              <div key={call.id} className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-2">
                     <Badge
-                      variant="secondary"
-                      className={
-                        call.sentiment === "positive" ? "bg-green-100 text-green-800" :
-                        call.sentiment === "negative" ? "bg-red-100 text-red-800" :
-                        "bg-slate-100 text-slate-800"
+                      variant={call.status === 'in-progress' ? 'default' : 'outline'}
+                      className={call.status === 'in-progress'
+                        ? "bg-green-100 text-green-800 border-green-200"
+                        : "bg-slate-100 text-slate-800"
                       }
                     >
-                      {call.sentiment.charAt(0).toUpperCase() + call.sentiment.slice(1)}
+                      {call.status === 'in-progress' ? 'Live Call' : 'Call Ended'}
                     </Badge>
+                    <span className="text-sm text-muted-foreground">
+                      {new Date(call.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  </div>
+                  
+                  {call.status !== 'in-progress' && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        // Remove this specific call
+                        setActiveCalls(prev => prev.filter(c => c.id !== call.id));
+                      }}
+                    >
+                      Dismiss
+                    </Button>
                   )}
                 </div>
-              </CardHeader>
-              <CardContent className="pb-2">
-                <div className="flex justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <Avatar className="h-8 w-8 border border-slate-200">
-                      <AvatarImage src={call.caller.avatar || "/placeholder.svg"} alt={call.caller.name} />
-                      <AvatarFallback>{call.caller.name.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <h4 className="font-medium text-sm">{call.caller.name}</h4>
-                      <p className="text-xs text-muted-foreground">{call.caller.number}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="text-right">
-                      <h4 className="font-medium text-sm">{call.agent.name}</h4>
-                      <p className="text-xs text-muted-foreground">Agent</p>
-                    </div>
-                    <Avatar className="h-8 w-8 border border-slate-200">
-                      <AvatarImage src={call.agent.avatar || "/placeholder.svg"} alt={call.agent.name} />
-                      <AvatarFallback>{call.agent.name.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                  </div>
-                </div>
-                <div className="text-sm text-center mt-2">
-                  Click to view live transcript
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                
+                <LiveCallDisplay
+                  key={call.id}
+                  initialCallData={call}
+                  onEndCall={() => handleEndCall(call.id)}
+                  onTransferCall={() => handleTransferCall(call.id)}
+                />
+              </div>
+            ))}
+        </div>
+      ) : (
+        // Show empty state when no calls
+        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-8">
+          <PhoneOff className="h-10 w-10 text-muted-foreground mb-4" />
+          <h3 className="text-lg font-medium">No Active Calls</h3>
+          <p className="text-sm text-muted-foreground mt-1">There are currently no active calls in your system.</p>
         </div>
       )}
 
@@ -894,73 +897,84 @@ function CallForwardingPanel({ isConfigured, onSetupClick }: { isConfigured: boo
 }
 
 function RecentCallHistoryPanel() {
-  const recentCalls = [
-    {
-      id: "call-1001",
-      caller: {
-        name: "Sarah Johnson",
-        number: "+1 (555) 123-4567",
-      },
-      agent: "Michael Chen",
-      duration: "12:34",
-      time: "Today, 10:30 AM",
-      status: "completed",
-      recording: true,
-      transcript: true,
-    },
-    {
-      id: "call-1002",
-      caller: {
-        name: "James Wilson",
-        number: "+1 (555) 987-6543",
-      },
-      agent: "Emma Rodriguez",
-      duration: "8:12",
-      time: "Today, 9:15 AM",
-      status: "completed",
-      recording: true,
-      transcript: true,
-    },
-    {
-      id: "call-1003",
-      caller: {
-        name: "Robert Smith",
-        number: "+1 (555) 234-5678",
-      },
-      agent: "Lisa Taylor",
-      duration: "3:45",
-      time: "Yesterday, 4:20 PM",
-      status: "missed",
-      recording: false,
-      transcript: false,
-    },
-    {
-      id: "call-1004",
-      caller: {
-        name: "Jennifer Lopez",
-        number: "+1 (555) 876-5432",
-      },
-      agent: "David Williams",
-      duration: "15:22",
-      time: "Yesterday, 2:45 PM",
-      status: "completed",
-      recording: true,
-      transcript: true,
-    },
-    {
-      id: "call-1005",
-      caller: {
-        name: "Unknown",
-        number: "+1 (555) 345-6789",
-      },
-      agent: "System",
-      duration: "0:12",
-      time: "Yesterday, 11:30 AM",
-      status: "rejected",
-      recording: false,
-      transcript: false,
-    },
-  ]
+  const [recentCalls, setRecentCalls] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedTranscript, setSelectedTranscript] = useState<string | null>(null);
+  const { toast } = useToast();
+  
+  // Fetch recent call history
+  useEffect(() => {
+    const fetchRecentCalls = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/calls/history');
+        if (response.ok) {
+          const data = await response.json();
+          
+          // Transform the data to match our UI format
+          const formattedCalls = data.map((call: any) => ({
+            id: call.id,
+            callSid: call.callId,
+            caller: {
+              name: call.callerName || 'Unknown Caller',
+              number: call.callerPhone || 'Unknown Number',
+            },
+            agent: call.agent?.name || 'AI Assistant',
+            duration: formatDuration(call.duration || 0),
+            time: formatCallTime(call.startTime),
+            status: call.status.toLowerCase(),
+            recording: !!call.recordingUrl,
+            recordingUrl: call.recordingUrl,
+            transcript: !!call.transcriptId,
+            transcriptId: call.transcriptId,
+          }));
+          
+          // Limit to 5 recent calls
+          setRecentCalls(formattedCalls.slice(0, 5));
+        }
+      } catch (error) {
+        console.error('Error fetching recent calls:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load recent call history",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchRecentCalls();
+    
+    // Refresh every 30 seconds
+    const interval = setInterval(fetchRecentCalls, 30000);
+    
+    return () => clearInterval(interval);
+  }, [toast]);
+  
+  // Format call time
+  const formatCallTime = (timestamp: string) => {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const yesterday = new Date(now);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    if (date.toDateString() === now.toDateString()) {
+      return `Today, ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+    } else if (date.toDateString() === yesterday.toDateString()) {
+      return `Yesterday, ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+    } else {
+      return date.toLocaleDateString([], { month: 'short', day: 'numeric' }) +
+             `, ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+    }
+  };
+  
+  // Format duration as mm:ss
+  const formatDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -991,7 +1005,7 @@ function RecentCallHistoryPanel() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-medium">Recent Call History</h3>
+        <h3 className="text-lg font-medium">Recent Call History (Last 5 Calls)</h3>
         <div className="flex gap-2">
           <Button variant="outline" size="sm">
             <Filter className="mr-2 h-4 w-4" />
@@ -1021,53 +1035,111 @@ function RecentCallHistoryPanel() {
                   </tr>
                 </thead>
                 <tbody>
-                  {recentCalls.map((call) => (
-                    <tr key={call.id} className="border-b">
-                      <td className="p-4 align-middle">
-                        <div>
-                          <p className="font-medium">{call.caller.name}</p>
-                          <p className="text-sm text-muted-foreground">{call.caller.number}</p>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">{call.agent}</td>
-                      <td className="p-4 align-middle font-medium">{call.duration}</td>
-                      <td className="p-4 align-middle text-muted-foreground">{call.time}</td>
-                      <td className="p-4 align-middle">
-                        <Badge variant="secondary" className={getStatusColor(call.status)}>
-                          {getStatusLabel(call.status)}
-                        </Badge>
-                      </td>
-                      <td className="p-4 align-middle">
-                        {call.recording ? (
-                          <Button variant="ghost" size="sm" className="h-8 px-2">
-                            <Headphones className="h-4 w-4 mr-1" />
-                            Play
-                          </Button>
-                        ) : (
-                          <span className="text-sm text-muted-foreground">N/A</span>
-                        )}
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="flex gap-1">
-                          {call.transcript && (
-                            <Button variant="outline" size="sm" className="h-8 px-2">
-                              <FileText className="h-4 w-4 mr-1" />
-                              Transcript
-                            </Button>
-                          )}
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <MoreVertical className="h-4 w-4" />
-                          </Button>
+                  {loading ? (
+                    <tr>
+                      <td colSpan={7} className="p-4 text-center">
+                        <div className="flex justify-center items-center py-8">
+                          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground mr-2" />
+                          <span>Loading recent calls...</span>
                         </div>
                       </td>
                     </tr>
-                  ))}
+                  ) : recentCalls.length === 0 ? (
+                    <tr>
+                      <td colSpan={7} className="p-4 text-center">
+                        <div className="py-8 text-muted-foreground">
+                          No recent calls found
+                        </div>
+                      </td>
+                    </tr>
+                  ) : (
+                    recentCalls.map((call) => (
+                      <tr key={call.id} className="border-b">
+                        <td className="p-4 align-middle">
+                          <div>
+                            <p className="font-medium">{call.caller.name}</p>
+                            <p className="text-sm text-muted-foreground">{call.caller.number}</p>
+                          </div>
+                        </td>
+                        <td className="p-4 align-middle">{call.agent}</td>
+                        <td className="p-4 align-middle font-medium">{call.duration}</td>
+                        <td className="p-4 align-middle text-muted-foreground">{call.time}</td>
+                        <td className="p-4 align-middle">
+                          <Badge variant="secondary" className={getStatusColor(call.status)}>
+                            {getStatusLabel(call.status)}
+                          </Badge>
+                        </td>
+                        <td className="p-4 align-middle">
+                          {call.recordingUrl ? (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 px-2"
+                              onClick={() => {
+                                window.open(call.recordingUrl, '_blank');
+                              }}
+                            >
+                              <Headphones className="h-4 w-4 mr-1" />
+                              Play
+                            </Button>
+                          ) : (
+                            <span className="text-sm text-muted-foreground">N/A</span>
+                          )}
+                        </td>
+                        <td className="p-4 align-middle">
+                          <div className="flex gap-1">
+                            {call.transcript && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-8 px-2"
+                                onClick={() => setSelectedTranscript(call.id)}
+                              >
+                                <FileText className="h-4 w-4 mr-1" />
+                                Transcript
+                              </Button>
+                            )}
+                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                              <MoreVertical className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
           </div>
         </CardContent>
       </Card>
+      
+      {/* Transcript Dialog */}
+      {selectedTranscript && (
+        <TranscriptViewDialog
+          transcript={{
+            id: selectedTranscript,
+            customer: {
+              name: recentCalls.find(call => call.id === selectedTranscript)?.caller.name || 'Unknown',
+              phone: recentCalls.find(call => call.id === selectedTranscript)?.caller.number || 'Unknown',
+              avatar: "/placeholder.svg",
+            },
+            agent: {
+              name: recentCalls.find(call => call.id === selectedTranscript)?.agent || 'AI Assistant',
+              avatar: "/placeholder.svg",
+            },
+            duration: recentCalls.find(call => call.id === selectedTranscript)?.duration || '0:00',
+            date: recentCalls.find(call => call.id === selectedTranscript)?.time || 'Unknown',
+            sentiment: "neutral",
+            topics: [],
+            starred: false,
+            flagged: false,
+            summary: "",
+          }}
+          open={!!selectedTranscript}
+          onOpenChange={() => setSelectedTranscript(null)}
+        />
+      )}
     </div>
   )
 }

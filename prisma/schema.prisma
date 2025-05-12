@@ -199,6 +199,8 @@ model Call {
   sentiment       String?   // positive, neutral, negative
   resolution      Boolean?  // whether the issue was resolved
   resolutionTime  Int?      // time to resolution in seconds
+  recordingUrl    String?   // URL to the call recording
+  recordingSid    String?   // Twilio recording SID
   
   // AI assistance
   aiAssisted      Boolean   @default(false)

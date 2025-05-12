@@ -12593,6 +12593,8 @@ export namespace Prisma {
     sentiment: string | null
     resolution: boolean | null
     resolutionTime: number | null
+    recordingUrl: string | null
+    recordingSid: string | null
     aiAssisted: boolean | null
     aiSuggestions: number | null
     aiSuggestionsUsed: number | null
@@ -12617,6 +12619,8 @@ export namespace Prisma {
     sentiment: string | null
     resolution: boolean | null
     resolutionTime: number | null
+    recordingUrl: string | null
+    recordingSid: string | null
     aiAssisted: boolean | null
     aiSuggestions: number | null
     aiSuggestionsUsed: number | null
@@ -12641,6 +12645,8 @@ export namespace Prisma {
     sentiment: number
     resolution: number
     resolutionTime: number
+    recordingUrl: number
+    recordingSid: number
     aiAssisted: number
     aiSuggestions: number
     aiSuggestionsUsed: number
@@ -12681,6 +12687,8 @@ export namespace Prisma {
     sentiment?: true
     resolution?: true
     resolutionTime?: true
+    recordingUrl?: true
+    recordingSid?: true
     aiAssisted?: true
     aiSuggestions?: true
     aiSuggestionsUsed?: true
@@ -12705,6 +12713,8 @@ export namespace Prisma {
     sentiment?: true
     resolution?: true
     resolutionTime?: true
+    recordingUrl?: true
+    recordingSid?: true
     aiAssisted?: true
     aiSuggestions?: true
     aiSuggestionsUsed?: true
@@ -12729,6 +12739,8 @@ export namespace Prisma {
     sentiment?: true
     resolution?: true
     resolutionTime?: true
+    recordingUrl?: true
+    recordingSid?: true
     aiAssisted?: true
     aiSuggestions?: true
     aiSuggestionsUsed?: true
@@ -12840,6 +12852,8 @@ export namespace Prisma {
     sentiment: string | null
     resolution: boolean | null
     resolutionTime: number | null
+    recordingUrl: string | null
+    recordingSid: string | null
     aiAssisted: boolean
     aiSuggestions: number | null
     aiSuggestionsUsed: number | null
@@ -12883,6 +12897,8 @@ export namespace Prisma {
     sentiment?: boolean
     resolution?: boolean
     resolutionTime?: boolean
+    recordingUrl?: boolean
+    recordingSid?: boolean
     aiAssisted?: boolean
     aiSuggestions?: boolean
     aiSuggestionsUsed?: boolean
@@ -12913,6 +12929,8 @@ export namespace Prisma {
     sentiment?: boolean
     resolution?: boolean
     resolutionTime?: boolean
+    recordingUrl?: boolean
+    recordingSid?: boolean
     aiAssisted?: boolean
     aiSuggestions?: boolean
     aiSuggestionsUsed?: boolean
@@ -12939,6 +12957,8 @@ export namespace Prisma {
     sentiment?: boolean
     resolution?: boolean
     resolutionTime?: boolean
+    recordingUrl?: boolean
+    recordingSid?: boolean
     aiAssisted?: boolean
     aiSuggestions?: boolean
     aiSuggestionsUsed?: boolean
@@ -12965,6 +12985,8 @@ export namespace Prisma {
     sentiment?: boolean
     resolution?: boolean
     resolutionTime?: boolean
+    recordingUrl?: boolean
+    recordingSid?: boolean
     aiAssisted?: boolean
     aiSuggestions?: boolean
     aiSuggestionsUsed?: boolean
@@ -12973,7 +12995,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type CallOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "callId" | "status" | "startTime" | "endTime" | "duration" | "callerId" | "callerName" | "callerPhone" | "callerAvatar" | "agentId" | "type" | "sentiment" | "resolution" | "resolutionTime" | "aiAssisted" | "aiSuggestions" | "aiSuggestionsUsed" | "teamId" | "createdAt" | "updatedAt", ExtArgs["result"]["call"]>
+  export type CallOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "callId" | "status" | "startTime" | "endTime" | "duration" | "callerId" | "callerName" | "callerPhone" | "callerAvatar" | "agentId" | "type" | "sentiment" | "resolution" | "resolutionTime" | "recordingUrl" | "recordingSid" | "aiAssisted" | "aiSuggestions" | "aiSuggestionsUsed" | "teamId" | "createdAt" | "updatedAt", ExtArgs["result"]["call"]>
   export type CallInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     agent?: boolean | Call$agentArgs<ExtArgs>
     transcript?: boolean | Call$transcriptArgs<ExtArgs>
@@ -13016,6 +13038,8 @@ export namespace Prisma {
       sentiment: string | null
       resolution: boolean | null
       resolutionTime: number | null
+      recordingUrl: string | null
+      recordingSid: string | null
       aiAssisted: boolean
       aiSuggestions: number | null
       aiSuggestionsUsed: number | null
@@ -13465,6 +13489,8 @@ export namespace Prisma {
     readonly sentiment: FieldRef<"Call", 'String'>
     readonly resolution: FieldRef<"Call", 'Boolean'>
     readonly resolutionTime: FieldRef<"Call", 'Int'>
+    readonly recordingUrl: FieldRef<"Call", 'String'>
+    readonly recordingSid: FieldRef<"Call", 'String'>
     readonly aiAssisted: FieldRef<"Call", 'Boolean'>
     readonly aiSuggestions: FieldRef<"Call", 'Int'>
     readonly aiSuggestionsUsed: FieldRef<"Call", 'Int'>
@@ -26596,6 +26622,8 @@ export namespace Prisma {
     sentiment: 'sentiment',
     resolution: 'resolution',
     resolutionTime: 'resolutionTime',
+    recordingUrl: 'recordingUrl',
+    recordingSid: 'recordingSid',
     aiAssisted: 'aiAssisted',
     aiSuggestions: 'aiSuggestions',
     aiSuggestionsUsed: 'aiSuggestionsUsed',
@@ -27635,6 +27663,8 @@ export namespace Prisma {
     sentiment?: StringNullableFilter<"Call"> | string | null
     resolution?: BoolNullableFilter<"Call"> | boolean | null
     resolutionTime?: IntNullableFilter<"Call"> | number | null
+    recordingUrl?: StringNullableFilter<"Call"> | string | null
+    recordingSid?: StringNullableFilter<"Call"> | string | null
     aiAssisted?: BoolFilter<"Call"> | boolean
     aiSuggestions?: IntNullableFilter<"Call"> | number | null
     aiSuggestionsUsed?: IntNullableFilter<"Call"> | number | null
@@ -27664,6 +27694,8 @@ export namespace Prisma {
     sentiment?: SortOrderInput | SortOrder
     resolution?: SortOrderInput | SortOrder
     resolutionTime?: SortOrderInput | SortOrder
+    recordingUrl?: SortOrderInput | SortOrder
+    recordingSid?: SortOrderInput | SortOrder
     aiAssisted?: SortOrder
     aiSuggestions?: SortOrderInput | SortOrder
     aiSuggestionsUsed?: SortOrderInput | SortOrder
@@ -27696,6 +27728,8 @@ export namespace Prisma {
     sentiment?: StringNullableFilter<"Call"> | string | null
     resolution?: BoolNullableFilter<"Call"> | boolean | null
     resolutionTime?: IntNullableFilter<"Call"> | number | null
+    recordingUrl?: StringNullableFilter<"Call"> | string | null
+    recordingSid?: StringNullableFilter<"Call"> | string | null
     aiAssisted?: BoolFilter<"Call"> | boolean
     aiSuggestions?: IntNullableFilter<"Call"> | number | null
     aiSuggestionsUsed?: IntNullableFilter<"Call"> | number | null
@@ -27725,6 +27759,8 @@ export namespace Prisma {
     sentiment?: SortOrderInput | SortOrder
     resolution?: SortOrderInput | SortOrder
     resolutionTime?: SortOrderInput | SortOrder
+    recordingUrl?: SortOrderInput | SortOrder
+    recordingSid?: SortOrderInput | SortOrder
     aiAssisted?: SortOrder
     aiSuggestions?: SortOrderInput | SortOrder
     aiSuggestionsUsed?: SortOrderInput | SortOrder
@@ -27757,6 +27793,8 @@ export namespace Prisma {
     sentiment?: StringNullableWithAggregatesFilter<"Call"> | string | null
     resolution?: BoolNullableWithAggregatesFilter<"Call"> | boolean | null
     resolutionTime?: IntNullableWithAggregatesFilter<"Call"> | number | null
+    recordingUrl?: StringNullableWithAggregatesFilter<"Call"> | string | null
+    recordingSid?: StringNullableWithAggregatesFilter<"Call"> | string | null
     aiAssisted?: BoolWithAggregatesFilter<"Call"> | boolean
     aiSuggestions?: IntNullableWithAggregatesFilter<"Call"> | number | null
     aiSuggestionsUsed?: IntNullableWithAggregatesFilter<"Call"> | number | null
@@ -29364,6 +29402,8 @@ export namespace Prisma {
     sentiment?: string | null
     resolution?: boolean | null
     resolutionTime?: number | null
+    recordingUrl?: string | null
+    recordingSid?: string | null
     aiAssisted?: boolean
     aiSuggestions?: number | null
     aiSuggestionsUsed?: number | null
@@ -29392,6 +29432,8 @@ export namespace Prisma {
     sentiment?: string | null
     resolution?: boolean | null
     resolutionTime?: number | null
+    recordingUrl?: string | null
+    recordingSid?: string | null
     aiAssisted?: boolean
     aiSuggestions?: number | null
     aiSuggestionsUsed?: number | null
@@ -29418,6 +29460,8 @@ export namespace Prisma {
     sentiment?: NullableStringFieldUpdateOperationsInput | string | null
     resolution?: NullableBoolFieldUpdateOperationsInput | boolean | null
     resolutionTime?: NullableIntFieldUpdateOperationsInput | number | null
+    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    recordingSid?: NullableStringFieldUpdateOperationsInput | string | null
     aiAssisted?: BoolFieldUpdateOperationsInput | boolean
     aiSuggestions?: NullableIntFieldUpdateOperationsInput | number | null
     aiSuggestionsUsed?: NullableIntFieldUpdateOperationsInput | number | null
@@ -29446,6 +29490,8 @@ export namespace Prisma {
     sentiment?: NullableStringFieldUpdateOperationsInput | string | null
     resolution?: NullableBoolFieldUpdateOperationsInput | boolean | null
     resolutionTime?: NullableIntFieldUpdateOperationsInput | number | null
+    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    recordingSid?: NullableStringFieldUpdateOperationsInput | string | null
     aiAssisted?: BoolFieldUpdateOperationsInput | boolean
     aiSuggestions?: NullableIntFieldUpdateOperationsInput | number | null
     aiSuggestionsUsed?: NullableIntFieldUpdateOperationsInput | number | null
@@ -29473,6 +29519,8 @@ export namespace Prisma {
     sentiment?: string | null
     resolution?: boolean | null
     resolutionTime?: number | null
+    recordingUrl?: string | null
+    recordingSid?: string | null
     aiAssisted?: boolean
     aiSuggestions?: number | null
     aiSuggestionsUsed?: number | null
@@ -29496,6 +29544,8 @@ export namespace Prisma {
     sentiment?: NullableStringFieldUpdateOperationsInput | string | null
     resolution?: NullableBoolFieldUpdateOperationsInput | boolean | null
     resolutionTime?: NullableIntFieldUpdateOperationsInput | number | null
+    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    recordingSid?: NullableStringFieldUpdateOperationsInput | string | null
     aiAssisted?: BoolFieldUpdateOperationsInput | boolean
     aiSuggestions?: NullableIntFieldUpdateOperationsInput | number | null
     aiSuggestionsUsed?: NullableIntFieldUpdateOperationsInput | number | null
@@ -29519,6 +29569,8 @@ export namespace Prisma {
     sentiment?: NullableStringFieldUpdateOperationsInput | string | null
     resolution?: NullableBoolFieldUpdateOperationsInput | boolean | null
     resolutionTime?: NullableIntFieldUpdateOperationsInput | number | null
+    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    recordingSid?: NullableStringFieldUpdateOperationsInput | string | null
     aiAssisted?: BoolFieldUpdateOperationsInput | boolean
     aiSuggestions?: NullableIntFieldUpdateOperationsInput | number | null
     aiSuggestionsUsed?: NullableIntFieldUpdateOperationsInput | number | null
@@ -31268,6 +31320,8 @@ export namespace Prisma {
     sentiment?: SortOrder
     resolution?: SortOrder
     resolutionTime?: SortOrder
+    recordingUrl?: SortOrder
+    recordingSid?: SortOrder
     aiAssisted?: SortOrder
     aiSuggestions?: SortOrder
     aiSuggestionsUsed?: SortOrder
@@ -31299,6 +31353,8 @@ export namespace Prisma {
     sentiment?: SortOrder
     resolution?: SortOrder
     resolutionTime?: SortOrder
+    recordingUrl?: SortOrder
+    recordingSid?: SortOrder
     aiAssisted?: SortOrder
     aiSuggestions?: SortOrder
     aiSuggestionsUsed?: SortOrder
@@ -31323,6 +31379,8 @@ export namespace Prisma {
     sentiment?: SortOrder
     resolution?: SortOrder
     resolutionTime?: SortOrder
+    recordingUrl?: SortOrder
+    recordingSid?: SortOrder
     aiAssisted?: SortOrder
     aiSuggestions?: SortOrder
     aiSuggestionsUsed?: SortOrder
@@ -34157,6 +34215,8 @@ export namespace Prisma {
     sentiment?: string | null
     resolution?: boolean | null
     resolutionTime?: number | null
+    recordingUrl?: string | null
+    recordingSid?: string | null
     aiAssisted?: boolean
     aiSuggestions?: number | null
     aiSuggestionsUsed?: number | null
@@ -34183,6 +34243,8 @@ export namespace Prisma {
     sentiment?: string | null
     resolution?: boolean | null
     resolutionTime?: number | null
+    recordingUrl?: string | null
+    recordingSid?: string | null
     aiAssisted?: boolean
     aiSuggestions?: number | null
     aiSuggestionsUsed?: number | null
@@ -34573,6 +34635,8 @@ export namespace Prisma {
     sentiment?: StringNullableFilter<"Call"> | string | null
     resolution?: BoolNullableFilter<"Call"> | boolean | null
     resolutionTime?: IntNullableFilter<"Call"> | number | null
+    recordingUrl?: StringNullableFilter<"Call"> | string | null
+    recordingSid?: StringNullableFilter<"Call"> | string | null
     aiAssisted?: BoolFilter<"Call"> | boolean
     aiSuggestions?: IntNullableFilter<"Call"> | number | null
     aiSuggestionsUsed?: IntNullableFilter<"Call"> | number | null
@@ -35156,6 +35220,8 @@ export namespace Prisma {
     sentiment?: string | null
     resolution?: boolean | null
     resolutionTime?: number | null
+    recordingUrl?: string | null
+    recordingSid?: string | null
     aiAssisted?: boolean
     aiSuggestions?: number | null
     aiSuggestionsUsed?: number | null
@@ -35183,6 +35249,8 @@ export namespace Prisma {
     sentiment?: string | null
     resolution?: boolean | null
     resolutionTime?: number | null
+    recordingUrl?: string | null
+    recordingSid?: string | null
     aiAssisted?: boolean
     aiSuggestions?: number | null
     aiSuggestionsUsed?: number | null
@@ -36581,6 +36649,8 @@ export namespace Prisma {
     sentiment?: string | null
     resolution?: boolean | null
     resolutionTime?: number | null
+    recordingUrl?: string | null
+    recordingSid?: string | null
     aiAssisted?: boolean
     aiSuggestions?: number | null
     aiSuggestionsUsed?: number | null
@@ -36608,6 +36678,8 @@ export namespace Prisma {
     sentiment?: string | null
     resolution?: boolean | null
     resolutionTime?: number | null
+    recordingUrl?: string | null
+    recordingSid?: string | null
     aiAssisted?: boolean
     aiSuggestions?: number | null
     aiSuggestionsUsed?: number | null
@@ -36649,6 +36721,8 @@ export namespace Prisma {
     sentiment?: NullableStringFieldUpdateOperationsInput | string | null
     resolution?: NullableBoolFieldUpdateOperationsInput | boolean | null
     resolutionTime?: NullableIntFieldUpdateOperationsInput | number | null
+    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    recordingSid?: NullableStringFieldUpdateOperationsInput | string | null
     aiAssisted?: BoolFieldUpdateOperationsInput | boolean
     aiSuggestions?: NullableIntFieldUpdateOperationsInput | number | null
     aiSuggestionsUsed?: NullableIntFieldUpdateOperationsInput | number | null
@@ -36676,6 +36750,8 @@ export namespace Prisma {
     sentiment?: NullableStringFieldUpdateOperationsInput | string | null
     resolution?: NullableBoolFieldUpdateOperationsInput | boolean | null
     resolutionTime?: NullableIntFieldUpdateOperationsInput | number | null
+    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    recordingSid?: NullableStringFieldUpdateOperationsInput | string | null
     aiAssisted?: BoolFieldUpdateOperationsInput | boolean
     aiSuggestions?: NullableIntFieldUpdateOperationsInput | number | null
     aiSuggestionsUsed?: NullableIntFieldUpdateOperationsInput | number | null
@@ -36701,6 +36777,8 @@ export namespace Prisma {
     sentiment?: string | null
     resolution?: boolean | null
     resolutionTime?: number | null
+    recordingUrl?: string | null
+    recordingSid?: string | null
     aiAssisted?: boolean
     aiSuggestions?: number | null
     aiSuggestionsUsed?: number | null
@@ -36728,6 +36806,8 @@ export namespace Prisma {
     sentiment?: string | null
     resolution?: boolean | null
     resolutionTime?: number | null
+    recordingUrl?: string | null
+    recordingSid?: string | null
     aiAssisted?: boolean
     aiSuggestions?: number | null
     aiSuggestionsUsed?: number | null
@@ -36769,6 +36849,8 @@ export namespace Prisma {
     sentiment?: NullableStringFieldUpdateOperationsInput | string | null
     resolution?: NullableBoolFieldUpdateOperationsInput | boolean | null
     resolutionTime?: NullableIntFieldUpdateOperationsInput | number | null
+    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    recordingSid?: NullableStringFieldUpdateOperationsInput | string | null
     aiAssisted?: BoolFieldUpdateOperationsInput | boolean
     aiSuggestions?: NullableIntFieldUpdateOperationsInput | number | null
     aiSuggestionsUsed?: NullableIntFieldUpdateOperationsInput | number | null
@@ -36796,6 +36878,8 @@ export namespace Prisma {
     sentiment?: NullableStringFieldUpdateOperationsInput | string | null
     resolution?: NullableBoolFieldUpdateOperationsInput | boolean | null
     resolutionTime?: NullableIntFieldUpdateOperationsInput | number | null
+    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    recordingSid?: NullableStringFieldUpdateOperationsInput | string | null
     aiAssisted?: BoolFieldUpdateOperationsInput | boolean
     aiSuggestions?: NullableIntFieldUpdateOperationsInput | number | null
     aiSuggestionsUsed?: NullableIntFieldUpdateOperationsInput | number | null
@@ -36859,6 +36943,8 @@ export namespace Prisma {
     sentiment?: string | null
     resolution?: boolean | null
     resolutionTime?: number | null
+    recordingUrl?: string | null
+    recordingSid?: string | null
     aiAssisted?: boolean
     aiSuggestions?: number | null
     aiSuggestionsUsed?: number | null
@@ -36886,6 +36972,8 @@ export namespace Prisma {
     sentiment?: string | null
     resolution?: boolean | null
     resolutionTime?: number | null
+    recordingUrl?: string | null
+    recordingSid?: string | null
     aiAssisted?: boolean
     aiSuggestions?: number | null
     aiSuggestionsUsed?: number | null
@@ -36960,6 +37048,8 @@ export namespace Prisma {
     sentiment?: NullableStringFieldUpdateOperationsInput | string | null
     resolution?: NullableBoolFieldUpdateOperationsInput | boolean | null
     resolutionTime?: NullableIntFieldUpdateOperationsInput | number | null
+    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    recordingSid?: NullableStringFieldUpdateOperationsInput | string | null
     aiAssisted?: BoolFieldUpdateOperationsInput | boolean
     aiSuggestions?: NullableIntFieldUpdateOperationsInput | number | null
     aiSuggestionsUsed?: NullableIntFieldUpdateOperationsInput | number | null
@@ -36987,6 +37077,8 @@ export namespace Prisma {
     sentiment?: NullableStringFieldUpdateOperationsInput | string | null
     resolution?: NullableBoolFieldUpdateOperationsInput | boolean | null
     resolutionTime?: NullableIntFieldUpdateOperationsInput | number | null
+    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    recordingSid?: NullableStringFieldUpdateOperationsInput | string | null
     aiAssisted?: BoolFieldUpdateOperationsInput | boolean
     aiSuggestions?: NullableIntFieldUpdateOperationsInput | number | null
     aiSuggestionsUsed?: NullableIntFieldUpdateOperationsInput | number | null
@@ -38141,6 +38233,8 @@ export namespace Prisma {
     sentiment?: string | null
     resolution?: boolean | null
     resolutionTime?: number | null
+    recordingUrl?: string | null
+    recordingSid?: string | null
     aiAssisted?: boolean
     aiSuggestions?: number | null
     aiSuggestionsUsed?: number | null
@@ -38305,6 +38399,8 @@ export namespace Prisma {
     sentiment?: NullableStringFieldUpdateOperationsInput | string | null
     resolution?: NullableBoolFieldUpdateOperationsInput | boolean | null
     resolutionTime?: NullableIntFieldUpdateOperationsInput | number | null
+    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    recordingSid?: NullableStringFieldUpdateOperationsInput | string | null
     aiAssisted?: BoolFieldUpdateOperationsInput | boolean
     aiSuggestions?: NullableIntFieldUpdateOperationsInput | number | null
     aiSuggestionsUsed?: NullableIntFieldUpdateOperationsInput | number | null
@@ -38331,6 +38427,8 @@ export namespace Prisma {
     sentiment?: NullableStringFieldUpdateOperationsInput | string | null
     resolution?: NullableBoolFieldUpdateOperationsInput | boolean | null
     resolutionTime?: NullableIntFieldUpdateOperationsInput | number | null
+    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    recordingSid?: NullableStringFieldUpdateOperationsInput | string | null
     aiAssisted?: BoolFieldUpdateOperationsInput | boolean
     aiSuggestions?: NullableIntFieldUpdateOperationsInput | number | null
     aiSuggestionsUsed?: NullableIntFieldUpdateOperationsInput | number | null
@@ -38357,6 +38455,8 @@ export namespace Prisma {
     sentiment?: NullableStringFieldUpdateOperationsInput | string | null
     resolution?: NullableBoolFieldUpdateOperationsInput | boolean | null
     resolutionTime?: NullableIntFieldUpdateOperationsInput | number | null
+    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    recordingSid?: NullableStringFieldUpdateOperationsInput | string | null
     aiAssisted?: BoolFieldUpdateOperationsInput | boolean
     aiSuggestions?: NullableIntFieldUpdateOperationsInput | number | null
     aiSuggestionsUsed?: NullableIntFieldUpdateOperationsInput | number | null
@@ -38631,6 +38731,8 @@ export namespace Prisma {
     sentiment?: string | null
     resolution?: boolean | null
     resolutionTime?: number | null
+    recordingUrl?: string | null
+    recordingSid?: string | null
     aiAssisted?: boolean
     aiSuggestions?: number | null
     aiSuggestionsUsed?: number | null
@@ -38865,6 +38967,8 @@ export namespace Prisma {
     sentiment?: NullableStringFieldUpdateOperationsInput | string | null
     resolution?: NullableBoolFieldUpdateOperationsInput | boolean | null
     resolutionTime?: NullableIntFieldUpdateOperationsInput | number | null
+    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    recordingSid?: NullableStringFieldUpdateOperationsInput | string | null
     aiAssisted?: BoolFieldUpdateOperationsInput | boolean
     aiSuggestions?: NullableIntFieldUpdateOperationsInput | number | null
     aiSuggestionsUsed?: NullableIntFieldUpdateOperationsInput | number | null
@@ -38892,6 +38996,8 @@ export namespace Prisma {
     sentiment?: NullableStringFieldUpdateOperationsInput | string | null
     resolution?: NullableBoolFieldUpdateOperationsInput | boolean | null
     resolutionTime?: NullableIntFieldUpdateOperationsInput | number | null
+    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    recordingSid?: NullableStringFieldUpdateOperationsInput | string | null
     aiAssisted?: BoolFieldUpdateOperationsInput | boolean
     aiSuggestions?: NullableIntFieldUpdateOperationsInput | number | null
     aiSuggestionsUsed?: NullableIntFieldUpdateOperationsInput | number | null
@@ -38918,6 +39024,8 @@ export namespace Prisma {
     sentiment?: NullableStringFieldUpdateOperationsInput | string | null
     resolution?: NullableBoolFieldUpdateOperationsInput | boolean | null
     resolutionTime?: NullableIntFieldUpdateOperationsInput | number | null
+    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    recordingSid?: NullableStringFieldUpdateOperationsInput | string | null
     aiAssisted?: BoolFieldUpdateOperationsInput | boolean
     aiSuggestions?: NullableIntFieldUpdateOperationsInput | number | null
     aiSuggestionsUsed?: NullableIntFieldUpdateOperationsInput | number | null

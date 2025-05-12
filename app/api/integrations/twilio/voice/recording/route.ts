@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import twilio from 'twilio';
 import VoiceResponse from 'twilio/lib/twiml/VoiceResponse';
 import { io as socketIO } from 'socket.io-client';
+import { processRecording } from '@/lib/services/audio-processor';
 
 // Declare global socket client
 declare global {
@@ -33,7 +34,14 @@ export async function POST(request: NextRequest) {
     const recordingDuration = formData.get('RecordingDuration') as string;
     const recordingSid = formData.get('RecordingSid') as string;
     
-    console.log(`Recording received: ${recordingSid} for call ${callSid}, duration: ${recordingDuration}s, URL: ${recordingUrl}`);
+    console.log(`🎙️ RECORDING RECEIVED: ${recordingSid} for call ${callSid}`);
+    console.log(`🎙️ Recording details:`, {
+      recordingSid,
+      callSid,
+      duration: recordingDuration,
+      url: recordingUrl,
+      formData: Object.fromEntries(formData.entries())
+    });
 
     // Create a new TwiML response
     const twiml = new VoiceResponse();
@@ -46,7 +54,8 @@ export async function POST(request: NextRequest) {
     });
 
     if (!call) {
-      console.error(`Call not found for SID: ${callSid}`);
+      console.error(`❌ CALL NOT FOUND FOR SID: ${callSid}`);
+      console.error(`❌ Cannot process recording without a valid call record`);
       twiml.say('Thank you for your message. We will get back to you as soon as possible.');
       twiml.hangup();
       
@@ -57,16 +66,52 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Update the call with the recording information
-    await prisma.call.update({
-      where: {
-        id: call.id,
-      },
-      data: {
-        // Store the recording URL and duration
-        type: `Recording: ${recordingUrl}`,
-      },
-    });
+    // Process the recording (download from Twilio and upload to S3)
+    try {
+      // Get the team ID
+      const team = await prisma.team.findFirst({
+        where: {
+          id: call.teamId || undefined,
+        },
+      });
+
+      if (!team) {
+        console.error(`❌ TEAM NOT FOUND FOR CALL: ${callSid}`);
+        console.error(`❌ Cannot process recording without a valid team`);
+      } else {
+        // Process the recording
+        await processRecording(
+          recordingSid,
+          recordingUrl,
+          call.id,
+          team.id,
+          team.companyId || undefined
+        );
+        
+        console.log(`✅ RECORDING PROCESSED SUCCESSFULLY for call: ${callSid}`);
+        console.log(`✅ Recording details:`, {
+          recordingSid,
+          callSid,
+          callId: call.id,
+          teamId: team.id,
+          companyId: team.companyId || 'none'
+        });
+      }
+    } catch (error) {
+      console.error(`❌ ERROR PROCESSING RECORDING for call ${callSid}:`, error);
+      // Log more details about the error
+      if (error instanceof Error) {
+        console.error(`❌ Error message: ${error.message}`);
+        console.error(`❌ Error stack: ${error.stack}`);
+      }
+      console.error(`❌ Error context:`, {
+        recordingSid,
+        callSid,
+        callId: call.id,
+        recordingUrl
+      });
+      // Continue even if processing fails - we'll still have the Twilio URL
+    }
 
     // Check if there's a transcript for this call
     let transcript = await prisma.transcript.findFirst({
@@ -109,13 +154,20 @@ export async function POST(request: NextRequest) {
     }
 
     // Emit a socket event for the recording
-    if (global.socketClient) {
-      global.socketClient.emit('call:recording', {
-        callId: call.id,
-        callSid: callSid,
-        recordingUrl: recordingUrl,
-        recordingDuration: recordingDuration,
-      });
+    try {
+      if (global.socketClient) {
+        global.socketClient.emit('call:recording', {
+          callId: call.id,
+          callSid: callSid,
+          recordingSid: recordingSid,
+          recordingDuration: recordingDuration,
+        });
+        console.log(`📡 Emitted call:recording event for ${callSid}`);
+      } else {
+        console.warn(`⚠️ Socket client not available, could not emit call:recording event`);
+      }
+    } catch (socketError) {
+      console.error(`❌ Error emitting socket event:`, socketError);
     }
 
     // Thank the caller and end the call
@@ -129,7 +181,12 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Error handling recording:', error);
+    console.error('❌ ERROR HANDLING RECORDING:', error);
+    // Log more details about the error
+    if (error instanceof Error) {
+      console.error(`❌ Error message: ${error.message}`);
+      console.error(`❌ Error stack: ${error.stack}`);
+    }
     
     // Create a TwiML response for the error case
     const twiml = new VoiceResponse();
