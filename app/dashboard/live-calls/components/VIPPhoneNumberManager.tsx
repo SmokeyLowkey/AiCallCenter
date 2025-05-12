@@ -147,25 +147,7 @@ export function VIPPhoneNumberManager() {
     }
   }
 
-  // For demo purposes, add some sample VIP numbers if none exist
-  useEffect(() => {
-    if (!loading && vipNumbers.length === 0) {
-      setVipNumbers([
-        {
-          id: "vip-1",
-          name: "John Smith (CEO)",
-          phoneNumber: "+13062092891",
-          notes: "Always route to senior support"
-        },
-        {
-          id: "vip-2",
-          name: "Sarah Johnson",
-          phoneNumber: "+1 (555) 123-7890",
-          notes: "Premium customer"
-        }
-      ])
-    }
-  }, [loading, vipNumbers.length])
+  // No mock data - we'll only show VIP numbers from the database
 
   return (
     <Card>

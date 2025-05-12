@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get all VIP phone numbers for the team
-    const vipNumbers = await prisma.vipPhoneNumber.findMany({
+    const vipNumbers = await prisma.vIPPhoneNumber.findMany({
       where: {
         teamId: user.teamId
       },
@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if the phone number already exists for this team
-    const existingNumber = await prisma.vipPhoneNumber.findFirst({
+    const existingNumber = await prisma.vIPPhoneNumber.findFirst({
       where: {
         teamId: user.teamId,
         phoneNumber: body.phoneNumber
@@ -121,7 +121,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create the new VIP phone number
-    const vipNumber = await prisma.vipPhoneNumber.create({
+    const vipNumber = await prisma.vIPPhoneNumber.create({
       data: {
         name: body.name || 'VIP Contact',
         phoneNumber: body.phoneNumber,
