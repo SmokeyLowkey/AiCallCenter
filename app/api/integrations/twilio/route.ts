@@ -206,7 +206,7 @@ export async function POST(request: NextRequest) {
           status: 'Connected',
           config: {
             accountSid,
-            authToken: authToken.substring(0, 5) + '***', // Store partial token for security
+            authToken, // Store the full token for now (in a real app, use a secure vault)
             webhooks: webhookConfig,
             ...twilioConfig
           },
@@ -226,7 +226,7 @@ export async function POST(request: NextRequest) {
           status: 'Connected',
           config: {
             accountSid,
-            authToken: authToken.substring(0, 5) + '***', // Store partial token for security
+            authToken, // Store the full token for now (in a real app, use a secure vault)
             webhooks: webhookConfig,
             ...twilioConfig
           },

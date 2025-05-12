@@ -136,7 +136,6 @@ export default function LiveCallsPage() {
         <div className="flex items-center justify-between">
           <TabsList>
             <TabsTrigger value="active-calls">Active Calls</TabsTrigger>
-            <TabsTrigger value="call-queue">Call Queue</TabsTrigger>
             <TabsTrigger value="forwarding">Call Forwarding</TabsTrigger>
             <TabsTrigger value="history">Recent History</TabsTrigger>
           </TabsList>
@@ -152,20 +151,6 @@ export default function LiveCallsPage() {
               buttonText="Go to Integrations"
               onClick={navigateToIntegrations}
               icon={<PhoneCall className="h-12 w-12 text-muted-foreground" />}
-            />
-          )}
-        </TabsContent>
-
-        <TabsContent value="call-queue" className="space-y-4">
-          {twilioConfigured ? (
-            <CallQueuePanel />
-          ) : (
-            <SetupRequiredPanel
-              title="Set up Twilio to manage call queue"
-              description="Configure your Twilio integration in the Integrations page to start managing your call queue."
-              buttonText="Go to Integrations"
-              onClick={navigateToIntegrations}
-              icon={<Clock className="h-12 w-12 text-muted-foreground" />}
             />
           )}
         </TabsContent>
@@ -446,11 +431,13 @@ function ActiveCallsPanel() {
         </div>
       ) : (
         // Show empty state when no calls
-        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-8">
-          <PhoneOff className="h-10 w-10 text-muted-foreground mb-4" />
-          <h3 className="text-lg font-medium">No Active Calls</h3>
-          <p className="text-sm text-muted-foreground mt-1">There are currently no active calls in your system.</p>
-        </div>
+        <>
+        </>
+        // <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-8">
+        //   {/* <PhoneOff className="h-10 w-10 text-muted-foreground mb-4" />
+        //   <h3 className="text-lg font-medium">No Active Calls</h3>
+        //   <p className="text-sm text-muted-foreground mt-1">There are currently no active calls in your system.</p> */}
+        // </div>
       )}
 
       {activeCalls.length === 0 && (
@@ -598,142 +585,6 @@ function ActiveCallCard({ call }: { call: any }) {
   )
 }
 
-function CallQueuePanel() {
-  const queuedCalls = [
-    {
-      id: "queue-1",
-      caller: {
-        name: "Robert Smith",
-        number: "+1 (555) 234-5678",
-      },
-      waitTime: "2:45",
-      estimatedWait: "~5 min",
-      reason: "Technical Support",
-      priority: "High",
-    },
-    {
-      id: "queue-2",
-      caller: {
-        name: "Jennifer Lopez",
-        number: "+1 (555) 876-5432",
-      },
-      waitTime: "1:30",
-      estimatedWait: "~3 min",
-      reason: "Billing Question",
-      priority: "Medium",
-    },
-    {
-      id: "queue-3",
-      caller: {
-        name: "David Williams",
-        number: "+1 (555) 345-6789",
-      },
-      waitTime: "0:45",
-      estimatedWait: "~2 min",
-      reason: "Sales Inquiry",
-      priority: "Medium",
-    },
-  ]
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case "High":
-        return "bg-red-100 text-red-800"
-      case "Medium":
-        return "bg-amber-100 text-amber-800"
-      case "Low":
-        return "bg-green-100 text-green-800"
-      default:
-        return "bg-slate-100 text-slate-800"
-    }
-  }
-
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-medium">Call Queue ({queuedCalls.length})</h3>
-        <div className="flex gap-2">
-          <Select defaultValue="all-agents">
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Assign To" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all-agents">All Available Agents</SelectItem>
-              <SelectItem value="support">Support Team</SelectItem>
-              <SelectItem value="sales">Sales Team</SelectItem>
-              <SelectItem value="technical">Technical Team</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button variant="outline" size="sm">
-            <Settings className="mr-2 h-4 w-4" />
-            Queue Settings
-          </Button>
-        </div>
-      </div>
-
-      <Card>
-        <CardContent className="p-0">
-          <div className="rounded-md border">
-            <div className="relative w-full overflow-auto">
-              <table className="w-full caption-bottom text-sm">
-                <thead>
-                  <tr className="border-b bg-slate-50">
-                    <th className="h-10 px-4 text-left font-medium text-muted-foreground">Caller</th>
-                    <th className="h-10 px-4 text-left font-medium text-muted-foreground">Wait Time</th>
-                    <th className="h-10 px-4 text-left font-medium text-muted-foreground">Est. Wait</th>
-                    <th className="h-10 px-4 text-left font-medium text-muted-foreground">Reason</th>
-                    <th className="h-10 px-4 text-left font-medium text-muted-foreground">Priority</th>
-                    <th className="h-10 px-4 text-left font-medium text-muted-foreground">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {queuedCalls.map((call) => (
-                    <tr key={call.id} className="border-b">
-                      <td className="p-4 align-middle">
-                        <div>
-                          <p className="font-medium">{call.caller.name}</p>
-                          <p className="text-sm text-muted-foreground">{call.caller.number}</p>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle font-medium">{call.waitTime}</td>
-                      <td className="p-4 align-middle text-muted-foreground">{call.estimatedWait}</td>
-                      <td className="p-4 align-middle">{call.reason}</td>
-                      <td className="p-4 align-middle">
-                        <Badge variant="secondary" className={getPriorityColor(call.priority)}>
-                          {call.priority}
-                        </Badge>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="flex gap-2">
-                          <Button size="sm">
-                            <PhoneCall className="h-4 w-4 mr-1" />
-                            Answer
-                          </Button>
-                          <Button variant="outline" size="sm">
-                            <PhoneForwarded className="h-4 w-4 mr-1" />
-                            Assign
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {queuedCalls.length === 0 && (
-        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-8">
-          <Clock className="h-10 w-10 text-muted-foreground mb-4" />
-          <h3 className="text-lg font-medium">No Calls in Queue</h3>
-          <p className="text-sm text-muted-foreground mt-1">There are currently no calls waiting in the queue.</p>
-        </div>
-      )}
-    </div>
-  )
-}
 
 function CallForwardingPanel({ isConfigured, onSetupClick }: { isConfigured: boolean, onSetupClick: () => void }) {
   const [forwardingEnabled, setForwardingEnabled] = useState(true)
@@ -831,69 +682,6 @@ function CallForwardingPanel({ isConfigured, onSetupClick }: { isConfigured: boo
           </div>
         </CardContent>
       </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Phone Numbers</CardTitle>
-          <CardDescription>Manage your Twilio phone numbers</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-medium">Your Numbers</h3>
-              <Button variant="outline">
-                <Plus className="mr-2 h-4 w-4" />
-                Add Number
-              </Button>
-            </div>
-
-            <div className="rounded-md border">
-              <div className="relative w-full overflow-auto">
-                <table className="w-full caption-bottom text-sm">
-                  <thead>
-                    <tr className="border-b bg-slate-50">
-                      <th className="h-10 px-4 text-left font-medium text-muted-foreground">Phone Number</th>
-                      <th className="h-10 px-4 text-left font-medium text-muted-foreground">Type</th>
-                      <th className="h-10 px-4 text-left font-medium text-muted-foreground">Assigned To</th>
-                      <th className="h-10 px-4 text-left font-medium text-muted-foreground">Status</th>
-                      <th className="h-10 px-4 text-left font-medium text-muted-foreground">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b">
-                      <td className="p-4 align-middle font-medium">+1 (555) 123-4567</td>
-                      <td className="p-4 align-middle">Main Line</td>
-                      <td className="p-4 align-middle">Support Team</td>
-                      <td className="p-4 align-middle">
-                        <Badge className="bg-green-100 text-green-800">Active</Badge>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <Button variant="ghost" size="icon">
-                          <Settings className="h-4 w-4" />
-                        </Button>
-                      </td>
-                    </tr>
-                    <tr className="border-b">
-                      <td className="p-4 align-middle font-medium">+1 (555) 987-6543</td>
-                      <td className="p-4 align-middle">Sales Line</td>
-                      <td className="p-4 align-middle">Sales Team</td>
-                      <td className="p-4 align-middle">
-                        <Badge className="bg-green-100 text-green-800">Active</Badge>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <Button variant="ghost" size="icon">
-                          <Settings className="h-4 w-4" />
-                        </Button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
       {/* VIP Phone Numbers Manager */}
       <VIPPhoneNumberManager />
     </div>

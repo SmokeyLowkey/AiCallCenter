@@ -241,15 +241,15 @@ export async function POST(request: NextRequest) {
     }
 
     // Continue listening for more speech
-    return createTwiMLResponse('', true, call);
+    return await createTwiMLResponse('', true, call);
   } catch (error) {
     console.error('Error handling transcription:', error);
-    return createTwiMLResponse('We encountered an error processing your request.', false);
+    return await createTwiMLResponse('We encountered an error processing your request.', false);
   }
 }
 
 // Helper function to create a TwiML response
-function createTwiMLResponse(message: string, continueListening: boolean = false, call?: any) {
+async function createTwiMLResponse(message: string, continueListening: boolean = false, call?: any) {
   const twiml = new VoiceResponse();
   
   if (message) {
@@ -260,7 +260,7 @@ function createTwiMLResponse(message: string, continueListening: boolean = false
     // Continue listening for more speech
     const gather = twiml.gather({
       input: ['speech'] as any,
-      action: 'https://6116-24-72-111-53.ngrok-free.app/api/integrations/twilio/voice/transcribe',
+      action: `${process.env.BASE_URL}/api/integrations/twilio/voice/transcribe`,
       speechTimeout: 'auto',
       speechModel: 'phone_call',
       enhanced: true,
@@ -269,12 +269,32 @@ function createTwiMLResponse(message: string, continueListening: boolean = false
     
     // For VIP callers, we want to be completely silent
     // Check if this is a VIP call
-    const vipPhoneNumbers = ['+13062092891']; // Add your phone number here
-    const isVipCall = call && vipPhoneNumbers.includes(call.callerPhone);
+    // Check if this is a VIP call by looking up the phone number in the database
+    let isVipCall = false;
+    
+    if (call) {
+      try {
+        // Look up the phone number in the VIP phone numbers table
+        const vipNumber = await prisma.vIPPhoneNumber.findFirst({
+          where: {
+            phoneNumber: call.callerPhone,
+            teamId: call.teamId || undefined
+          }
+        });
+        
+        if (vipNumber) {
+          isVipCall = true;
+          console.log(`VIP caller detected: ${vipNumber.name} (${call.callerPhone})`);
+        }
+      } catch (error) {
+        console.error('Error checking VIP status:', error);
+        // Continue even if VIP check fails
+      }
+    }
     
     if (!isVipCall) {
       // Only add voice prompts for non-VIP callers
-      gather.say('Please continue.');
+      console.log('Non-VIP call detected, will stay silent');
     } else {
       console.log('VIP call detected, remaining silent');
     }
